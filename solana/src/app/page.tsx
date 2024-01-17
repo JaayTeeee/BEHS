@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { RectangleButton } from "../../public/components/RectangleButton";
+import RectangleButton from "../../public/components/RectangleButton";
 import HealthCare from "./icons/icons-healthcare.png";
 import MedicalImage from "./icons/medical.png";
 
@@ -27,8 +27,7 @@ export default function Home() {
           >
             <strong>Blockchain-based Electronic Health System</strong>
           </div>
-
-          <RectangleButton />
+          <RectangleButton text="jecjjfewjf" onClick={""} />
         </div>
 
         <div className="circle" />
