@@ -17,13 +17,19 @@ export default function Home() {
             flexDirection: "column",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", letterSpacing: "3px"  }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              letterSpacing: "3px",
+            }}
+          >
             <Image src={HealthCare} className="icon" alt="healthcare" />
-            <div className="BEHS ml-7 mt-5">BEHS</div>
+            <div className="BEHS ml-7 mt-2">BEHS</div>
           </div>
           <div
             className="BEHS"
-            style={{ fontSize: "24px", marginTop: "-30px"}}
+            style={{ fontSize: "24px", marginTop: "-30px" }}
           >
             <strong>Blockchain-based Electronic Health System</strong>
           </div>
@@ -45,7 +51,7 @@ export default function Home() {
           alt="medical-image"
           objectFit="cover"
           style={{ right: "-60px", top: "-200px" }}
-          />
+        />
       </div>
     </main>
   );
