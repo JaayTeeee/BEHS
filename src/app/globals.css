@@ -45,3 +45,44 @@ body {
   width: 193px;
   position: absolute;
 }
+<<<<<<< Updated upstream
+=======
+
+.search-box {
+  display: block;
+  background: #dfdfdf;
+  height: 35px;
+  width: 330px;
+  border-radius: 7px;
+  position: absolute;
+  z-index: 1;
+}
+
+.buttonWithImage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #339f6b;
+  background: white;
+  width: 350px;
+  height: 270px;
+  margin: 10px;
+  z-index: 999;
+  border: 3px solid #339f6b;
+  border-radius: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
+  transition: background-color 0.3s;
+}
+
+.buttonWithImage:hover {
+  background-color: #339f6b;
+  color: white;
+}
+
+.buttonWithImage:hover img {
+  filter: brightness(0) invert(1);
+}
+>>>>>>> Stashed changes
