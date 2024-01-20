@@ -46,6 +46,16 @@ body {
   position: absolute;
 }
 
+.search-box {
+  display: block;
+  background: #dfdfdf;
+  height: 35px;
+  width: 330px;
+  border-radius: 7px;
+  position: absolute;
+  z-index: 1;
+
+
 .buttonWithImage {
   position: relative;
   display: flex;
@@ -73,3 +83,4 @@ body {
 .buttonWithImage:hover img {
   filter: brightness(0) invert(1);
 }
+
