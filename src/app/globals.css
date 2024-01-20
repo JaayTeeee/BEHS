@@ -28,8 +28,8 @@ body {
 }
 
 .icon {
-  height: 120px;
-  width: 120px;
+  height: 90px;
+  width: 90px;
 }
 
 .BEHS {
@@ -45,8 +45,6 @@ body {
   width: 193px;
   position: absolute;
 }
-<<<<<<< Updated upstream
-=======
 
 .search-box {
   display: block;
@@ -56,7 +54,7 @@ body {
   border-radius: 7px;
   position: absolute;
   z-index: 1;
-}
+
 
 .buttonWithImage {
   position: relative;
@@ -85,4 +83,4 @@ body {
 .buttonWithImage:hover img {
   filter: brightness(0) invert(1);
 }
->>>>>>> Stashed changes
+
