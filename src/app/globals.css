@@ -47,14 +47,15 @@ body {
 }
 
 .search-box {
-  display: block;
+  display: flex;
+  align-items: center;
   background: #dfdfdf;
-  height: 35px;
+  height: 40px;
   width: 330px;
   border-radius: 7px;
   position: absolute;
   z-index: 1;
-
+}
 
 .buttonWithImage {
   position: relative;
@@ -84,3 +85,15 @@ body {
   filter: brightness(0) invert(1);
 }
 
+.scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.small-circle {
+  display: block;
+  background: #ffffff;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+}

@@ -1,3 +1,11 @@
+import InputForm from "./form";
+
 export default function Registration() {
-  return <main></main>;
+  return (
+    <main>
+      <>
+        <InputForm />
+      </>
+    </main>
+  );
 }

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import RectangleButton from "../../public/components/RectangleButton";
+import Button from "../../public/components/RectangleButton";
 import HealthCare from "../../public/icons/icons-healthcare.png";
 import MedicalImage from "../../public/icons/medical.jpg";
 
@@ -40,7 +40,7 @@ export default function Home() {
               marginTop: "30px",
             }}
           >
-            <RectangleButton text="LOGIN" onClick={""} />
+            <Button text="LOGIN" onClick={""} />
           </div>
         </div>
 
