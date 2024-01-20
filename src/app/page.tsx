@@ -1,7 +1,7 @@
 import Image from "next/image";
 import RectangleButton from "../../public/components/RectangleButton";
-import HealthCare from "./icons/icons-healthcare.png";
-import MedicalImage from "./icons/medical.jpg";
+import HealthCare from "../../public/icons/icons-healthcare.png";
+import MedicalImage from "../../public/icons/medical.jpg";
 
 export default function Home() {
   return (

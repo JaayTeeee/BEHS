@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import HealthCare from "../../src/app/icons/icons-healthcare.png";
+import HealthCare from "../../public/icons/icons-healthcare.png";
 
 const HomePageButton = ({}) => {
   return (

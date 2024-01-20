@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import UserProfileImage from "../../src/app/icons/icons-user-profile.png";
+import UserProfileImage from "../../public/icons/icons-user-profile.png";
 
 const UserProfileButton = ({}) => {
   return (

@@ -1,9 +1,9 @@
 import ButtonWithImage from "../../../public/components/ButtonWithImage";
 import HomePageButton from "../../../public/components/HomePageButton";
 import UserProfileButton from "../../../public/components/UserProfileButton";
-import MedRecordImage from "../icons/icons-medical-record.png";
-import PermissionImage from "../icons/icons-permission.png";
-import ResearchImage from "../icons/icons-research.png";
+import MedRecordImage from "../../../public/icons/icons-medical-record.png";
+import PermissionImage from "../../../public/icons/icons-permission.png";
+import ResearchImage from "../../../public/icons/icons-research.png";
 
 export default function Home() {
   return (
