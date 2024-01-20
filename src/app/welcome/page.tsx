@@ -4,6 +4,7 @@ import UserProfileButton from "../../../public/components/UserProfileButton";
 import MedRecordImage from "../../../public/icons/icons-medical-record.png";
 import PermissionImage from "../../../public/icons/icons-permission.png";
 import ResearchImage from "../../../public/icons/icons-research.png";
+import LogoutButton from "../../../public/components/LogoutButton";
 
 export default function Home() {
   return (
@@ -34,6 +35,7 @@ export default function Home() {
           }}
         >
           <UserProfileButton />
+          <LogoutButton />
         </div>
       </div>
       <div

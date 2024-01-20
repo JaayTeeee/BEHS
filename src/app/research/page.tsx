@@ -1,7 +1,8 @@
 import Image from "next/image";
 import HomePageButton from "../../../public/components/HomePageButton";
 import SearchButton from "../../../public/components/searchButton";
-import searchIcon from "../icons/icons-search-black.png";
+import searchIcon from "../../../public/icons/icons-search-black.png";
+import RectangleButton from "../../../public/components/RectangleButton";
 
 export default function Research() {
   return (
@@ -45,7 +46,7 @@ export default function Research() {
         >
           <div
             className="BEHS"
-            style={{ fontSize: "32px", marginRight: "550px" }}
+            style={{ fontSize: "35px", marginRight: "550px" }}
           >
             <strong>Available Researches:</strong>
           </div>
@@ -72,12 +73,42 @@ export default function Research() {
             />
             <SearchButton text="Search" onClick={""} />
           </div>
-          {/* Placeholder for available researches */}
+          <div className="green-bar"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div className="greenbar-title">
+              <strong style={{marginRight: "40px" }}>Research ID</strong>
+              <strong style={{marginRight: "40px" }}>Date</strong>
+              <strong style={{marginRight: "150px" }}>Project Name</strong>
+              <strong style={{marginRight: "30px" }}>Members Joined</strong>
+              <strong>Deadline</strong>
+            </div>
+            <RectangleButton text="DETAILS" textStyle={{fontSize: "30px", fontWeight: "bold" }} onClick={""} />
+          </div>
+          <br/>
           <div
             className="BEHS"
-            style={{ fontSize: "32px", marginRight: "500px" }}
+            style={{ fontSize: "35px", marginRight: "500px" }}
           >
             <strong>Participated Researches:</strong>
+          </div>
+          <div className="green-bar"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div className="greenbar-title">
+              <strong style={{marginRight: "70px" }}>Research ID</strong>
+              <strong style={{marginRight: "60px" }}>Date</strong>
+              <strong style={{marginRight: "200px" }}>Project Name</strong>
+            </div>
+            <RectangleButton text="DETAILS" textStyle={{fontSize: "30px", fontWeight: "bold" }} onClick={""} />
           </div>
           {/* Placeholder for participated researches */}
         </div>

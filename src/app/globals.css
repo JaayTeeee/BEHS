@@ -97,3 +97,21 @@ body {
   width: 50px;
   position: absolute;
 }
+
+.green-bar {
+  background-color: #F3FFEF;
+  border: 2px solid #339f6b;
+  border-radius: 10px;
+  height: 100px;
+  width: 1270px;
+  margin-left: 120px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.greenbar-title {
+  color: #339f6b;
+  font-size: 25px;
+  margin-left: 20px;
+  margin-top: -40px;
+}
