@@ -2,16 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import RejectImage from "../../public/icons/icons-wrong.png";
 
-const ApproveButton = ({}) => {
+const RejectButton = () => {
   return (
-    <Link href="/profile">
-      <Image
-        src={RejectImage}
-        alt="Button Icon"
-        style={{ marginBottom: "5px", height: "70px", width: "70px", marginRight: "40px" }}
-      />
-    </Link>
+    <div style={{ marginTop: "5px" }}>
+      <Link href="/profile">
+        <Image
+          src={RejectImage}
+          alt="Button Icon"
+          style={{ height: "70px", width: "70px" }}
+        />
+      </Link>
+    </div>
   );
 };
 
-export default ApproveButton;
+export default RejectButton;

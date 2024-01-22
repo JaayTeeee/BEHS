@@ -2,15 +2,26 @@ import Image from "next/image";
 import Link from "next/link";
 import ApproveImage from "../../public/icons/icons-correct.png";
 
-const ApproveButton = ({}) => {
+const ApproveButton = () => {
   return (
-    <Link href="/profile">
-      <Image
-        src={ApproveImage}
-        alt="Button Icon"
-        style={{ marginBottom: "5px", height: "75px", width: "75px", marginLeft: "40s0px" }}
-      />
-    </Link>
+    <div
+      style={{
+        marginTop: "5px",
+        marginLeft: "400px",
+        marginRight: "20px",
+        height: "72px",
+        width: "72px",
+      }}
+    >
+      <Link
+        href="/profile"
+        style={{
+          display: "inline-block",
+        }}
+      >
+        <Image src={ApproveImage} alt="Button Icon" />
+      </Link>
+    </div>
   );
 };
 

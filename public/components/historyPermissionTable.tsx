@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface TableRowProps {
   data: {
@@ -20,13 +20,23 @@ const TableRow: React.FC<TableRowProps> = ({ data }) => (
 
 const PermissionTable: React.FC = () => {
   const tableData = [
-    { header1: 'Row 1, Cell 1', header2: 'Row 1, Cell 2', header3: 'Row 1, Cell 3', header4: 'Row 1, Cell 4' },
-    { header1: 'Row 2, Cell 1', header2: 'Row 2, Cell 2', header3: 'Row 2, Cell 3', header4: 'Row 2, Cell 4' },
+    {
+      header1: "Row 1, Cell 1",
+      header2: "Row 1, Cell 2",
+      header3: "Row 1, Cell 3",
+      header4: "Row 1, Cell 4",
+    },
+    {
+      header1: "Row 2, Cell 1",
+      header2: "Row 2, Cell 2",
+      header3: "Row 2, Cell 3",
+      header4: "Row 2, Cell 4",
+    },
     // Add more data as needed
   ];
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <table style={tableStyle}>
         <thead>
           <tr>
@@ -48,44 +58,42 @@ const PermissionTable: React.FC = () => {
 
 // Style for the entire table
 const tableStyle: React.CSSProperties = {
-  width: '100%',
-  borderCollapse: 'collapse',
-  marginTop: '20px',
-  marginBottom: '20px',
-  backgroundColor: '#F3FFEF',
-  border: '2px solid #339f6b',
-  borderRadius: '20px',
-  height: '100px',
-  width: '1270px',
-  marginLeft: '140px',
+  width: "100%",
+  borderCollapse: "collapse",
+  marginTop: "20px",
+  marginBottom: "20px",
+  backgroundColor: "#F3FFEF",
+  border: "2px solid #339f6b",
+  height: "100px",
+  marginLeft: "140px",
 };
 
 // Style for header cells
 const headerCellStyle: React.CSSProperties = {
-  backgroundColor: '#339f6b',
-  color: 'white',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  padding: '10px',
-  textAlign: 'center',
-  borderBottom: '1px solid #339f6b',
+  backgroundColor: "#339f6b",
+  color: "white",
+  fontSize: "20px",
+  fontWeight: "bold",
+  padding: "10px",
+  textAlign: "center",
+  borderBottom: "1px solid #339f6b",
 };
 
 // Style for regular cells
 const cellStyle: React.CSSProperties = {
-  padding: '12px',
-  textAlign: 'center',
-  borderBottom: '1px solid #339f6b',
-  margin: '0px 0', // Added margin, adjust as needed
-  marginRight: '40px',
-  marginLeft: '40px',
+  padding: "12px",
+  textAlign: "center",
+  borderBottom: "1px solid #339f6b",
+  margin: "0px 0", // Added margin, adjust as needed
+  marginRight: "40px",
+  marginLeft: "40px",
 };
 
 // Style for table rows
 const rowStyle: React.CSSProperties = {
-  border: '2px solid #339f6b',
-  borderRadius: '20px',
-  margin: '10px 0',
+  border: "2px solid #339f6b",
+  borderRadius: "20px",
+  margin: "10px 0",
 };
 
 export default PermissionTable;

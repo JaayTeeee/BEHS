@@ -1,13 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
+import { DayPicker } from "react-day-picker";
 import Button from "../../../public/components/RectangleButton";
-
 interface UserData {
   firstName: string;
   lastName: string;
   gender: string;
-  dateBirth: string;
+  dateBirth: Date;
   idNumber: string;
   phoneNumber: string;
   address: string;
@@ -29,11 +28,21 @@ const Step1: React.FC<{
     }));
   };
 
-  const handleDateChange = (date: Date) => {
+  const handleGenderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setUserData((prevState) => ({
       ...prevState,
-      dateBirth: date.toISOString().slice(0, 10),
+      [name]: value,
     }));
+  };
+
+  const handleDateChange = (value: Date) => {
+    setUserData((prevState) => {
+      return {
+        ...prevState,
+        dateBirth: value,
+      };
+    });
   };
 
   const handleNext = () => {
@@ -70,6 +79,7 @@ const Step1: React.FC<{
                 height: "45px",
                 width: "100%",
                 caretColor: "transparent",
+                marginLeft: "10px",
               }}
             />
           </div>
@@ -102,6 +112,7 @@ const Step1: React.FC<{
                 height: "45px",
                 width: "100%",
                 caretColor: "transparent",
+                marginLeft: "10px",
               }}
             />
           </div>
@@ -114,20 +125,21 @@ const Step1: React.FC<{
           <div
             style={{
               backgroundColor: "#dfdfdf",
-              width: "400px",
+              width: "410px",
               height: "45px",
             }}
           >
             <select
               name="gender"
               value={userData.gender}
-              onChange={(e) => handleChange(e.target.value)}
+              onChange={handleGenderChange}
               style={{
                 backgroundColor: "#dfdfdf",
                 outline: "none",
                 border: "none",
                 height: "45px",
-                width: "100%",
+                width: "400px",
+                marginLeft: "10px",
               }}
             >
               <option value="">Select Gender</option>
@@ -142,32 +154,18 @@ const Step1: React.FC<{
           style={{
             display: "flex",
             flexDirection: "column",
-            marginLeft: "200px",
+            marginLeft: "190px",
           }}
         >
           <text style={{ fontSize: "28px" }}>Date of Birth</text>
           <div
             style={{
               backgroundColor: "#dfdfdf",
-              width: "400px",
+              width: "410px",
               height: "45px",
             }}
           >
-            <DatePicker
-              selected={
-                userData.dateBirth ? new Date(userData.dateBirth) : null
-              }
-              onChange={(date) => handleDateChange(date)}
-              dateFormat="yyyy-MM-dd"
-              placeholderText="Select Date"
-              style={{
-                backgroundColor: "#dfdfdf",
-                outline: "none",
-                border: "none",
-                height: "45px",
-                width: "100%",
-              }}
-            />
+            <DayPicker mode="single" onDayClick={handleDateChange} />
           </div>
         </div>
 
@@ -243,7 +241,7 @@ const InputForm = () => {
     firstName: "",
     lastName: "",
     gender: "",
-    dateBirth: "",
+    dateBirth: new Date(),
     idNumber: "",
     phoneNumber: "",
     address: "",
