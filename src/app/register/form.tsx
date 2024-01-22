@@ -20,6 +20,7 @@ const Step1: React.FC<{
   setUserData: React.Dispatch<React.SetStateAction<UserData>>;
   onNext: () => void;
 }> = ({ userData, setUserData, onNext }) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData((prevState) => ({
@@ -43,6 +44,11 @@ const Step1: React.FC<{
         dateBirth: value,
       };
     });
+  };
+
+  const handleInputClick = () => {
+    // Set the state to true when the input field is clicked
+    setShowDatePicker(true);
   };
 
   const handleNext = () => {
@@ -158,16 +164,38 @@ const Step1: React.FC<{
           }}
         >
           <text style={{ fontSize: "28px" }}>Date of Birth</text>
-          <div
+        <div
+          style={{
+            backgroundColor: "#dfdfdf",
+            width: "410px",
+            height: "45px",
+          }}
+        >
+          <input
+            type="text"
+            name="dateBirth"
+            value={userData.dateBirth.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+            onFocus={handleInputClick} // Handle input field click
+            readOnly // Make the input field read-only to prevent direct editing
             style={{
               backgroundColor: "#dfdfdf",
-              width: "410px",
+              outline: "none",
+              border: "none",
               height: "45px",
+              width: "100%",
+              caretColor: "transparent",
+              marginLeft: "10px",
             }}
-          >
-            <DayPicker mode="single" onDayClick={handleDateChange} />
-          </div>
+          />
+          {showDatePicker && ( // Render the date picker only when showDatePicker is true
+            <DayPicker
+              mode="single"
+              onDayClick={handleDateChange}
+              style={{ position: "absolute" }} // Adjust styling as needed
+            />
+          )}
         </div>
+      </div>
 
         {/* Add more input fields for other personal information */}
       </div>
@@ -193,9 +221,17 @@ const Step2: React.FC<{
   userData: UserData;
   setUserData: React.Dispatch<React.SetStateAction<UserData>>;
   onPrevious: () => void;
-  onSubmit: () => void;
-}> = ({ userData, setUserData, onPrevious, onSubmit }) => {
+  onNext: () => void;
+}> = ({ userData, setUserData, onPrevious, onNext }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleStateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setUserData((prevState) => ({
       ...prevState,
@@ -207,31 +243,426 @@ const Step2: React.FC<{
     onPrevious();
   };
 
+  const handleNext = () => {
+    onNext();
+  };
+  
+  return (
+    <div
+      style={{
+        marginTop: "50px",
+        marginLeft: "250px",
+        marginRight: "200px",
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+        <text style={{ fontSize: "28px" }}>Identification Number</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <input
+              type="text"
+              name="idNumber"
+              value={userData.idNumber}
+              onChange={handleChange}
+              style={{
+                backgroundColor: "#dfdfdf",
+                outline: "none",
+                border: "none",
+                height: "45px",
+                width: "100%",
+                caretColor: "transparent",
+                marginLeft: "10px",
+              }}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "200px",
+          }}
+        >
+          <text style={{ fontSize: "28px" }}>Phone Number</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <input
+              type="text"
+              name="phoneNumber"
+              value={userData.phoneNumber}
+              onChange={handleChange}
+              style={{
+                backgroundColor: "#dfdfdf",
+                outline: "none",
+                border: "none",
+                height: "45px",
+                width: "100%",
+                caretColor: "transparent",
+                marginLeft: "10px",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+      <br/>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+        <text style={{ fontSize: "28px" }}>Address</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <input
+              type="text"
+              name="address"
+              value={userData.address}
+              onChange={handleChange}
+              style={{
+                backgroundColor: "#dfdfdf",
+                outline: "none",
+                border: "none",
+                height: "45px",
+                width: "100%",
+                caretColor: "transparent",
+                marginLeft: "10px",
+              }}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "200px",
+          }}
+        >
+          <text style={{ fontSize: "28px" }}>City</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <input
+              type="text"
+              name="city"
+              value={userData.city}
+              onChange={handleChange}
+              style={{
+                backgroundColor: "#dfdfdf",
+                outline: "none",
+                border: "none",
+                height: "45px",
+                width: "100%",
+                caretColor: "transparent",
+                marginLeft: "10px",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+      <br/>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+        <text style={{ fontSize: "28px" }}>Postcode</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <input
+              type="number"
+              name="postcode"
+              value={userData.postcode}
+              onChange={handleChange}
+              style={{
+                backgroundColor: "#dfdfdf",
+                outline: "none",
+                border: "none",
+                height: "45px",
+                width: "100%",
+                caretColor: "transparent",
+                marginLeft: "10px",
+              }}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "200px",
+          }}
+        >
+          <text style={{ fontSize: "28px" }}>State / Federal Territories</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "410px",
+              height: "45px",
+            }}
+          >
+            <select
+              name="state"
+              value={userData.state}
+              onChange={handleStateChange}
+              style={{
+                backgroundColor: "#dfdfdf",
+                outline: "none",
+                border: "none",
+                height: "45px",
+                width: "400px",
+                marginLeft: "10px",
+              }}
+            >
+              <option value="">Select State or Federal Territories</option>
+              <option value="Johor">Johor</option>
+              <option value="Kedah">Kedah</option>
+              <option value="KualaLumpur">Kuala Lumpur</option>
+              <option value="Labuan">Labuan</option>
+              <option value="Melaka">Melaka</option>
+              <option value="Perak">Perak</option>
+              <option value="Pahang">Pahang</option>
+              <option value="Penang">Penang</option>
+              <option value="Sabah">Sabah</option>
+              <option value="Sarawak">Sarawak</option>
+              <option value="Seremban">Seremban</option>
+              <option value="Selangor">Selangor</option>
+              <option value="Terrenganu">Terrenganu</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Add more input fields for other contact information */}
+      <Button
+        text={"Previous"}
+        onClick={handlePrevious}
+        style={{
+          background: "#69BF96",
+          width: "185px",
+          height: "60px",
+          borderRadius: "14px",
+          position: "fixed",
+          bottom: "20px",
+          left: "50px",
+        }}
+      />
+      <Button
+        text={"Submit"}
+        onClick={handleNext}
+        style={{
+          background: "#69BF96",
+          width: "185px",
+          height: "60px",
+          borderRadius: "14px",
+          position: "fixed",
+          bottom: "20px",
+          right: "50px",
+        }}
+      />
+      
+</div>
+  );
+};
+
+const Confirmation: React.FC<{
+  userData: UserData;
+  onPrevious: () => void;
+  onSubmit: () => void;
+}> = ({ userData, onPrevious, onSubmit }) => {
+  const handlePrevious = () => {
+    onPrevious();
+  };
+
   const handleSubmit = () => {
     onSubmit();
   };
 
-  return (
-    <div>
-      <h2>Step 2: Contact Information</h2>
-      <input
-        type="text"
-        name="phoneNumber"
-        value={userData.phoneNumber}
-        onChange={handleChange}
-        placeholder="Phone Number"
+  return(
+    <div
+      style={{
+        marginTop: "50px",
+        marginLeft: "250px",
+        marginRight: "200px",
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+        <text style={{ fontSize: "25px" }}>First Name</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <text>{userData.firstName}</text>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "200px",
+          }}
+        >
+          <text style={{ fontSize: "25px" }}>Last Name</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+          <text>{userData.lastName}</text>
+          </div>
+        </div>
+        </div>
+        <br/>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+        <text style={{ fontSize: "25px" }}>Gender</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+          <text>{userData.gender}</text>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "200px",
+          }}
+        >
+          <text style={{ fontSize: "25px" }}>Date of Birth</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <text>{userData.dateBirth.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</text>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+        <text style={{ fontSize: "25px" }}>Identification Number</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+          <text>{userData.idNumber}</text>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "200px",
+          }}
+        >
+          <text style={{ fontSize: "25px" }}>Phone Number</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <text>{userData.phoneNumber}</text>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+        <text style={{ fontSize: "25px" }}>Postcode</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+          <text>{userData.postcode}</text>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "200px",
+          }}
+        >
+          <text style={{ fontSize: "25px" }}>State / Federal Territories</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <text>{userData.state}</text>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <Button
+        text={"Previous"}
+        onClick={handlePrevious}
+        style={{
+          background: "#69BF96",
+          width: "185px",
+          height: "60px",
+          borderRadius: "14px",
+          position: "fixed",
+          bottom: "20px",
+          left: "50px",
+        }}
       />
-      <input
-        type="text"
-        name="address"
-        value={userData.address}
-        onChange={handleChange}
-        placeholder="Address"
+      <Button
+        text={"Submit"}
+        onClick={handleSubmit}
+        style={{
+          background: "#69BF96",
+          width: "185px",
+          height: "60px",
+          borderRadius: "14px",
+          position: "fixed",
+          bottom: "20px",
+          right: "50px",
+        }}
       />
-      {/* Add more input fields for other contact information */}
-      <button onClick={handlePrevious}>Previous</button>
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
+      </div>
   );
 };
 
@@ -259,8 +690,7 @@ const InputForm = () => {
   };
 
   const handleSubmit = () => {
-    // Handle form submission
-    console.log(userData);
+   
   };
 
   return (
@@ -372,15 +802,136 @@ const InputForm = () => {
           </div>
         </div>
       )}
+      
       {currentStep === 2 && (
-        <Step2
-          userData={userData}
-          setUserData={setUserData}
-          onPrevious={handlePrevious}
-          onSubmit={handleSubmit}
-        />
-      )}
+  <div>
+    <div
+      style={{
+        backgroundColor: "#69BF96",
+        height: "80px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "#D9D9D9",
+          borderTopRightRadius: "25px",
+          borderBottomRightRadius: "25px",
+          height: "80px",
+          width: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ marginLeft: "220px" }}>
+          <div
+              className="small-circle"
+              style={{
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "center",
+                background: "#B8B8B8",
+              }}
+            >
+            <span style={{ color: "white", fontSize: "24px" }}>
+              <strong>1</strong>
+            </span>
+          </div>
+            <span
+            style={{
+              color: "#B8B8B8",
+              fontSize: "32px",
+              marginLeft: "90px",
+            }}
+          >
+            <strong>Your Profile</strong>
+          </span>
+        </div>
+      </div>
+
+      <div
+        style={{
+          height: "80px",
+          display: "flex",
+          alignItems: "center",
+          marginRight: "230px",
+        }}
+      >
+        <div>
+            <div
+            className="small-circle"
+            style={{
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <span style={{ color: "#69BF96", fontSize: "24px" }}>
+              <strong>2</strong>
+            </span>
+          </div>
+          <span
+            style={{
+              color: "white",
+              fontSize: "32px",
+              marginLeft: "90px",
+            }}
+          >
+            <strong>Your Information</strong>
+          </span>
+        </div>
+      </div>
     </div>
+
+    <div>
+      <div
+        style={{
+          flexDirection: "column",
+          display: "flex",
+          textAlign: "center",
+          marginTop: "20px",
+        }}
+      >
+        <span style={{ color: "#69BF96", fontSize: "48px" }}>
+          <strong>Your Information</strong>
+        </span>
+        <span style={{ color: "black", fontSize: "24px" }}>
+          Next, enter the following information to create your account.
+        </span>
+      </div>
+
+      <Step2
+        userData={userData}
+        setUserData={setUserData}
+        onPrevious={handlePrevious}
+        onNext={handleNext}
+      />
+    </div>
+  </div>
+)}
+  {currentStep === 3 && (
+  <div
+    style={{
+      flexDirection: "column",
+      display: "flex",
+      textAlign: "center",
+      marginTop: "80px",
+    }}
+  >
+    <span style={{ color: "#69BF96", fontSize: "30px" }}>
+      <strong>Please ensure that your information is correct as below:</strong>
+    </span>
+    <Confirmation
+      userData={userData}
+      onPrevious={handlePrevious}
+      onSubmit={handleSubmit}
+    />
+  </div>
+)}
+ </div> 
   );
 };
 
