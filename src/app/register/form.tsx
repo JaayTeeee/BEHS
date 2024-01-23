@@ -164,38 +164,42 @@ const Step1: React.FC<{
           }}
         >
           <text style={{ fontSize: "28px" }}>Date of Birth</text>
-        <div
-          style={{
-            backgroundColor: "#dfdfdf",
-            width: "410px",
-            height: "45px",
-          }}
-        >
-          <input
-            type="text"
-            name="dateBirth"
-            value={userData.dateBirth.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-            onFocus={handleInputClick} // Handle input field click
-            readOnly // Make the input field read-only to prevent direct editing
+          <div
             style={{
               backgroundColor: "#dfdfdf",
-              outline: "none",
-              border: "none",
+              width: "410px",
               height: "45px",
-              width: "100%",
-              caretColor: "transparent",
-              marginLeft: "10px",
             }}
-          />
-          {showDatePicker && ( // Render the date picker only when showDatePicker is true
-            <DayPicker
-              mode="single"
-              onDayClick={handleDateChange}
-              style={{ position: "absolute" }} // Adjust styling as needed
+          >
+            <input
+              type="text"
+              name="dateBirth"
+              value={userData.dateBirth.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+              onFocus={handleInputClick} // Handle input field click
+              readOnly // Make the input field read-only to prevent direct editing
+              style={{
+                backgroundColor: "#dfdfdf",
+                outline: "none",
+                border: "none",
+                height: "45px",
+                width: "100%",
+                caretColor: "transparent",
+                marginLeft: "10px",
+              }}
             />
-          )}
+            {showDatePicker && ( // Render the date picker only when showDatePicker is true
+              <DayPicker
+                mode="single"
+                onDayClick={handleDateChange}
+                style={{ position: "absolute" }} // Adjust styling as needed
+              />
+            )}
+          </div>
         </div>
-      </div>
 
         {/* Add more input fields for other personal information */}
       </div>
@@ -246,7 +250,7 @@ const Step2: React.FC<{
   const handleNext = () => {
     onNext();
   };
-  
+
   return (
     <div
       style={{
@@ -257,7 +261,7 @@ const Step2: React.FC<{
     >
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-        <text style={{ fontSize: "28px" }}>Identification Number</text>
+          <text style={{ fontSize: "28px" }}>Identification Number</text>
           <div
             style={{
               backgroundColor: "#dfdfdf",
@@ -315,10 +319,10 @@ const Step2: React.FC<{
           </div>
         </div>
       </div>
-      <br/>
+      <br />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-        <text style={{ fontSize: "28px" }}>Address</text>
+          <text style={{ fontSize: "28px" }}>Address</text>
           <div
             style={{
               backgroundColor: "#dfdfdf",
@@ -376,10 +380,10 @@ const Step2: React.FC<{
           </div>
         </div>
       </div>
-      <br/>
+      <br />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-        <text style={{ fontSize: "28px" }}>Postcode</text>
+          <text style={{ fontSize: "28px" }}>Postcode</text>
           <div
             style={{
               backgroundColor: "#dfdfdf",
@@ -478,8 +482,7 @@ const Step2: React.FC<{
           right: "50px",
         }}
       />
-      
-</div>
+    </div>
   );
 };
 
@@ -496,7 +499,7 @@ const Confirmation: React.FC<{
     onSubmit();
   };
 
-  return(
+  return (
     <div
       style={{
         marginTop: "50px",
@@ -506,7 +509,7 @@ const Confirmation: React.FC<{
     >
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-        <text style={{ fontSize: "25px" }}>First Name</text>
+          <text style={{ fontSize: "25px" }}>First Name</text>
           <div
             style={{
               backgroundColor: "#dfdfdf",
@@ -514,7 +517,9 @@ const Confirmation: React.FC<{
               height: "45px",
             }}
           >
-            <text>{userData.firstName}</text>
+            <div style={{ marginTop: "10px" }}>
+              <text>{userData.firstName}</text>
+            </div>
           </div>
         </div>
         <div
@@ -532,14 +537,16 @@ const Confirmation: React.FC<{
               height: "45px",
             }}
           >
-          <text>{userData.lastName}</text>
+            <div style={{ marginTop: "10px" }}>
+              <text>{userData.lastName}</text>
+            </div>
           </div>
         </div>
-        </div>
-        <br/>
+      </div>
+      <br />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-        <text style={{ fontSize: "25px" }}>Gender</text>
+          <text style={{ fontSize: "25px" }}>Gender</text>
           <div
             style={{
               backgroundColor: "#dfdfdf",
@@ -547,7 +554,9 @@ const Confirmation: React.FC<{
               height: "45px",
             }}
           >
-          <text>{userData.gender}</text>
+            <div style={{ marginTop: "10px" }}>
+              <text>{userData.gender}</text>
+            </div>
           </div>
         </div>
         <div
@@ -565,14 +574,22 @@ const Confirmation: React.FC<{
               height: "45px",
             }}
           >
-            <text>{userData.dateBirth.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</text>
+            <div style={{ marginTop: "10px" }}>
+              <text>
+                {userData.dateBirth.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </text>
+            </div>
           </div>
         </div>
       </div>
-      <br/>
+      <br />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-        <text style={{ fontSize: "25px" }}>Identification Number</text>
+          <text style={{ fontSize: "25px" }}>Identification Number</text>
           <div
             style={{
               backgroundColor: "#dfdfdf",
@@ -580,7 +597,9 @@ const Confirmation: React.FC<{
               height: "45px",
             }}
           >
-          <text>{userData.idNumber}</text>
+            <div style={{ marginTop: "10px" }}>
+              <text>{userData.idNumber}</text>
+            </div>
           </div>
         </div>
         <div
@@ -598,14 +617,16 @@ const Confirmation: React.FC<{
               height: "45px",
             }}
           >
-            <text>{userData.phoneNumber}</text>
+            <div style={{ marginTop: "10px" }}>
+              <text>{userData.phoneNumber}</text>
+            </div>
           </div>
         </div>
       </div>
-      <br/>
+      <br />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-        <text style={{ fontSize: "25px" }}>Postcode</text>
+          <text style={{ fontSize: "25px" }}>Postcode</text>
           <div
             style={{
               backgroundColor: "#dfdfdf",
@@ -613,7 +634,9 @@ const Confirmation: React.FC<{
               height: "45px",
             }}
           >
-          <text>{userData.postcode}</text>
+            <div style={{ marginTop: "10px" }}>
+              <text>{userData.postcode}</text>
+            </div>
           </div>
         </div>
         <div
@@ -631,11 +654,13 @@ const Confirmation: React.FC<{
               height: "45px",
             }}
           >
-            <text>{userData.state}</text>
+            <div style={{ marginTop: "10px" }}>
+              <text>{userData.state}</text>
+            </div>
           </div>
         </div>
       </div>
-      <br/>
+      <br />
       <Button
         text={"Previous"}
         onClick={handlePrevious}
@@ -662,7 +687,7 @@ const Confirmation: React.FC<{
           right: "50px",
         }}
       />
-      </div>
+    </div>
   );
 };
 
@@ -689,9 +714,7 @@ const InputForm = () => {
     setCurrentStep((prevStep) => prevStep - 1);
   };
 
-  const handleSubmit = () => {
-   
-  };
+  const handleSubmit = () => {};
 
   return (
     <div>
@@ -802,136 +825,139 @@ const InputForm = () => {
           </div>
         </div>
       )}
-      
+
       {currentStep === 2 && (
-  <div>
-    <div
-      style={{
-        backgroundColor: "#69BF96",
-        height: "80px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "#D9D9D9",
-          borderTopRightRadius: "25px",
-          borderBottomRightRadius: "25px",
-          height: "80px",
-          width: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ marginLeft: "220px" }}>
+        <div>
           <div
-              className="small-circle"
+            style={{
+              backgroundColor: "#69BF96",
+              height: "80px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <div
               style={{
-                alignItems: "center",
+                backgroundColor: "#D9D9D9",
+                borderTopRightRadius: "25px",
+                borderBottomRightRadius: "25px",
+                height: "80px",
+                width: "50%",
                 display: "flex",
+                alignItems: "center",
                 justifyContent: "center",
-                background: "#B8B8B8",
               }}
             >
-            <span style={{ color: "white", fontSize: "24px" }}>
-              <strong>1</strong>
-            </span>
-          </div>
-            <span
-            style={{
-              color: "#B8B8B8",
-              fontSize: "32px",
-              marginLeft: "90px",
-            }}
-          >
-            <strong>Your Profile</strong>
-          </span>
-        </div>
-      </div>
+              <div style={{ marginLeft: "20px" }}>
+                <div
+                  className="small-circle"
+                  style={{
+                    alignItems: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    background: "#B8B8B8",
+                  }}
+                >
+                  <span style={{ color: "white", fontSize: "24px" }}>
+                    <strong>1</strong>
+                  </span>
+                </div>
+                <span
+                  style={{
+                    color: "#B8B8B8",
+                    fontSize: "32px",
+                    marginLeft: "90px",
+                    marginRight: "20px",
+                  }}
+                >
+                  <strong>Your Profile</strong>
+                </span>
+              </div>
+            </div>
 
-      <div
-        style={{
-          height: "80px",
-          display: "flex",
-          alignItems: "center",
-          marginRight: "230px",
-        }}
-      >
-        <div>
             <div
-            className="small-circle"
-            style={{
-              alignItems: "center",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <span style={{ color: "#69BF96", fontSize: "24px" }}>
-              <strong>2</strong>
-            </span>
+              style={{
+                height: "80px",
+                display: "flex",
+                alignItems: "center",
+                marginRight: "230px",
+              }}
+            >
+              <div>
+                <div
+                  className="small-circle"
+                  style={{
+                    alignItems: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <span style={{ color: "#69BF96", fontSize: "24px" }}>
+                    <strong>2</strong>
+                  </span>
+                </div>
+                <span
+                  style={{
+                    color: "white",
+                    fontSize: "32px",
+                    marginLeft: "90px",
+                  }}
+                >
+                  <strong>Your Information</strong>
+                </span>
+              </div>
+            </div>
           </div>
-          <span
-            style={{
-              color: "white",
-              fontSize: "32px",
-              marginLeft: "90px",
-            }}
-          >
-            <strong>Your Information</strong>
-          </span>
+
+          <div>
+            <div
+              style={{
+                flexDirection: "column",
+                display: "flex",
+                textAlign: "center",
+                marginTop: "20px",
+              }}
+            >
+              <span style={{ color: "#69BF96", fontSize: "48px" }}>
+                <strong>Your Information</strong>
+              </span>
+              <span style={{ color: "black", fontSize: "24px" }}>
+                Next, enter the following information to create your account.
+              </span>
+            </div>
+
+            <Step2
+              userData={userData}
+              setUserData={setUserData}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+            />
+          </div>
         </div>
-      </div>
+      )}
+      {currentStep === 3 && (
+        <div
+          style={{
+            flexDirection: "column",
+            display: "flex",
+            textAlign: "center",
+            marginTop: "80px",
+          }}
+        >
+          <span style={{ color: "#69BF96", fontSize: "30px" }}>
+            <strong>
+              Please ensure that your information is correct as below:
+            </strong>
+          </span>
+          <Confirmation
+            userData={userData}
+            onPrevious={handlePrevious}
+            onSubmit={handleSubmit}
+          />
+        </div>
+      )}
     </div>
-
-    <div>
-      <div
-        style={{
-          flexDirection: "column",
-          display: "flex",
-          textAlign: "center",
-          marginTop: "20px",
-        }}
-      >
-        <span style={{ color: "#69BF96", fontSize: "48px" }}>
-          <strong>Your Information</strong>
-        </span>
-        <span style={{ color: "black", fontSize: "24px" }}>
-          Next, enter the following information to create your account.
-        </span>
-      </div>
-
-      <Step2
-        userData={userData}
-        setUserData={setUserData}
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-      />
-    </div>
-  </div>
-)}
-  {currentStep === 3 && (
-  <div
-    style={{
-      flexDirection: "column",
-      display: "flex",
-      textAlign: "center",
-      marginTop: "80px",
-    }}
-  >
-    <span style={{ color: "#69BF96", fontSize: "30px" }}>
-      <strong>Please ensure that your information is correct as below:</strong>
-    </span>
-    <Confirmation
-      userData={userData}
-      onPrevious={handlePrevious}
-      onSubmit={handleSubmit}
-    />
-  </div>
-)}
- </div> 
   );
 };
 

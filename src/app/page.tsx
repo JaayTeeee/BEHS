@@ -1,9 +1,36 @@
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import {
+  getLedgerWallet,
+  getPhantomWallet,
+  getSlopeWallet,
+  getSolflareWallet,
+  getSolletExtensionWallet,
+  getSolletWallet,
+} from "@solana/wallet-adapter-wallets";
+import { clusterApiUrl } from "@solana/web3.js";
 import Image from "next/image";
+import React from "react";
 import Button from "../../public/components/RectangleButton";
 import HealthCare from "../../public/icons/icons-healthcare.png";
 import MedicalImage from "../../public/icons/medical.jpg";
 
-export default function Home() {
+function Home() {
+  const network = WalletAdapterNetwork.Mainnet;
+
+  const endpoint = React.useMemo(() => clusterApiUrl(network), [network]);
+
+  const wallets = React.useMemo(
+    () => [
+      getPhantomWallet(),
+      getSlopeWallet(),
+      getSolflareWallet(),
+      getLedgerWallet(),
+      getSolletWallet({ network }),
+      getSolletExtensionWallet({ network }),
+    ],
+    [network]
+  );
+
   return (
     <main>
       <div style={{ display: "flex", alignItems: "center" }}>
