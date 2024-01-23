@@ -495,8 +495,55 @@ const Confirmation: React.FC<{
     onPrevious();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     onSubmit();
+
+    try {
+      const InsertUserdata = {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        gender: userData.gender,
+        dateBirth: userData.dateBirth,
+        idNumber: userData.idNumber,
+        phoneNumber: userData.phoneNumber,
+        address: userData.address,
+        city: userData.city,
+        postcode: userData.postcode,
+        state: userData.state,
+      };
+
+      const request = new Request('http://localhost:3001/api/insertUserdata', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }),
+        mode: 'cors', // Set CORS mode to 'cors'
+        body: JSON.stringify(InsertUserdata)
+      });
+
+      const res = await fetch(request);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch: ${res.statusText}`);
+      }
+      const response = await res.json();
+
+      /*if (response.success) {
+        if (walletAddress !== null) {
+          const encodedWalletAddress = encodeURIComponent(walletAddress);
+          console.log('Encoded Address:', encodedWalletAddress);
+          setRedirectTo(`/welcome?walletAddress=${encodedWalletAddress}`);
+          console.log('Redirecting to:', redirectTo);
+        } else {
+          console.error('Address is null.');
+          // Handle the case when address is null
+        }
+      } else {
+        console.error('Failed to save data');
+      }*/
+    } catch (error) {
+      console.error('Failed to save data:', error);
+    }
   };
 
   return (
@@ -619,6 +666,43 @@ const Confirmation: React.FC<{
           >
             <div style={{ marginTop: "10px" }}>
               <text>{userData.phoneNumber}</text>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <text style={{ fontSize: "25px" }}>Address</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <div style={{ marginTop: "10px" }}>
+              <text>{userData.address}</text>
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "200px",
+          }}
+        >
+          <text style={{ fontSize: "25px" }}>City</text>
+          <div
+            style={{
+              backgroundColor: "#dfdfdf",
+              width: "400px",
+              height: "45px",
+            }}
+          >
+            <div style={{ marginTop: "10px" }}>
+              <text>{userData.city}</text>
             </div>
           </div>
         </div>
@@ -942,10 +1026,10 @@ const InputForm = () => {
             flexDirection: "column",
             display: "flex",
             textAlign: "center",
-            marginTop: "80px",
+            marginTop: "35px",
           }}
         >
-          <span style={{ color: "#69BF96", fontSize: "30px" }}>
+          <span style={{ color: "#69BF96", fontSize: "30px", marginBottom: "-15px" }}>
             <strong>
               Please ensure that your information is correct as below:
             </strong>
