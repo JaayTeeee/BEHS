@@ -3,8 +3,17 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import LogoutImage from "../../../public/icons/icons-logout.png";
 const LogoutButton = () => {
+  const { disconnect, connected } = useWallet();
+  const router = useRouter();
+  const disconnectWallet = () => {
+    disconnect();
+    if (!connected) {
+      router.push("/");
+    }
+  };
+
   return (
-    <button onClick={""}>
+    <button onClick={disconnectWallet}>
       <Image
         src={LogoutImage}
         alt="Button Icon"
