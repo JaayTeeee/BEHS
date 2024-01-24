@@ -1,8 +1,8 @@
 import Image from "next/image";
-import HomePageButton from "../../../public/components/HomePageButton";
-import SearchButton from "../../../public/components/searchButton";
 import searchIcon from "../../../public/icons/icons-search-black.png";
-import RectangleButton from "../../../public/components/RectangleButton";
+import HomePageButton from "../components/HomePageButton";
+import RectangleButton from "../components/RectangleButton";
+import SearchButton from "../components/searchButton";
 
 export default function Research() {
   return (
@@ -73,7 +73,8 @@ export default function Research() {
             />
             <SearchButton text="Search" onClick={""} />
           </div>
-          <div className="green-bar"
+          <div
+            className="green-bar"
             style={{
               display: "flex",
               alignItems: "center",
@@ -81,22 +82,27 @@ export default function Research() {
             }}
           >
             <div className="greenbar-title">
-              <strong style={{marginRight: "40px" }}>Research ID</strong>
-              <strong style={{marginRight: "40px" }}>Date</strong>
-              <strong style={{marginRight: "150px" }}>Project Name</strong>
-              <strong style={{marginRight: "30px" }}>Members Joined</strong>
+              <strong style={{ marginRight: "40px" }}>Research ID</strong>
+              <strong style={{ marginRight: "40px" }}>Date</strong>
+              <strong style={{ marginRight: "150px" }}>Project Name</strong>
+              <strong style={{ marginRight: "30px" }}>Members Joined</strong>
               <strong>Deadline</strong>
             </div>
-            <RectangleButton text="DETAILS" textStyle={{fontSize: "30px", fontWeight: "bold" }} onClick={""} />
+            <RectangleButton
+              text="DETAILS"
+              textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+              onClick={""}
+            />
           </div>
-          <br/>
+          <br />
           <div
             className="BEHS"
             style={{ fontSize: "35px", marginRight: "500px" }}
           >
             <strong>Participated Researches:</strong>
           </div>
-          <div className="green-bar"
+          <div
+            className="green-bar"
             style={{
               display: "flex",
               alignItems: "center",
@@ -104,11 +110,15 @@ export default function Research() {
             }}
           >
             <div className="greenbar-title">
-              <strong style={{marginRight: "70px" }}>Research ID</strong>
-              <strong style={{marginRight: "60px" }}>Date</strong>
-              <strong style={{marginRight: "200px" }}>Project Name</strong>
+              <strong style={{ marginRight: "70px" }}>Research ID</strong>
+              <strong style={{ marginRight: "60px" }}>Date</strong>
+              <strong style={{ marginRight: "200px" }}>Project Name</strong>
             </div>
-            <RectangleButton text="DETAILS" textStyle={{fontSize: "30px", fontWeight: "bold" }} onClick={""} />
+            <RectangleButton
+              text="DETAILS"
+              textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+              onClick={""}
+            />
           </div>
           {/* Placeholder for participated researches */}
         </div>

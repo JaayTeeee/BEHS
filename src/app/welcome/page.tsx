@@ -1,10 +1,12 @@
-import ButtonWithImage from "../../../public/components/ButtonWithImage";
-import HomePageButton from "../../../public/components/HomePageButton";
-import UserProfileButton from "../../../public/components/UserProfileButton";
+"use client";
+
 import MedRecordImage from "../../../public/icons/icons-medical-record.png";
 import PermissionImage from "../../../public/icons/icons-permission.png";
 import ResearchImage from "../../../public/icons/icons-research.png";
-import LogoutButton from "../../../public/components/LogoutButton";
+import ButtonWithImage from "../components/ButtonWithImage";
+import HomePageButton from "../components/HomePageButton";
+import LogoutButton from "../components/LogoutButton";
+import UserProfileButton from "../components/UserProfileButton";
 
 export default function Home() {
   return (

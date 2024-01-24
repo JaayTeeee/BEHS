@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import HealthCare from "../../public/icons/icons-healthcare.png";
+import UserProfileImage from "../../../public/icons/icons-user-profile.png";
 
-const HomePageButton = ({}) => {
+const UserProfileButton = ({}) => {
   return (
-    <Link href="/welcome">
+    <Link href="/profile">
       <Image
-        src={HealthCare}
+        src={UserProfileImage}
         alt="Button Icon"
         style={{ marginBottom: "20px", height: "75px", width: "75px" }}
       />
@@ -14,4 +14,4 @@ const HomePageButton = ({}) => {
   );
 };
 
-export default HomePageButton;
+export default UserProfileButton;
