@@ -1,4 +1,4 @@
-import Button from "./Button";
+import Button from "./RectangleButton";
 
 const TermsBox = () => {
   return (
@@ -74,15 +74,15 @@ const TermsBox = () => {
             2.2 Non-Personal Information: The non-personal information we
             collect may be used for analytics, monitoring, and improving our
             [website/app/service] and its performance. 3. Information Sharing We
-            do not sell, trade, or rent users' personal information to third
-            parties. However, we may share personal information with trusted
-            third-party service providers who assist us in operating our
+            do not sell, trade, or rent users&apos; personal information to
+            third parties. However, we may share personal information with
+            trusted third-party service providers who assist us in operating our
             business, conducting transactions, or providing services to users.
             These third parties are required to maintain the confidentiality and
             security of the personal information. We may also disclose personal
             information if required by law or to protect our rights, safety, or
             property, or the rights, safety, or property of others. 4. Security
-            We are committed to ensuring the security of users' personal
+            We are committed to ensuring the security of users&apos; personal
             information. We implement appropriate technical and organizational
             measures to protect against unauthorized access, alteration,
             disclosure, or destruction of personal information. 5. Third-Party
@@ -90,15 +90,15 @@ const TermsBox = () => {
             websites. We have no control over the content, privacy practices, or
             security of these third-party websites. We encourage users to review
             the privacy policies of these websites before providing any personal
-            information. 6. Children's Privacy Our [website/app/service] is not
-            intended for use by individuals under the age of [insert minimum age
-            requirement]. We do not knowingly collect personal information from
-            children. If we become aware that we have inadvertently collected
-            personal information from a child under the applicable age limit, we
-            will take steps to delete the information as soon as possible. 7.
-            Updates to this Privacy Policy We reserve the right to update or
-            modify this Privacy Policy at any time. Any changes will be
-            effective immediately upon posting the updated policy on our
+            information. 6. Children&apos;s Privacy Our [website/app/service] is
+            not intended for use by individuals under the age of [insert minimum
+            age requirement]. We do not knowingly collect personal information
+            from children. If we become aware that we have inadvertently
+            collected personal information from a child under the applicable age
+            limit, we will take steps to delete the information as soon as
+            possible. 7. Updates to this Privacy Policy We reserve the right to
+            update or modify this Privacy Policy at any time. Any changes will
+            be effective immediately upon posting the updated policy on our
             [website/app/service]. We encourage users to review this policy
             periodically for any updates. 8. Contact Us If you have any
             questions or concerns about this Privacy Policy or our data

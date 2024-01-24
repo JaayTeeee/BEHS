@@ -33,8 +33,13 @@ export default function Research() {
           marginBottom: "100px",
         }}
       >
-        <div className="BEHS" style={{ fontSize: "78px", marginLeft: "20px" }}>
-          <strong>Research Opportunities</strong>
+        <div style={{ flexDirection: "column", marginLeft: "45px" }}>
+          <div className="BEHS" style={{ fontSize: "78px" }}>
+            <strong>Retrieve Medical Record</strong>
+          </div>
+          <div style={{ marginRight: "800px" }}>
+            <strong>Last Update:[Date]</strong>
+          </div>
         </div>
 
         <div
@@ -46,9 +51,14 @@ export default function Research() {
         >
           <div
             className="BEHS"
-            style={{ fontSize: "35px", marginRight: "520px" }}
+            style={{
+              fontSize: "35px",
+              marginRight: "570px",
+              color: "black",
+              textDecorationLine: "underline",
+            }}
           >
-            <strong>Available Researches:</strong>
+            <strong>Insert New Record:</strong>
           </div>
           <div className="search-box" style={{ marginLeft: "1050px" }}>
             <Image
@@ -68,7 +78,7 @@ export default function Research() {
                 backgroundColor: "#dfdfdf",
                 outline: "none",
                 border: "none",
-                marginLeft: "5px",
+                marginLeft: "10px",
               }}
             />
             <SearchButton text="Search" onClick={""} />
@@ -82,11 +92,10 @@ export default function Research() {
             }}
           >
             <div className="greenbar-title">
-              <strong style={{ marginRight: "40px" }}>Research ID</strong>
-              <strong style={{ marginRight: "40px" }}>Date</strong>
-              <strong style={{ marginRight: "150px" }}>Project Name</strong>
-              <strong style={{ marginRight: "30px" }}>Members Joined</strong>
-              <strong>Deadline</strong>
+              <strong style={{ marginRight: "50px" }}>Record ID</strong>
+              <strong style={{ marginRight: "50px" }}>Date</strong>
+              <strong style={{ marginRight: "150px" }}>Patient ID</strong>
+              <strong style={{ marginRight: "30px" }}>Last Recorded By:</strong>
             </div>
             <RectangleButton
               text="DETAILS"
@@ -95,32 +104,6 @@ export default function Research() {
             />
           </div>
           <br />
-          <div
-            className="BEHS"
-            style={{ fontSize: "35px", marginRight: "460px" }}
-          >
-            <strong>Participated Researches:</strong>
-          </div>
-          <div
-            className="green-bar"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <div className="greenbar-title">
-              <strong style={{ marginRight: "70px" }}>Research ID</strong>
-              <strong style={{ marginRight: "60px" }}>Date</strong>
-              <strong style={{ marginRight: "200px" }}>Project Name</strong>
-            </div>
-            <RectangleButton
-              text="DETAILS"
-              textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-              onClick={""}
-            />
-          </div>
-          {/* Placeholder for participated researches */}
         </div>
       </div>
     </main>
