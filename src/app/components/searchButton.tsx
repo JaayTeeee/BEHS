@@ -12,7 +12,7 @@ const searchButton: React.FC<searchButtonProps> = ({ text, onClick }) => {
       style={{
         color: "white",
         background: "#339f6b",
-        width: "75px",
+        width: "100px",
         height: "40px",
         margin: "10px",
         border: "none",

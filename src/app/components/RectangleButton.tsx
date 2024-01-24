@@ -11,7 +11,7 @@ const Button: React.FC<ButtonProps> = ({ text, onClick, style, textStyle }) => {
   const defaultStyles: React.CSSProperties = {
     color: "white",
     background: "#339f6b",
-    width: "225px",
+    width: "215px",
     height: "75px",
     margin: "10px",
     zIndex: 999,
