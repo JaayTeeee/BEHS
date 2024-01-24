@@ -1,7 +1,7 @@
-import HomePageButton from "../../../public/components/HomePageButton";
-import ApproveButton from "../../../public/components/approveButton";
-import HistoryTable from "../../../public/components/historyPermissionTable";
-import RejectButton from "../../../public/components/rejectButton";
+import HomePageButton from "../components/HomePageButton";
+import ApproveButton from "../components/approveButton";
+import HistoryTable from "../components/historyPermissionTable";
+import RejectButton from "../components/rejectButton";
 
 export default function Permissions() {
   return (

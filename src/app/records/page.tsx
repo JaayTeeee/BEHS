@@ -1,5 +1,5 @@
-import HomePageButton from "../../../public/components/HomePageButton";
-import TermsBox from "../../../public/components/TermsBox";
+import HomePageButton from "../components/HomePageButton";
+import TermsBox from "../components/TermsBox";
 
 export default function Records() {
   return (

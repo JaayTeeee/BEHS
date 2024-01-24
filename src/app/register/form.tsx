@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { DayPicker } from "react-day-picker";
-import Button from "../../../public/components/RectangleButton";
+import Button from "../components/RectangleButton";
 interface UserData {
   firstName: string;
   lastName: string;
