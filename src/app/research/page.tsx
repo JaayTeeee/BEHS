@@ -33,7 +33,7 @@ export default function Research() {
           marginBottom: "100px",
         }}
       >
-        <div className="BEHS" style={{ fontSize: "78px" }}>
+        <div className="BEHS" style={{ fontSize: "78px", marginLeft: "20px" }}>
           <strong>Research Opportunities</strong>
         </div>
 
@@ -46,7 +46,7 @@ export default function Research() {
         >
           <div
             className="BEHS"
-            style={{ fontSize: "35px", marginRight: "550px" }}
+            style={{ fontSize: "35px", marginRight: "520px" }}
           >
             <strong>Available Researches:</strong>
           </div>
@@ -97,7 +97,7 @@ export default function Research() {
           <br />
           <div
             className="BEHS"
-            style={{ fontSize: "35px", marginRight: "500px" }}
+            style={{ fontSize: "35px", marginRight: "460px" }}
           >
             <strong>Participated Researches:</strong>
           </div>
