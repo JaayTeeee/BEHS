@@ -494,23 +494,22 @@ const Confirmation: React.FC<{
   onSubmit: () => void;
 }> = ({ userData, onPrevious, onSubmit }) => {
   const router = useRouter();
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
-
+  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
+  
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get('walletAddress');
+    const addressFromQuery = urlSearchParams.get('WalletAddress');
     setWalletAddress(addressFromQuery);
-  }, [router.query?.walletAddress]);
-
+  }, [fetchWalletAddress]);
   const handlePrevious = () => {
     onPrevious();
   };
 
   const handleSubmit = async () => {
     onSubmit();
-
     try {
       const insertUserData = {
+        walletAddress: fetchWalletAddress,
         firstName: userData.firstName,
         lastName: userData.lastName,
         gender: userData.gender,
@@ -540,8 +539,8 @@ const Confirmation: React.FC<{
 
       const response = await res.json();
 
-      if (response.success && walletAddress !== null) {
-        const encodedWalletAddress = encodeURIComponent(walletAddress);
+      if (response.success && fetchWalletAddress !== null) {
+        const encodedWalletAddress = encodeURIComponent(fetchWalletAddress);
         console.log('Encoded Address:', encodedWalletAddress);
         router.push(`/welcome?walletAddress=${encodedWalletAddress}`);
       } else {
