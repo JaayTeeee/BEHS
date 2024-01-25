@@ -1,7 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import Button from "../components/RectangleButton";
+import { useRouter } from "next/navigation";
+
 interface UserData {
   firstName: string;
   lastName: string;
@@ -491,6 +493,15 @@ const Confirmation: React.FC<{
   onPrevious: () => void;
   onSubmit: () => void;
 }> = ({ userData, onPrevious, onSubmit }) => {
+  const router = useRouter();
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const addressFromQuery = urlSearchParams.get('walletAddress');
+    setWalletAddress(addressFromQuery);
+  }, [router.query?.walletAddress]);
+
   const handlePrevious = () => {
     onPrevious();
   };
@@ -499,7 +510,7 @@ const Confirmation: React.FC<{
     onSubmit();
 
     try {
-      const InsertUserdata = {
+      const insertUserData = {
         firstName: userData.firstName,
         lastName: userData.lastName,
         gender: userData.gender,
@@ -516,31 +527,27 @@ const Confirmation: React.FC<{
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         }),
         mode: 'cors', // Set CORS mode to 'cors'
-        body: JSON.stringify(InsertUserdata)
+        body: JSON.stringify(insertUserData),
       });
 
       const res = await fetch(request);
       if (!res.ok) {
         throw new Error(`Failed to fetch: ${res.statusText}`);
       }
+
       const response = await res.json();
 
-      /*if (response.success) {
-        if (walletAddress !== null) {
-          const encodedWalletAddress = encodeURIComponent(walletAddress);
-          console.log('Encoded Address:', encodedWalletAddress);
-          setRedirectTo(`/welcome?walletAddress=${encodedWalletAddress}`);
-          console.log('Redirecting to:', redirectTo);
-        } else {
-          console.error('Address is null.');
-          // Handle the case when address is null
-        }
+      if (response.success && walletAddress !== null) {
+        const encodedWalletAddress = encodeURIComponent(walletAddress);
+        console.log('Encoded Address:', encodedWalletAddress);
+        router.push(`/welcome?walletAddress=${encodedWalletAddress}`);
       } else {
-        console.error('Failed to save data');
-      }*/
+        console.error('Address is null or response is not successful.');
+        // Handle the case when address is null or response is not successful
+      }
     } catch (error) {
       console.error('Failed to save data:', error);
     }
