@@ -6,6 +6,7 @@ import ButtonWithImage from "../components/ButtonWithImage";
 import HomePageButton from "../components/HomePageButton";
 import LogoutButton from "../components/LogoutButton";
 import UserProfileButton from "../components/UserProfileButton";
+import CheckUsername from "../components/getUsername";
 
 export default function Home() {
   return (
@@ -47,7 +48,7 @@ export default function Home() {
         }}
       >
         <div className="BEHS" style={{ fontSize: "65px" }}>
-          <strong>WELCOME, [XXX]</strong>
+          <strong>WELCOME, <CheckUsername /></strong>
         </div>
       </div>
       <div

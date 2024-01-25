@@ -7,7 +7,7 @@ import ButtonWithImage from "../components/ButtonWithImage";
 import HomePageButton from "../components/HomePageButton";
 import LogoutButton from "../components/LogoutButton";
 import UserProfileButton from "../components/UserProfileButton";
-import CheckUsername from "./getUsername";
+import CheckUsername from "../components/getUsername";
 
 export default function Home() {
   return (

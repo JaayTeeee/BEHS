@@ -57,7 +57,7 @@ export default function CheckUsername() {
   return (
     <>
       {checkData?.firstName && checkData?.lastName && (
-        <strong>{`${checkData.firstName.toUpperCase()} ${checkData.lastName.toUpperCase()}`}</strong>
+        <strong>{`${checkData.lastName.toUpperCase()} ${checkData.firstName.toUpperCase()}`}</strong>
         )}
     </>
   );

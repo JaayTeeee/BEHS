@@ -38,14 +38,16 @@ app.post("/api/insertUserdata", (req, res) => {
         address TEXT,
         city TEXT,
         postcode INTEGER,
-        state TEXT
+        state TEXT,
+        userType TEXT
       )
     `);
 
     const insertStmt = db.prepare(
-      "INSERT INTO userData (walletAddress, firstName, lastName, gender, dateBirth, idNumber, phoneNumber, address, city, postcode, state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO userData (walletAddress, firstName, lastName, gender, dateBirth, idNumber, phoneNumber, address, city, postcode, state, userType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     );
-    insertStmt.run(walletAddress, firstName, lastName, gender, formattedDateOfBirth, idNumber, phoneNumber, address, city, postcode, state);
+    
+    insertStmt.run(walletAddress, firstName, lastName, gender, formattedDateOfBirth, idNumber, phoneNumber, address, city, postcode, state, 'user');
 
     console.log("Data inserted successfully:", {
       walletAddress: walletAddress,
@@ -75,7 +77,7 @@ app.post("/api/checkID", (req, res) => {
   
   try {
     const checkStmt = db.prepare(
-      "SELECT firstName, lastName FROM userData WHERE walletAddress = ?"
+      "SELECT firstName, lastName, userType FROM userData WHERE walletAddress = ?"
     );
     const result = checkStmt.get(walletAddress);
     
@@ -86,7 +88,8 @@ app.post("/api/checkID", (req, res) => {
         success: true,
         walletAddress: walletAddress,
         firstName: result.firstName,
-        lastName: result.lastName
+        lastName: result.lastName,
+        userType: result.userType,
       });
     } else {
       console.log("User not found with walletAddress:", walletAddress);
