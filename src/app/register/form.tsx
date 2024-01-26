@@ -1,14 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { DayPicker } from "react-day-picker";
-import Button from "../components/RectangleButton";
+import { DatePicker } from "antd";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import Button from "../components/RectangleButton";
 
 interface UserData {
   firstName: string;
   lastName: string;
   gender: string;
-  dateBirth: Date;
+  dateBirth: string;
   idNumber: string;
   phoneNumber: string;
   address: string;
@@ -22,7 +22,6 @@ const Step1: React.FC<{
   setUserData: React.Dispatch<React.SetStateAction<UserData>>;
   onNext: () => void;
 }> = ({ userData, setUserData, onNext }) => {
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData((prevState) => ({
@@ -39,18 +38,19 @@ const Step1: React.FC<{
     }));
   };
 
-  const handleDateChange = (value: Date) => {
+  const handleDateChange = (date, dateString) => {
     setUserData((prevState) => {
       return {
         ...prevState,
-        dateBirth: value,
+        dateBirth: dateString,
       };
     });
   };
 
-  const handleInputClick = () => {
-    // Set the state to true when the input field is clicked
-    setShowDatePicker(true);
+  const disableNumberPress = (event) => {
+    if (event.which >= 48 && event.which <= 57) {
+      event.preventDefault();
+    }
   };
 
   const handleNext = () => {
@@ -80,6 +80,7 @@ const Step1: React.FC<{
               name="firstName"
               value={userData.firstName}
               onChange={handleChange}
+              onKeyDown={disableNumberPress}
               style={{
                 backgroundColor: "#dfdfdf",
                 outline: "none",
@@ -113,6 +114,7 @@ const Step1: React.FC<{
               name="lastName"
               value={userData.lastName}
               onChange={handleChange}
+              onKeyDown={disableNumberPress}
               style={{
                 backgroundColor: "#dfdfdf",
                 outline: "none",
@@ -173,37 +175,18 @@ const Step1: React.FC<{
               height: "45px",
             }}
           >
-            <input
-              type="text"
-              name="dateBirth"
-              value={userData.dateBirth.toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-              onFocus={handleInputClick} // Handle input field click
-              readOnly // Make the input field read-only to prevent direct editing
+            <DatePicker
+              onChange={handleDateChange}
               style={{
+                position: "absolute",
+                marginTop: "5px",
                 backgroundColor: "#dfdfdf",
-                outline: "none",
-                border: "none",
-                height: "45px",
-                width: "100%",
-                caretColor: "transparent",
-                marginLeft: "10px",
+                marginLeft: "5px",
+                width: "400px",
               }}
             />
-            {showDatePicker && ( // Render the date picker only when showDatePicker is true
-              <DayPicker
-                mode="single"
-                onDayClick={handleDateChange}
-                style={{ position: "absolute" }} // Adjust styling as needed
-              />
-            )}
           </div>
         </div>
-
-        {/* Add more input fields for other personal information */}
       </div>
 
       <Button
@@ -253,6 +236,14 @@ const Step2: React.FC<{
     onNext();
   };
 
+  const disableABCPress = (event) => {
+    const numericRegex = /^[0-9-]+$/;
+
+    if (!numericRegex.test(event.key)) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <div
       style={{
@@ -276,6 +267,7 @@ const Step2: React.FC<{
               name="idNumber"
               value={userData.idNumber}
               onChange={handleChange}
+              onKeyDown={disableABCPress}
               style={{
                 backgroundColor: "#dfdfdf",
                 outline: "none",
@@ -308,6 +300,7 @@ const Step2: React.FC<{
               name="phoneNumber"
               value={userData.phoneNumber}
               onChange={handleChange}
+              onKeyDown={disableABCPress}
               style={{
                 backgroundColor: "#dfdfdf",
                 outline: "none",
@@ -495,10 +488,10 @@ const Confirmation: React.FC<{
 }> = ({ userData, onPrevious, onSubmit }) => {
   const router = useRouter();
   const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get('WalletAddress');
+    const addressFromQuery = urlSearchParams.get("WalletAddress");
     setWalletAddress(addressFromQuery);
   }, [fetchWalletAddress]);
   const handlePrevious = () => {
@@ -522,13 +515,13 @@ const Confirmation: React.FC<{
         state: userData.state,
       };
 
-      const request = new Request('http://localhost:3001/api/insertUserdata', {
-        method: 'POST',
+      const request = new Request("http://localhost:3001/api/insertUserdata", {
+        method: "POST",
         headers: new Headers({
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
+          "Content-Type": "application/json",
+          Accept: "application/json",
         }),
-        mode: 'cors', // Set CORS mode to 'cors'
+        mode: "cors", // Set CORS mode to 'cors'
         body: JSON.stringify(insertUserData),
       });
 
@@ -541,14 +534,14 @@ const Confirmation: React.FC<{
 
       if (response.success && fetchWalletAddress !== null) {
         const encodedWalletAddress = encodeURIComponent(fetchWalletAddress);
-        console.log('Encoded Address:', encodedWalletAddress);
+        console.log("Encoded Address:", encodedWalletAddress);
         router.push(`/welcome?walletAddress=${encodedWalletAddress}`);
       } else {
-        console.error('Address is null or response is not successful.');
+        console.error("Address is null or response is not successful.");
         // Handle the case when address is null or response is not successful
       }
     } catch (error) {
-      console.error('Failed to save data:', error);
+      console.error("Failed to save data:", error);
     }
   };
 
@@ -628,13 +621,7 @@ const Confirmation: React.FC<{
             }}
           >
             <div style={{ marginTop: "10px" }}>
-              <text>
-                {userData.dateBirth.toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                })}
-              </text>
+              <text>{userData.dateBirth}</text>
             </div>
           </div>
         </div>
@@ -787,7 +774,7 @@ const InputForm = () => {
     firstName: "",
     lastName: "",
     gender: "",
-    dateBirth: new Date(),
+    dateBirth: "",
     idNumber: "",
     phoneNumber: "",
     address: "",
@@ -1035,7 +1022,13 @@ const InputForm = () => {
             marginTop: "35px",
           }}
         >
-          <span style={{ color: "#69BF96", fontSize: "30px", marginBottom: "-15px" }}>
+          <span
+            style={{
+              color: "#69BF96",
+              fontSize: "30px",
+              marginBottom: "-15px",
+            }}
+          >
             <strong>
               Please ensure that your information is correct as below:
             </strong>
