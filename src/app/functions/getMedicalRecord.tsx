@@ -6,10 +6,15 @@ interface CheckUserDataProps {
 }
 
 interface CheckData {
+  recordID: BigInteger;
   firstName: string;
   lastName: string;
   gender: string;
   dateBirth: string;
+  recordDate: string;
+  diagnosis: string;
+  attachment: string;
+  hospitalAddress: string;
 }
 
 export default function CheckUserData({
@@ -20,7 +25,7 @@ export default function CheckUserData({
 
   function fetchData() {
     const checkRequest = new Request(
-      "http://localhost:3001/api/checkUserData",
+      "http://localhost:3001/api/checkMedicalRecord",
       {
         method: "POST",
         headers: new Headers({
@@ -42,22 +47,21 @@ export default function CheckUserData({
       })
       .then((checkData) => {
         if (checkData.success) {
-          setCheckData(checkData);
+          setCheckData(checkData.medicalRecord); // Assuming medical record data is returned under 'medicalRecord' key
           console.log(checkData);
         } else {
           console.error("Failed to check ID:", checkData);
         }
-        onCheckDataReceived(checkData);
+        onCheckDataReceived(checkData.medicalRecord); // Passing the medical record data to the parent component
       })
       .catch((error) => {
         console.error("Fetch error during check:", error);
       });
   }
 
- useEffect(() => {
-  fetchData();
-}, [address]);
-
+  useEffect(() => {
+    fetchData();
+  }, [address]);
 
   return null;
 }

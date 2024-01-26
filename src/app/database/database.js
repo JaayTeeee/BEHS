@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors"); // Import the cors module
+const bodyParser = require('body-parser');
 const Database = require("better-sqlite3");
 const app = express();
 const db = new Database("./database.db");
@@ -12,6 +13,8 @@ app.use(
     methods: ["GET", "POST"], // Add the methods you need
   })
 );
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 const PORT = 3001;
 app.listen(PORT, () => {
@@ -164,23 +167,35 @@ app.post("/api/insertMedicalRecord", (req, res) => {
     dateBirth,
     diagnosis,
     attachment,
+    hospitalAddress,
   } = req.body;
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1; // Note: January is 0, so we add 1 to get the correct month
+  const day = currentDate.getDate();
+
+  // Format the date as needed
+  const recordDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+
+
   try {
     db.exec(`
       CREATE TABLE IF NOT EXISTS MedicalRecordData (
         recordID INTEGER PRIMARY KEY AUTOINCREMENT,
+        recordDate TEXT,
         userAddress TEXT UNIQUE,
         firstName TEXT,
         lastName TEXT,
         gender TEXT,
         dateBirth TEXT, 
         diagnosis TEXT,
-        attachment BLOB
+        attachment BLOB,
+        hospitalAddress TEXT
       )
     `);
 
     const insertStmt = db.prepare(
-      "INSERT INTO MedicalRecordData (userAddress, firstName, lastName, gender, dateBirth, diagnosis, attachment) VALUES (?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO MedicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, diagnosis, attachment, hospitalAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
     );
 
     console.log("Values:", {
@@ -191,16 +206,19 @@ app.post("/api/insertMedicalRecord", (req, res) => {
       dateBirth,
       diagnosis,
       attachment,
+      hospitalAddress
     });
 
     insertStmt.run(
       userAddress,
+      recordDate,
       firstName,
       lastName,
       gender,
       dateBirth,
       diagnosis,
-      attachment
+      attachment,
+      hospitalAddress
     );
     console.log("Data inserted successfully:", {
       userAddress: userAddress,
@@ -215,6 +233,36 @@ app.post("/api/insertMedicalRecord", (req, res) => {
     res.status(200).json({ success: true });
   } catch (error) {
     console.error("Error inserting data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Define API endpoint for checking medical record data
+app.post("/api/checkMedicalRecord", (req, res) => {
+  const walletAddress = req.body.walletAddress;
+  try {
+    const checkStmt = db.prepare(
+      "SELECT * FROM medicalRecordData WHERE userAddress = ?"
+    );
+    const result = checkStmt.get(walletAddress);
+
+    // Ensure that result is not null before accessing properties
+    if (result) {
+      console.log("User exists with userAddress:", walletAddress);
+      res.status(200).json({
+        success: true,
+        walletAddress: walletAddress,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        userType: result.userType,
+        hospitalAddress: result.hospitalAddress,
+      });
+    } else {
+      console.log("User not found with walletAddress:", walletAddress);
+      res.status(200).json({ success: false, message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error checking data:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
