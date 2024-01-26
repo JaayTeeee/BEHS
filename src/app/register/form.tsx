@@ -90,6 +90,7 @@ const Step1: React.FC<{
                 caretColor: "transparent",
                 marginLeft: "10px",
               }}
+              required
             />
           </div>
         </div>
@@ -124,6 +125,7 @@ const Step1: React.FC<{
                 caretColor: "transparent",
                 marginLeft: "10px",
               }}
+              required
             />
           </div>
         </div>
@@ -277,6 +279,7 @@ const Step2: React.FC<{
                 caretColor: "transparent",
                 marginLeft: "10px",
               }}
+              required
             />
           </div>
         </div>
@@ -310,6 +313,7 @@ const Step2: React.FC<{
                 caretColor: "transparent",
                 marginLeft: "10px",
               }}
+              required
             />
           </div>
         </div>
@@ -339,6 +343,7 @@ const Step2: React.FC<{
                 caretColor: "transparent",
                 marginLeft: "10px",
               }}
+              required
             />
           </div>
         </div>
@@ -371,6 +376,7 @@ const Step2: React.FC<{
                 caretColor: "transparent",
                 marginLeft: "10px",
               }}
+              required
             />
           </div>
         </div>
@@ -400,6 +406,7 @@ const Step2: React.FC<{
                 caretColor: "transparent",
                 marginLeft: "10px",
               }}
+              required
             />
           </div>
         </div>
@@ -450,7 +457,6 @@ const Step2: React.FC<{
         </div>
       </div>
 
-      {/* Add more input fields for other contact information */}
       <Button
         text={"Previous"}
         onClick={handlePrevious}
@@ -488,6 +494,7 @@ const Confirmation: React.FC<{
 }> = ({ userData, onPrevious, onSubmit }) => {
   const router = useRouter();
   const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -499,6 +506,7 @@ const Confirmation: React.FC<{
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     onSubmit();
     try {
       const insertUserData = {
@@ -542,6 +550,8 @@ const Confirmation: React.FC<{
       }
     } catch (error) {
       console.error("Failed to save data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

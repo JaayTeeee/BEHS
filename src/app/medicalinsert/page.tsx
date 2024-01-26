@@ -36,7 +36,7 @@ export default function Research() {
           </div>
 
           <div style={{ display: "flex" }}>
-            <MedicalRecordInserter />
+            <MedicalRecordInserter userAddress="3wr9XMLD8BLcQGH4XLx3GgVfzxwFS2JJhWYpbFioqyx6" />
           </div>
         </div>
       </div>

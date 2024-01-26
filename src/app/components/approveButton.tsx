@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import ApproveImage from "../../public/icons/icons-correct.png";
+import ApproveImage from "../../../public/icons/icons-correct.png";
 
 const ApproveButton = () => {
   return (

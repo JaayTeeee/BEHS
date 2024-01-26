@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import RejectImage from "../../public/icons/icons-wrong.png";
+import RejectImage from "../../../public/icons/icons-wrong.png";
 
 const RejectButton = () => {
   return (

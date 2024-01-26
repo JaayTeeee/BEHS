@@ -1,34 +1,20 @@
 -- SQLite
-CREATE TABLE IF NOT EXISTS userData (
-    userid INTEGER PRIMARY KEY AUTOINCREMENT,
-    walletAddress TEXT UNIQUE,
+CREATE TABLE IF NOT EXISTS medicalRecordData (
+    medicalRecordID INTEGER PRIMARY KEY AUTOINCREMENT,
+    walletAddress TEXT
     firstName TEXT,
     lastName TEXT,
-    gender TEXT,
-    dateBirth TEXT,
-    idNumber INTEGER,
-    phoneNumber INTEGER,
-    address TEXT,
-    city TEXT,
-    postcode INTEGER,
-    state TEXT,
-    userType TEXT
+    availableSpots INTEGER,
+    deadline TEXT
 );
 
-INSERT INTO userData (walletAddress, firstName, lastName, gender, dateBirth, idNumber, phoneNumber, address, city, postcode, state, userType) 
+INSERT INTO researchData (projectName, currentSpots, availableSpots, deadline) 
 VALUES (
-    'ABt7ZBcL6UpRoTDMvKGECKsRfMiMqpMSMqjpgmw6CuZJ', 
-    'Hospital', 
-    'ABC',  
-    '',  
-    NULL,  
-    '',    
-    12344567878, 
-    'Jalan Ampang', 
-    'Kuala Lumpur', 
-    58200, 
-    'Kuala Lumpur', 
-    'hospital'
+    'An introductory research regarding human skeletal compartments and the physical movement',
+    4,
+    9,
+    '2024-8-31'
+    
 );
 
 

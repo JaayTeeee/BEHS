@@ -6,7 +6,7 @@ import ButtonWithImage from "../components/ButtonWithImage";
 import HomePageButton from "../components/HomePageButton";
 import LogoutButton from "../components/LogoutButton";
 import UserProfileButton from "../components/UserProfileButton";
-import CheckUsername from "../components/getUsername";
+import CheckUsername from "../functions/getUsername";
 
 export default function Home() {
   return (
@@ -48,7 +48,9 @@ export default function Home() {
         }}
       >
         <div className="BEHS" style={{ fontSize: "65px" }}>
-          <strong>WELCOME, <CheckUsername /></strong>
+          <strong>
+            WELCOME, <CheckUsername />
+          </strong>
         </div>
       </div>
       <div
@@ -62,14 +64,14 @@ export default function Home() {
           <ButtonWithImage
             text="Retrieve Medical Record"
             imageSrc={DatabaseImage}
-            link="/research"
+            link="/medicalretrieve"
           />
         </div>
         <div>
           <ButtonWithImage
             text="Insert Medical Records"
             imageSrc={InsertTableImage}
-            link="/records"
+            link="/medicalinsert"
           />
         </div>
       </div>
