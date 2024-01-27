@@ -21,10 +21,10 @@ const MedicalRecordInserter: React.FC<{ userAddress: string }> = ({
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get('WalletAddress');
+    const addressFromQuery = urlSearchParams.get("WalletAddress");
     setWalletAddress(addressFromQuery);
   }, [fetchWalletAddress]);
-  
+
   function handleCheckDataReceived(checkData: CheckData | null) {
     setCheckData(checkData);
   }
@@ -41,57 +41,56 @@ const MedicalRecordInserter: React.FC<{ userAddress: string }> = ({
 
       if (file) {
         const reader = new FileReader();
+        reader.onload = () => {
+          const fileData = reader.result;
+          const insertUserData = {
+            userAddress: userAddress,
+            firstName: checkData?.firstName,
+            lastName: checkData?.lastName,
+            gender: checkData?.gender,
+            dateBirth: checkData?.dateBirth,
+            diagnosis: diagnosisInput.value,
+            attachment: fileData,
+            hospitalAddress: fetchWalletAddress,
+          };
 
-        reader.onload = async function (event) {
-          if (event.target) {
-            const fileData = event.target.result;
+          const request = new Request(
+            "http://localhost:3001/api/insertMedicalRecord",
+            {
+              method: "POST",
+              headers: new Headers({
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              }),
+              mode: "cors", // Set CORS mode to 'cors'
+              body: JSON.stringify(insertUserData),
+            }
+          );
 
-            const fileBuffer = Buffer.from(fileData as ArrayBuffer);
-            const base64Attachment = fileBuffer.toString("base64");
-
-            const insertUserData = {
-              userAddress: userAddress,
-              firstName: checkData?.firstName,
-              lastName: checkData?.lastName,
-              gender: checkData?.gender,
-              dateBirth: checkData?.dateBirth,
-              diagnosis: diagnosisInput.value,
-              attachment: base64Attachment,
-              hospitalAddress: fetchWalletAddress,
-            };
-
-            const request = new Request(
-              "http://localhost:3001/api/insertMedicalRecord",
-              {
-                method: "POST",
-                headers: new Headers({
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                }),
-                mode: "cors", // Set CORS mode to 'cors'
-                body: JSON.stringify(insertUserData),
+          fetch(request)
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error(`Failed to fetch: ${res.statusText}`);
               }
-            );
-
-            const res = await fetch(request);
-            if (!res.ok) {
-              throw new Error(`Failed to fetch: ${res.statusText}`);
-            }
-
-            const response = await res.json();
-
-            if (response.success && userAddress !== null) {
-              const encodedWalletAddress = encodeURIComponent(userAddress);
-              console.log("Encoded Address:", encodedWalletAddress);
-              router.push(`/medicalwelcome?WalletAddress=${encodedWalletAddress}`);
-            } else {
-              console.error("Address is null or response is not successful.");
-              // Handle the case when address is null or response is not successful
-            }
-          }
+              return res.json();
+            })
+            .then((response) => {
+              if (response.success && userAddress !== null) {
+                const encodedWalletAddress = encodeURIComponent(userAddress);
+                console.log("Encoded Address:", encodedWalletAddress);
+                router.push(
+                  `/medicalwelcome?WalletAddress=${encodedWalletAddress}`
+                );
+              } else {
+                console.error("Address is null or response is not successful.");
+              }
+            })
+            .catch((error) => {
+              console.error("Failed to fetch:", error);
+            });
         };
 
-        reader.readAsArrayBuffer(file);
+        reader.readAsDataURL(file);
       } else {
         console.log("No file selected");
       }

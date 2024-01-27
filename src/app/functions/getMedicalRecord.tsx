@@ -6,62 +6,61 @@ interface CheckUserDataProps {
 }
 
 interface CheckData {
-  recordID: BigInteger;
+  recordID: string;
+  recordDate: string;
+  userAddress: string;
   firstName: string;
   lastName: string;
   gender: string;
   dateBirth: string;
-  recordDate: string;
   diagnosis: string;
   attachment: string;
   hospitalAddress: string;
 }
 
-export default function CheckUserData({
+export default function CheckMedicalRecord({
   address,
   onCheckDataReceived,
 }: CheckUserDataProps) {
-  const [checkData, setCheckData] = useState<CheckData | null>(null);
+  const [dataFetched, setDataFetched] = useState(false);
 
-  function fetchData() {
-    const checkRequest = new Request(
-      "http://localhost:3001/api/checkMedicalRecord",
-      {
-        method: "POST",
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        }),
-        mode: "cors",
-        body: JSON.stringify({ walletAddress: address }),
-      }
-    );
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const checkRequest = await fetch(
+          "http://localhost:3001/api/checkMedicalRecord",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({ userAddress: address }),
+          }
+        );
 
-    fetch(checkRequest)
-      .then((checkResponse) => {
-        if (checkResponse.ok) {
-          return checkResponse.json();
+        if (checkRequest.ok) {
+          const checkData = await checkRequest.json();
+          if (checkData.success) {
+            onCheckDataReceived(checkData); // Passing the medical record data to the parent component
+          } else {
+            console.error("Failed to check ID:", checkData);
+            onCheckDataReceived(null); // Passing null when the request is unsuccessful
+          }
         } else {
           throw new Error("Failed to check ID");
         }
-      })
-      .then((checkData) => {
-        if (checkData.success) {
-          setCheckData(checkData.medicalRecord); // Assuming medical record data is returned under 'medicalRecord' key
-          console.log(checkData);
-        } else {
-          console.error("Failed to check ID:", checkData);
-        }
-        onCheckDataReceived(checkData.medicalRecord); // Passing the medical record data to the parent component
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Fetch error during check:", error);
-      });
-  }
+        onCheckDataReceived(null); // Passing null in case of an error
+      }
+    }
 
-  useEffect(() => {
-    fetchData();
-  }, [address]);
+    if (!dataFetched) {
+      fetchData();
+      setDataFetched(true);
+    }
+  }, [address, dataFetched, onCheckDataReceived]);
 
   return null;
 }
