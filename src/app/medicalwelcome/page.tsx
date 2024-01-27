@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import DatabaseImage from "../../../public/icons/icons8-database-view-100.png";
 import InsertTableImage from "../../../public/icons/icons8-insert-table-100.png";
 import ButtonWithImage from "../components/ButtonWithImage";
@@ -9,6 +10,14 @@ import UserProfileButton from "../components/UserProfileButton";
 import CheckUsername from "../functions/getUsername";
 
 export default function Home() {
+  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const addressFromQuery = urlSearchParams.get('WalletAddress');
+    setWalletAddress(addressFromQuery);
+  }, [fetchWalletAddress]);
+
   return (
     <main>
       <div
@@ -64,14 +73,14 @@ export default function Home() {
           <ButtonWithImage
             text="Retrieve Medical Record"
             imageSrc={DatabaseImage}
-            link="/medicalretrieve"
+            link={`/medicalretrieve?WalletAddress=${fetchWalletAddress}`}
           />
         </div>
         <div>
           <ButtonWithImage
             text="Insert Medical Records"
             imageSrc={InsertTableImage}
-            link="/medicalinsert"
+            link={`/medicalinsert?WalletAddress=${fetchWalletAddress}`}
           />
         </div>
       </div>

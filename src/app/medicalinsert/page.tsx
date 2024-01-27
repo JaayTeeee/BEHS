@@ -2,6 +2,7 @@ import HomePageButton from "../components/HomePageButton";
 import MedicalRecordInserter from "../components/MedicalRecordInserter";
 
 export default function Research() {
+
   return (
     <main>
       <div
@@ -36,7 +37,7 @@ export default function Research() {
           </div>
 
           <div style={{ display: "flex" }}>
-            <MedicalRecordInserter userAddress="3wr9XMLD8BLcQGH4XLx3GgVfzxwFS2JJhWYpbFioqyx6" />
+            <MedicalRecordInserter userAddress="FKBZ4PQzvqx7mw5pj8nN9HLcjZ1fknjQwf6YuGGxF7ty" />
           </div>
         </div>
       </div>

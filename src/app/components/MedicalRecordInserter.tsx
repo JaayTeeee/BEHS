@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CheckUserData from "../functions/getUserData";
 import Button from "./RectangleButton";
 
@@ -17,6 +17,14 @@ const MedicalRecordInserter: React.FC<{ userAddress: string }> = ({
 }) => {
   const [checkData, setCheckData] = useState<CheckData | null>(null);
   const router = useRouter();
+  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const addressFromQuery = urlSearchParams.get('WalletAddress');
+    setWalletAddress(addressFromQuery);
+  }, [fetchWalletAddress]);
+  
   function handleCheckDataReceived(checkData: CheckData | null) {
     setCheckData(checkData);
   }
@@ -49,6 +57,7 @@ const MedicalRecordInserter: React.FC<{ userAddress: string }> = ({
               dateBirth: checkData?.dateBirth,
               diagnosis: diagnosisInput.value,
               attachment: base64Attachment,
+              hospitalAddress: fetchWalletAddress,
             };
 
             const request = new Request(
@@ -74,7 +83,7 @@ const MedicalRecordInserter: React.FC<{ userAddress: string }> = ({
             if (response.success && userAddress !== null) {
               const encodedWalletAddress = encodeURIComponent(userAddress);
               console.log("Encoded Address:", encodedWalletAddress);
-              router.push(`/medicalwelcome`);
+              router.push(`/medicalwelcome?WalletAddress=${encodedWalletAddress}`);
             } else {
               console.error("Address is null or response is not successful.");
               // Handle the case when address is null or response is not successful
