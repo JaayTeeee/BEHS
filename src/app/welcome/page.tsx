@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
@@ -28,7 +28,7 @@ export default function Home() {
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get('WalletAddress');
+    const addressFromQuery = urlSearchParams.get("WalletAddress");
     setWalletAddress(addressFromQuery);
   }, [fetchWalletAddress]);
 
@@ -43,7 +43,6 @@ export default function Home() {
     ],
     [solNetwork]
   );
-  
 
   return (
     <ConnectionProvider endpoint={endpoint}>

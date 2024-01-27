@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors"); // Import the cors module
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const Database = require("better-sqlite3");
 const app = express();
 const db = new Database("./database.db");
@@ -13,8 +13,8 @@ app.use(
     methods: ["GET", "POST"], // Add the methods you need
   })
 );
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 const PORT = 3001;
 app.listen(PORT, () => {
@@ -175,8 +175,9 @@ app.post("/api/insertMedicalRecord", (req, res) => {
   const day = currentDate.getDate();
 
   // Format the date as needed
-  const recordDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
-
+  const recordDate = `${year}-${month < 10 ? "0" + month : month}-${
+    day < 10 ? "0" + day : day
+  }`;
 
   try {
     db.exec(`
@@ -195,7 +196,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
     `);
 
     const insertStmt = db.prepare(
-      "INSERT INTO MedicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, diagnosis, attachment, hospitalAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO MedicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, diagnosis, attachment, hospitalAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)"
     );
 
     console.log("Values:", {
@@ -206,7 +207,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
       dateBirth,
       diagnosis,
       attachment,
-      hospitalAddress
+      hospitalAddress,
     });
 
     insertStmt.run(
@@ -239,7 +240,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
 
 // Define API endpoint for checking medical record data
 app.post("/api/checkMedicalRecord", (req, res) => {
-  const walletAddress = req.body.walletAddress;
+  const walletAddress = req.body.userAddress;
   try {
     const checkStmt = db.prepare(
       "SELECT * FROM medicalRecordData WHERE userAddress = ?"
@@ -248,13 +249,15 @@ app.post("/api/checkMedicalRecord", (req, res) => {
 
     // Ensure that result is not null before accessing properties
     if (result) {
-      console.log("User exists with userAddress:", walletAddress);
+      console.log("User exists with walletAddress:", walletAddress);
       res.status(200).json({
         success: true,
-        walletAddress: walletAddress,
+        userAddress: walletAddress,
         firstName: result.firstName,
         lastName: result.lastName,
         userType: result.userType,
+        recordDate: result.recordDate,
+        recordID: result.recordID,
         hospitalAddress: result.hospitalAddress,
       });
     } else {
