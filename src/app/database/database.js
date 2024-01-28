@@ -165,6 +165,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
     lastName,
     gender,
     dateBirth,
+    idNumber,
     diagnosis,
     attachment,
     hospitalAddress,
@@ -189,6 +190,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
         lastName TEXT,
         gender TEXT,
         dateBirth TEXT, 
+        idNumber TEXT,
         diagnosis TEXT,
         attachment BLOB,
         hospitalAddress TEXT
@@ -196,7 +198,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
     `);
 
     const insertStmt = db.prepare(
-      "INSERT INTO MedicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, diagnosis, attachment, hospitalAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)"
+      "INSERT INTO MedicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, idNumber, diagnosis, attachment, hospitalAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)"
     );
 
     console.log("Values:", {
@@ -217,6 +219,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
       lastName,
       gender,
       dateBirth,
+      idNumber,
       diagnosis,
       attachment,
       hospitalAddress
@@ -266,6 +269,35 @@ app.post("/api/checkMedicalRecord", (req, res) => {
     }
   } catch (error) {
     console.error("Error checking data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+// Define API endpoint for checking item for search
+app.post("/api/checkItem", (req, res) => {
+  const query = req.body.query;
+  try {
+    const checkStmt = db.prepare(
+      "SELECT * FROM medicalRecordData WHERE " +
+      "idNumber LIKE ? OR " +
+      "userAddress LIKE ?"
+    );
+    const result = checkStmt.all(
+      `${query}`,
+      `${query}`
+    );
+
+    // Ensure that result is not empty before responding
+    if (result.length > 0) {
+      console.log("Records found matching query:", query);
+      res.status(200).json({ success: true, records: result });
+    } else {
+      console.log("No records found matching query:", query);
+      res.status(200).json({ success: false, message: "No records found" });
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

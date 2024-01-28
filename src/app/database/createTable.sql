@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS medicalRecordData (
     lastName TEXT,
     gender TEXT,
     dateBirth TEXT, 
+    idNumber TEXT,
     diagnosis TEXT,
     attachment BLOB,
     hospitalAddress TEXT
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS researchData (
     deadline TEXT
 );
 
-INSERT INTO medicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, diagnosis, attachment, hospitalAddress) 
+INSERT INTO medicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, idNumber, diagnosis, attachment, hospitalAddress) 
 VALUES (
     'FKBZ4PQzvqx7mw5pj8nN9HLcjZ1fknjQwf6YuGGxF7ty',
     '2024-01-27',
@@ -31,11 +32,11 @@ VALUES (
     'ching',
     'female',
     '2024-01-25',
+    '1234567890',
     'test',
     '',
     'ABt7ZBcL6UpRoTDMvKGECKsRfMiMqpMSMqjpgmw6CuZJ'
 );
-
 
 
 CREATE TABLE IF NOT EXISTS userData (
@@ -50,12 +51,13 @@ CREATE TABLE IF NOT EXISTS userData (
     address TEXT,
     city TEXT,
     postcode INTEGER,
-    state TEXT
+    state TEXT,
+    userType TEXT
 );
 
 INSERT INTO userData (walletAddress, firstName, lastName, gender, dateBirth, idNumber, phoneNumber, address, city, postcode, state, userType) 
 VALUES (
-    'ABt7ZBcL6UpRoTDMvKGECKsRfMiMqpMSMqjpgmw6CuZJ', 
+    'CJjZcCKPCzwdN8MSUBMritQBaPRZoMZ72nzYFt2KE98w', 
     'Hospital', 
     'ABC',  
     '',  

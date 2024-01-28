@@ -10,6 +10,7 @@ interface CheckData {
   lastName: string;
   gender: string;
   dateBirth: string;
+  idNumber: string;
 }
 
 const MedicalRecordInserter: React.FC<{ userAddress: string }> = ({
@@ -49,6 +50,7 @@ const MedicalRecordInserter: React.FC<{ userAddress: string }> = ({
             lastName: checkData?.lastName,
             gender: checkData?.gender,
             dateBirth: checkData?.dateBirth,
+            idNumber: checkData?.idNumber,
             diagnosis: diagnosisInput.value,
             attachment: fileData,
             hospitalAddress: fetchWalletAddress,
@@ -251,6 +253,38 @@ const MedicalRecordInserter: React.FC<{ userAddress: string }> = ({
           >
             <div style={{ display: "flex", flexDirection: "column" }}>
               <text style={{ fontSize: "28px", marginRight: "320px" }}>
+                Identification Number
+              </text>
+              <div
+                style={{
+                  backgroundColor: "#dfdfdf",
+                  width: "410px",
+                  height: "45px",
+                }}
+              >
+                <input
+                  name="idNumber"
+                  value={checkData?.idNumber}
+                  style={{
+                    backgroundColor: "#dfdfdf",
+                    outline: "none",
+                    border: "none",
+                    height: "45px",
+                    width: "400px",
+                    marginLeft: "10px",
+                  }}
+                />
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginLeft: "220px",
+              }}
+            >
+              <text style={{ fontSize: "28px", marginRight: "300px" }}>
                 Diagnosis
               </text>
               <div
@@ -275,15 +309,13 @@ const MedicalRecordInserter: React.FC<{ userAddress: string }> = ({
                 />
               </div>
             </div>
+          </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                marginLeft: "190px",
-              }}
-            >
-              <text style={{ fontSize: "26px", marginRight: "160px" }}>
+          <div
+            style={{ display: "flex", flexDirection: "row", marginTop: "20px" }}
+          >
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <text style={{ fontSize: "28px", marginRight: "320px" }}>
                 Additional Documents
               </text>
               <div
