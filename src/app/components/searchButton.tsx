@@ -1,11 +1,10 @@
 import React from "react";
 
 interface searchButtonProps {
-  text: string;
   onClick: () => void;
 }
 
-const searchButton: React.FC<searchButtonProps> = ({ text, onClick }) => {
+const searchButton: React.FC<searchButtonProps> = ({ onClick }) => {
   return (
     <button
       type="button"
@@ -23,7 +22,7 @@ const searchButton: React.FC<searchButtonProps> = ({ text, onClick }) => {
       onClick={onClick}
     >
       <span style={{ fontSize: "15px" }}>
-        <b>{text}</b>
+        <b>Search</b>
       </span>
     </button>
   );

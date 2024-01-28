@@ -274,27 +274,34 @@ app.post("/api/checkMedicalRecord", (req, res) => {
 });
 
 
-// Define API endpoint for checking item for search
 app.post("/api/checkItem", (req, res) => {
   const query = req.body.query;
   try {
-    const checkStmt = db.prepare(
-      "SELECT * FROM medicalRecordData WHERE " +
-      "idNumber LIKE ? OR " +
-      "userAddress LIKE ?"
-    );
-    const result = checkStmt.all(
-      `${query}`,
-      `${query}`
+    const idNumberCheckStmt = db.prepare(
+      "SELECT * FROM medicalRecordData WHERE idNumber = ?"
     );
 
-    // Ensure that result is not empty before responding
-    if (result.length > 0) {
-      console.log("Records found matching query:", query);
-      res.status(200).json({ success: true, records: result });
+    const idNumberResult = idNumberCheckStmt.get(query);
+
+    // Check if any records are found based on idNumber
+    if (idNumberResult) {
+      console.log("Records found matching idNumber query:", query);
+      res.status(200).json({ success: true, records: [idNumberResult] }); // Wrap idNumberResult in an array
     } else {
-      console.log("No records found matching query:", query);
-      res.status(200).json({ success: false, message: "No records found" });
+      // If no records found based on idNumber, search by userAddress
+      const userAddressCheckStmt = db.prepare(
+        "SELECT * FROM medicalRecordData WHERE userAddress = ?"
+      );
+
+      const userAddressResult = userAddressCheckStmt.get(query);
+
+      if (userAddressResult) {
+        console.log("Records found matching userAddress query:", query);
+        res.status(200).json({ success: true, records: [userAddressResult] }); // Wrap userAddressResult in an array
+      } else {
+        console.log("No records found matching query:", query);
+        res.status(200).json({ success: false, message: "No records found" });
+      }
     }
   } catch (error) {
     console.error("Error searching records:", error);

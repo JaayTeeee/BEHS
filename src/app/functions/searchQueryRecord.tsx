@@ -44,6 +44,7 @@ export default function searchRecord({
           const checkData = await checkRequest.json();
           if (checkData.success) {
             onCheckDataReceived(checkData); // Passing the medical record data to the parent component
+            console.log("Received data:", checkData);
           } else {
             console.error("Failed to check ID:", checkData);
             onCheckDataReceived(null); // Passing null when the request is unsuccessful

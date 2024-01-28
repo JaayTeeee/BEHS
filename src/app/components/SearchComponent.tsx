@@ -4,19 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 import searchIcon from "../../../public/icons/icons-search-black.png";
 
-interface CheckData {
-  recordID: BigInteger;
-  recordDate: string;
-  userAddress: string;
-  firstName: string;
-  lastname: string;
-  gender: string;
-  dateBirth: string;
-  diagnosis: string;
-  attachment: string;
-  hospitalAddress: string;
-}
-
 export const SearchComponent = ({ handleSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
