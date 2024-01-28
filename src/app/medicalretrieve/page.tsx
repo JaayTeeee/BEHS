@@ -6,7 +6,7 @@ import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import { SearchComponent } from "../components/SearchComponent";
 import SearchButton from "../components/searchButton";
-import CheckMedicalRecord from "../functions/getMedicalRecord";
+import SearchMedicalRecord from "../functions/searchQueryRecord";
 
 interface CheckData {
   recordID: string;
@@ -16,12 +16,13 @@ interface CheckData {
   lastName: string;
   gender: string;
   dateBirth: string;
+  idNumber: string;
   diagnosis: string;
   attachment: string;
   hospitalAddress: string;
 }
 
-export default function Research() {
+export default function RetrieveRecord() {
   const [checkData, setCheckData] = useState<CheckData | null>(null);
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -112,12 +113,12 @@ export default function Research() {
                   Search for patient by using the search bar below:
                 </strong>
               </div>
-              <SearchComponent handleSearch={handleSearch} />
+              <SearchComponent />
             </>
           ) : (
             <>
-              <CheckMedicalRecord
-                address={searchQuery}
+              <SearchMedicalRecord
+                query={searchQuery}
                 onCheckDataReceived={handleCheckDataReceived}
               />
 
@@ -149,7 +150,7 @@ export default function Research() {
                           marginLeft: "10px",
                         }}
                       />
-                      <SearchButton text="Search" onClick={handleSearch} />
+                      <SearchButton text="Search" onClick={handleSearch} query={searchQuery} />
                     </div>
                   </div>
                   <div
@@ -235,7 +236,7 @@ export default function Research() {
                     >
                       <strong>User not found!</strong>
                     </div>
-                    <SearchComponent handleSearch={handleClickSearch} />
+                    <SearchComponent />
                   </div>
                 </>
               )}
