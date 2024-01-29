@@ -111,39 +111,6 @@ export default function RetrieveRecord() {
                 <SearchButton onClick={() => handleSearch(searchQuery)} />
               </div>
             </div>
-<<<<<<< Updated upstream
-            <br/><br/><br/>
-            <div className="green-bar" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexDirection: "row" }}>
-              <div className="greenbar-title">
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <div style={{ flexDirection: "column", marginTop: "40px" }}>
-                    <strong style={{ marginRight: "50px" }}>Record ID</strong>
-                    <div style={{ marginRight: "60px" }}>{checkData?.recordID}</div>
-                  </div>
-                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                    <strong style={{ marginRight: "50px" }}>Date</strong>
-                    <div style={{ marginRight: "50px" }}>{checkData?.recordDate}</div>
-                  </div>
-                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                    <strong style={{ marginRight: "60px" }}>Patient ID</strong>
-                    <div style={{ marginRight: "50px" }}>
-                      {checkData && checkData.userAddress && (
-                        <>
-                          {checkData.userAddress.substring(0, 7)}...
-                          {checkData.userAddress.substring(checkData.userAddress.length - 7)}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                    <div style={{ marginLeft: "30px" }}>
-                      {checkData && checkData.hospitalAddress && (
-                        <>
-                          {checkData.hospitalAddress.substring(0, 7)}...
-                          {checkData.hospitalAddress.substring(checkData.hospitalAddress.length - 7)}
-                        </>
-                      )}
-=======
             <br />
             <br />
             <br />
@@ -185,22 +152,16 @@ export default function RetrieveRecord() {
                         {record.hospitalAddress.substring(0, 7)}...
                         {record.hospitalAddress.substring(record.hospitalAddress.length - 7)}
                       </div>
->>>>>>> Stashed changes
                     </div>
                   </div>
                 </div>
               </div>
-<<<<<<< Updated upstream
-
-              <RectangleButton text="Request" textStyle={{ fontSize: "30px", fontWeight: "bold" }} onClick={handleRequest} />
-=======
             ))}
               <RectangleButton
                 text="Request"
                 textStyle={{ fontSize: "30px", fontWeight: "bold" }}
                 onClick={handleRequest}
               />
->>>>>>> Stashed changes
             </div>
           </div>
         )}
@@ -224,10 +185,6 @@ export default function RetrieveRecord() {
                 <SearchButton onClick={() => handleSearch(searchQuery)} />
               </div>
             </div>
-<<<<<<< Updated upstream
-            <div className="BEHS" style={{ display: "flex", justifyContent: "center", fontSize: "24px", marginLeft: "320px", marginTop: "40px" }}>
-              <strong>User not found!</strong>
-=======
             <div
               className="BEHS"
               style={{
@@ -243,7 +200,6 @@ export default function RetrieveRecord() {
               ) : (
                 <strong>User not found!</strong>
               )}
->>>>>>> Stashed changes
             </div>
           </div>
         )}
