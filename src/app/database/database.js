@@ -46,7 +46,7 @@ app.post("/api/insertUserdata", (req, res) => {
         lastName TEXT,
         gender TEXT,
         dateBirth TEXT, 
-        idNumber INTEGER,
+        idNumber INTEGER UNIQUE,
         phoneNumber INTEGER, 
         address TEXT,
         city TEXT,
@@ -125,34 +125,36 @@ app.post("/api/checkID", (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 app.post("/api/checkUserData", (req, res) => {
-  const walletAddress = req.body.walletAddress;
-
   try {
-    const checkStmt = db.prepare(
-      "SELECT firstName, lastName, userType, gender, dateBirth FROM userData WHERE walletAddress = ?"
+    const query = req.body.query; // Access the query parameter from req.body directly
+    const idNumberCheckStmt = db.prepare(
+      "SELECT firstName, lastName, userType, gender, dateBirth, idNumber, walletAddress FROM userData WHERE idNumber = ? AND userType = ?"
     );
-    const result = checkStmt.get(walletAddress);
 
-    // Ensure that result is not null before accessing properties
-    if (result) {
-      console.log("User exists with walletAddress:", walletAddress);
-      res.status(200).json({
-        success: true,
-        walletAddress: walletAddress,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        gender: result.gender,
-        dateBirth: result.dateBirth,
-        userType: result.userType,
-      });
+    const idNumberResult = idNumberCheckStmt.get(query, "user");
+    // Check if any records are found based on idNumber
+    if (idNumberResult) {
+      console.log("Records found matching idNumber query:", query);
+      res.status(200).json({ success: true, records: [idNumberResult] }); // Wrap idNumberResult in an array
     } else {
-      console.log("User not found with walletAddress:", walletAddress);
-      res.status(200).json({ success: false, message: "User not found" });
+      // If no records found based on idNumber, search by userAddress
+      const userAddressCheckStmt = db.prepare(
+        "SELECT firstName, lastName, userType, gender, dateBirth, idNumber, walletAddress FROM userData WHERE walletAddress = ? AND userType = ?"
+      );
+
+      const userAddressResult = userAddressCheckStmt.get(query, "user");
+
+      if (userAddressResult) {
+        console.log("Records found matching userAddress query:", query);
+        res.status(200).json({ success: true, records: [userAddressResult] }); // Wrap userAddressResult in an array
+      } else {
+        console.log("No records found matching query:", query);
+        res.status(200).json({ success: false, message: "No records found" });
+      }
     }
   } catch (error) {
-    console.error("Error checking data:", error);
+    console.error("Error searching records:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -198,7 +200,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
     `);
 
     const insertStmt = db.prepare(
-      "INSERT INTO MedicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, idNumber, diagnosis, attachment, hospitalAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)"
+      "INSERT INTO MedicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, idNumber, diagnosis, attachment, hospitalAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?)"
     );
 
     console.log("Values:", {
@@ -207,6 +209,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
       lastName,
       gender,
       dateBirth,
+      idNumber,
       diagnosis,
       attachment,
       hospitalAddress,
