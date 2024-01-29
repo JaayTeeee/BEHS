@@ -15,3 +15,6 @@ VALUES (
     'Kuala Lumpur', 
     'hospital'
 );
+
+DELETE FROM userData 
+WHERE walletAddress = "FsaZvMVpwsutWSsKUyM2i5NjaiJcifJykjXQVftNZMdh"
