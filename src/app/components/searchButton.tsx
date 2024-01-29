@@ -1,19 +1,18 @@
 import React from "react";
 
 interface searchButtonProps {
-  text: string;
   onClick: () => void;
 }
 
-const searchButton: React.FC<searchButtonProps> = ({ text, onClick }) => {
+const searchButton: React.FC<searchButtonProps> = ({ onClick }) => {
   return (
     <button
       type="button"
       style={{
         color: "white",
         background: "#339f6b",
-        width: "70px",
-        height: "35px",
+        width: "100px",
+        height: "40px",
         margin: "10px",
         border: "none",
         borderRadius: "8px",
@@ -22,7 +21,9 @@ const searchButton: React.FC<searchButtonProps> = ({ text, onClick }) => {
       }}
       onClick={onClick}
     >
-      <span style={{ fontSize: "15px" }}><b>{text}</b></span>
+      <span style={{ fontSize: "15px" }}>
+        <b>Search</b>
+      </span>
     </button>
   );
 };
