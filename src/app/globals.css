@@ -46,6 +46,17 @@ body {
   position: absolute;
 }
 
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #dfdfdf;
+  height: 40px;
+  width: 330px;
+  border-radius: 7px;
+  position: absolute;
+  z-index: 1;
+}
+
 .buttonWithImage {
   position: relative;
   display: flex;
@@ -54,7 +65,7 @@ body {
   justify-content: center;
   color: #339f6b;
   background: white;
-  width: 350px;
+  width: 400px;
   height: 270px;
   margin: 10px;
   z-index: 999;
@@ -72,4 +83,35 @@ body {
 
 .buttonWithImage:hover img {
   filter: brightness(0) invert(1);
+}
+
+.scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.small-circle {
+  display: block;
+  background: #ffffff;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+}
+
+.green-bar {
+  background-color: #f3ffef;
+  border: 2px solid #339f6b;
+  border-radius: 10px;
+  height: 100px;
+  width: 1270px;
+  margin-left: 120px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.greenbar-title {
+  color: #339f6b;
+  font-size: 25px;
+  margin-left: 20px;
+  margin-top: -40px;
 }
