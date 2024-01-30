@@ -543,7 +543,7 @@ const Confirmation: React.FC<{
       if (response.success && fetchWalletAddress !== null) {
         const encodedWalletAddress = encodeURIComponent(fetchWalletAddress);
         console.log("Encoded Address:", encodedWalletAddress);
-        router.push(`/welcome?walletAddress=${encodedWalletAddress}`);
+        router.push(`/welcome?WalletAddress=${encodedWalletAddress}`);
       } else {
         console.error("Address is null or response is not successful.");
         // Handle the case when address is null or response is not successful

@@ -46,7 +46,7 @@ app.post("/api/insertUserdata", (req, res) => {
         lastName TEXT,
         gender TEXT,
         dateBirth TEXT, 
-        idNumber INTEGER,
+        idNumber INTEGER UNIQUE,
         phoneNumber INTEGER, 
         address TEXT,
         city TEXT,
@@ -125,34 +125,37 @@ app.post("/api/checkID", (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 app.post("/api/checkUserData", (req, res) => {
-  const walletAddress = req.body.walletAddress;
-
   try {
-    const checkStmt = db.prepare(
-      "SELECT firstName, lastName, userType, gender, dateBirth FROM userData WHERE walletAddress = ?"
+    const query = req.body.query; // Access the query parameter from req.body directly
+    const idNumberCheckStmt = db.prepare(
+      "SELECT firstName, lastName, userType, gender, dateBirth, idNumber, walletAddress FROM userData WHERE idNumber = ? AND userType = ?"
     );
-    const result = checkStmt.get(walletAddress);
 
-    // Ensure that result is not null before accessing properties
-    if (result) {
-      console.log("User exists with walletAddress:", walletAddress);
-      res.status(200).json({
-        success: true,
-        walletAddress: walletAddress,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        gender: result.gender,
-        dateBirth: result.dateBirth,
-        userType: result.userType,
-      });
+    const idNumberResult = idNumberCheckStmt.get(query, "user");
+    // Check if any records are found based on idNumber
+    if (idNumberResult) {
+      console.log("Records found matching idNumber query:", query);
+      res.status(200).json({ success: true, records: [idNumberResult] }); // Wrap idNumberResult in an array
     } else {
-      console.log("User not found with walletAddress:", walletAddress);
-      res.status(200).json({ success: false, message: "User not found" });
+      // If no records found based on idNumber, search by userAddress
+      const userAddressCheckStmt = db.prepare(
+        "SELECT firstName, lastName, userType, gender, dateBirth, idNumber, walletAddress FROM userData WHERE walletAddress = ? AND userType = ?"
+      );
+
+      const userAddressResult = userAddressCheckStmt.get(query, "user");
+
+      if (userAddressResult) {
+        console.log("Records found matching userAddress query:", query);
+        console.log(userAddressResult);
+        res.status(200).json({ success: true, records: [userAddressResult] }); // Wrap userAddressResult in an array
+      } else {
+        console.log("No records found matching query:", query);
+        res.status(200).json({ success: false, message: "No records found" });
+      }
     }
   } catch (error) {
-    console.error("Error checking data:", error);
+    console.error("Error searching records:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -198,7 +201,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
     `);
 
     const insertStmt = db.prepare(
-      "INSERT INTO MedicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, idNumber, diagnosis, attachment, hospitalAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)"
+      "INSERT INTO MedicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, idNumber, diagnosis, attachment, hospitalAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?)"
     );
 
     console.log("Values:", {
@@ -207,6 +210,7 @@ app.post("/api/insertMedicalRecord", (req, res) => {
       lastName,
       gender,
       dateBirth,
+      idNumber,
       diagnosis,
       attachment,
       hospitalAddress,
@@ -273,7 +277,6 @@ app.post("/api/checkMedicalRecord", (req, res) => {
   }
 });
 
-
 app.post("/api/checkItem", (req, res) => {
   const query = req.body.query;
   try {
@@ -305,6 +308,97 @@ app.post("/api/checkItem", (req, res) => {
     }
   } catch (error) {
     console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/requestPermission", (req, res) => {
+  const { requestAddress, requestDate, requiredAddress, permissionStatus } =
+    req.body;
+  try {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS PermissionData (
+        permissionID INTEGER PRIMARY KEY AUTOINCREMENT,
+        requestAddress TEXT,
+        requestDate TEXT,
+        requiredAddress TEXT ,
+        permissionStatus NUMBER
+      )
+    `);
+
+    const insertStmt = db.prepare(
+      "INSERT INTO PermissionData (requestAddress, requestDate, requiredAddress, permissionStatus) VALUES (?,?, ?, ?)"
+    );
+
+    console.log("Values:", {
+      requestAddress,
+      requestDate,
+      requiredAddress,
+      permissionStatus,
+    });
+
+    insertStmt.run(
+      requestAddress,
+      requestDate,
+      requiredAddress,
+      permissionStatus
+    );
+    console.log("Data inserted successfully:", {
+      requestAddress: requestAddress,
+      requestDate: requestDate,
+      requiredAddress: requiredAddress,
+      permissionStatus: permissionStatus,
+    });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/checkPermission", (req, res) => {
+  const query = req.body.query;
+  try {
+    const selectStmt = db.prepare(`
+      SELECT ud.firstName, ud.lastName
+      FROM PermissionData pd
+      INNER JOIN userData ud ON pd.requestAddress = ud.walletAddress
+      WHERE pd.requiredAddress = ? AND pd.permissionStatus = 0
+    `);
+
+    const result = selectStmt.get(query);
+
+    if (result) {
+      console.log("Records found matching requiredAddress query:", query);
+      res.status(200).json({ success: true, records: [result] });
+    } else {
+      console.log("No records found matching query:", query);
+      res.status(200).json({ success: false, message: "No records found" });
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/grantPermission", (req, res) => {
+  const requiredAddress = req.body;
+  try {
+    const updateStmt = db.prepare(
+      "UPDATE PermissionData SET permissionStatus = 1 WHERE requiredAddress = ?"
+    );
+
+    console.log(requiredAddress.requiredAddress.requiredAddress);
+
+    updateStmt.run(requiredAddress.requiredAddress.requiredAddress);
+    console.log("Data updated successfully:", {
+      requiredAddress,
+    });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error inserting data:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

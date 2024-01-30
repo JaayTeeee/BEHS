@@ -40,7 +40,12 @@ function App() {
         <WalletModalProvider>
           <div className="App">
             <div className="App">
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                 <div
                   style={{
                     display: "flex",

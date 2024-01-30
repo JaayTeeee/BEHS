@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 interface CheckUserDataProps {
-  address: string;
+  query: string;
   onCheckDataReceived: (checkData: CheckData | null) => void;
 }
 
@@ -10,10 +10,11 @@ interface CheckData {
   lastName: string;
   gender: string;
   dateBirth: string;
+  idNumber: string;
 }
 
 export default function CheckUserData({
-  address,
+  query,
   onCheckDataReceived,
 }: CheckUserDataProps) {
   const [checkData, setCheckData] = useState<CheckData | null>(null);
@@ -28,7 +29,7 @@ export default function CheckUserData({
           Accept: "application/json",
         }),
         mode: "cors",
-        body: JSON.stringify({ walletAddress: address }),
+        body: JSON.stringify({ query }),
       }
     );
 
@@ -54,10 +55,9 @@ export default function CheckUserData({
       });
   }
 
- useEffect(() => {
-  fetchData();
-}, [address]);
-
+  useEffect(() => {
+    fetchData();
+  }, [query]);
 
   return null;
 }

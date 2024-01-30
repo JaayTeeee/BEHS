@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS medicalRecordData (
     hospitalAddress TEXT
 );
 
-DROP TABLE medicalRecordData;
+DROP TABLE userData;
 
 CREATE TABLE IF NOT EXISTS researchData (
     recordID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS userData (
     lastName TEXT,
     gender TEXT,
     dateBirth TEXT,
-    idNumber INTEGER,
+    idNumber INTEGER UNIQUE,
     phoneNumber INTEGER,
     address TEXT,
     city TEXT,
@@ -57,13 +57,13 @@ CREATE TABLE IF NOT EXISTS userData (
 
 INSERT INTO userData (walletAddress, firstName, lastName, gender, dateBirth, idNumber, phoneNumber, address, city, postcode, state, userType) 
 VALUES (
-    'CJjZcCKPCzwdN8MSUBMritQBaPRZoMZ72nzYFt2KE98w', 
+    'ABt7ZBcL6UpRoTDMvKGECKsRfMiMqpMSMqjpgmw6CuZJ', 
     'Hospital', 
-    'ABC',  
+    'XYZ',  
     '',  
     NULL,  
-    1232345645,    
-    12344567878, 
+    5734322346,    
+    64578236453, 
     'Jalan Ampang', 
     'Kuala Lumpur', 
     58200, 

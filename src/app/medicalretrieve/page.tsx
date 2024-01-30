@@ -5,6 +5,10 @@ import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
+<<<<<<< HEAD
+import GetPermission from "../functions/getPermission";
+=======
+>>>>>>> jero
 
 interface CheckData {
   recordID: string;
@@ -20,13 +24,25 @@ interface CheckData {
   hospitalAddress: string;
 }
 
+interface ReqProps {
+  requestAddress: string;
+  requiredAddress: string;
+}
+
 export default function RetrieveRecord() {
   const [checkData, setCheckData] = useState<CheckData | null>(null);
   const [checkFirstData, setCheckFirstData] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
 
-  const handleRequest = (query: string) => {
-    setSearchQuery(query);
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const addressFromQuery = urlSearchParams.get("WalletAddress");
+    setWalletAddress(addressFromQuery);
+  }, [fetchWalletAddress]);
+
+  const handleRequest = ({ requestAddress, requiredAddress }: ReqProps) => {
+    GetPermission(fetchWalletAddress, checkData?.userAddress);
   };
 
   const handleSearch = async (query: string) => {
@@ -65,7 +81,7 @@ export default function RetrieveRecord() {
         const checkData = await checkRequest.json();
         if (checkData.success) {
           console.log("Received data:", checkData);
-          return checkData as CheckData;
+          return checkData.records[0] as CheckData;
         } else {
           console.error("Failed to check ID:", checkData);
           return null;
@@ -139,9 +155,13 @@ export default function RetrieveRecord() {
                 <SearchButton onClick={() => handleSearch(searchQuery)} />
               </div>
             </div>
+<<<<<<< HEAD
+
+=======
             <br />
             <br />
             <br />
+>>>>>>> jero
             <div
               className="green-bar"
               style={{
@@ -153,12 +173,15 @@ export default function RetrieveRecord() {
             >
               <div className="greenbar-title">
                 <div style={{ display: "flex", flexDirection: "row" }}>
+<<<<<<< HEAD
+=======
                   <div style={{ flexDirection: "column", marginTop: "40px" }}>
                     <strong style={{ marginRight: "50px" }}>Record ID</strong>
                     <div style={{ marginRight: "60px" }}>
                       {checkData?.recordID}
                     </div>
                   </div>
+>>>>>>> jero
                   <div style={{ marginTop: "40px", flexDirection: "column" }}>
                     <strong style={{ marginRight: "50px" }}>Date</strong>
                     <div style={{ marginRight: "50px" }}>
@@ -179,7 +202,9 @@ export default function RetrieveRecord() {
                     </div>
                   </div>
                   <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                    <div style={{ marginLeft: "30px" }}>
+                    <strong>Hospital Address</strong>
+
+                    <div>
                       {checkData && checkData.hospitalAddress && (
                         <>
                           {checkData.hospitalAddress.substring(0, 7)}...
@@ -196,7 +221,16 @@ export default function RetrieveRecord() {
               <RectangleButton
                 text="Request"
                 textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+<<<<<<< HEAD
+                onClick={() =>
+                  handleRequest({
+                    requestAddress: fetchWalletAddress,
+                    requiredAddress: checkData?.userAddress,
+                  })
+                }
+=======
                 onClick={handleRequest}
+>>>>>>> jero
               />
             </div>
           </div>

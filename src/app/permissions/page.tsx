@@ -1,7 +1,6 @@
 import HomePageButton from "../components/HomePageButton";
-import ApproveButton from "../components/approveButton";
+import PermissionComponent from "../components/PermissionComponent";
 import HistoryTable from "../components/historyPermissionTable";
-import RejectButton from "../components/rejectButton";
 
 export default function Permissions() {
   return (
@@ -35,24 +34,7 @@ export default function Permissions() {
         <div className="BEHS" style={{ fontSize: "70px" }}>
           <strong>Permissions</strong>
         </div>
-        <div
-          className="green-bar"
-          style={{
-            display: "flex",
-            color: "#339f6b",
-            fontSize: "25px",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <p style={{ margin: "0 30px" }}>
-            [Hospital] wants to access your medical record
-          </p>
-          <div style={{ display: "flex", marginRight: "40px" }}>
-            <ApproveButton />
-            <RejectButton />
-          </div>
-        </div>
+        <PermissionComponent />
         <br />
         <div
           className="BEHS"

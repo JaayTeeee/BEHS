@@ -5,7 +5,6 @@ interface TableRowProps {
     header1: string;
     header2: string;
     header3: string;
-    header4: string;
   };
 }
 
@@ -14,7 +13,6 @@ const TableRow: React.FC<TableRowProps> = ({ data }) => (
     <td style={cellStyle}>{data.header1}</td>
     <td style={cellStyle}>{data.header2}</td>
     <td style={cellStyle}>{data.header3}</td>
-    <td style={cellStyle}>{data.header4}</td>
   </tr>
 );
 
@@ -24,13 +22,11 @@ const PermissionTable: React.FC = () => {
       header1: "Row 1, Cell 1",
       header2: "Row 1, Cell 2",
       header3: "Row 1, Cell 3",
-      header4: "Row 1, Cell 4",
     },
     {
       header1: "Row 2, Cell 1",
       header2: "Row 2, Cell 2",
       header3: "Row 2, Cell 3",
-      header4: "Row 2, Cell 4",
     },
     // Add more data as needed
   ];
@@ -40,7 +36,6 @@ const PermissionTable: React.FC = () => {
       <table style={tableStyle}>
         <thead>
           <tr>
-            <th style={headerCellStyle}>Access ID</th>
             <th style={headerCellStyle}>Date</th>
             <th style={headerCellStyle}>Time</th>
             <th style={headerCellStyle}>Hospital</th>
