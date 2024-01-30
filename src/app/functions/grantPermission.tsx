@@ -1,7 +1,9 @@
-export default function grantPermission(requiredAddress) {
+export default function grantPermission(requiredAddress, permissionID) {
   try {
+    
     const insertUserData = {
       requiredAddress: requiredAddress,
+      permissionID: permissionID,
     };
     const request = new Request("http://localhost:3001/api/grantPermission", {
       method: "POST",
