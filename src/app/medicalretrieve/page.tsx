@@ -1,12 +1,13 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
 import GetPermission from "../functions/getPermission";
-
 interface CheckData {
   recordID: string;
   recordDate: string;
@@ -39,7 +40,20 @@ export default function RetrieveRecord() {
   }, [fetchWalletAddress]);
 
   const handleRequest = ({ requestAddress, requiredAddress }: ReqProps) => {
-    GetPermission(fetchWalletAddress, checkData?.userAddress);
+    const onSuccess = () => {
+      toast.success("Request sent successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+      });
+    };
+
+    GetPermission(fetchWalletAddress, checkData?.userAddress, onSuccess);
   };
 
   const handleSearch = async (query: string) => {
@@ -122,6 +136,8 @@ export default function RetrieveRecord() {
           marginBottom: "100px",
         }}
       >
+        <ToastContainer />
+
         <div style={{ flexDirection: "column", marginLeft: "45px" }}>
           <div className="BEHS" style={{ fontSize: "78px" }}>
             <strong>Retrieve Medical Record</strong>

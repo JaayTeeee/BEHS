@@ -1,4 +1,8 @@
-export default function GetPermission(requestAddress, requiredAddress) {
+export default function GetPermission(
+  requestAddress,
+  requiredAddress,
+  onSuccess
+) {
   const now = new Date();
   const stringDate = now.toLocaleDateString();
   console.log(requestAddress);
@@ -30,8 +34,7 @@ export default function GetPermission(requestAddress, requiredAddress) {
       .then((response) => {
         if (response.success) {
           console.log("Permission inserted!");
-          const url = `http://localhost:3000/medicalwelcome?WalletAddress=${requestAddress}`;
-          window.location.href = url;
+          onSuccess();
         } else {
           console.error("Address is null or response is not successful.");
         }
