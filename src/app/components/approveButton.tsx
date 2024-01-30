@@ -1,8 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
 import ApproveImage from "../../../public/icons/icons-correct.png";
+import grantPermission from "../functions/grantPermission";
 
-const ApproveButton = () => {
+const ApproveButton = (requiredAddress: string) => {
   return (
     <div
       style={{
@@ -13,14 +13,14 @@ const ApproveButton = () => {
         width: "72px",
       }}
     >
-      <Link
-        href="/profile"
+      <button
+        onClick={() => grantPermission(requiredAddress)}
         style={{
           display: "inline-block",
         }}
       >
         <Image src={ApproveImage} alt="Button Icon" />
-      </Link>
+      </button>
     </div>
   );
 };

@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
-import { SearchComponent } from "../components/SearchComponent";
 import SearchButton from "../components/searchButton";
-import SearchMedicalRecord from "../functions/searchQueryRecord";
+import GetPermission from "../functions/getPermission";
 
 interface CheckData {
   recordID: string;
@@ -22,48 +21,64 @@ interface CheckData {
   hospitalAddress: string;
 }
 
+interface ReqProps {
+  requestAddress: string;
+  requiredAddress: string;
+}
+
 export default function RetrieveRecord() {
   const [checkData, setCheckData] = useState<CheckData | null>(null);
+  const [checkFirstData, setCheckFirstData] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
 
-  const handleRequest = (query: string) => {
-    setSearchQuery(query);
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const addressFromQuery = urlSearchParams.get("WalletAddress");
+    setWalletAddress(addressFromQuery);
+  }, [fetchWalletAddress]);
+
+  const handleRequest = ({ requestAddress, requiredAddress }: ReqProps) => {
+    GetPermission(fetchWalletAddress, checkData?.userAddress);
   };
-  
+
   const handleSearch = async (query: string) => {
-    console.log('Query:', query);
-    if (typeof query === 'string') {
+    console.log("Query:", query);
+    if (typeof query === "string") {
       try {
         const data = await searchRecord(query);
+        if (checkFirstData !== false) {
+          setCheckFirstData(true);
+        }
         setCheckData(data);
       } catch (error) {
         console.error("Error fetching medical records:", error);
+        if (checkFirstData !== false) {
+          setCheckFirstData(true);
+        }
         setCheckData(null);
       }
     } else {
-      console.error('Invalid query type:', query);
+      console.error("Invalid query type:", query);
     }
-  }; 
+  };
 
   const searchRecord = async (query: string): Promise<CheckData | null> => {
     try {
-      const checkRequest = await fetch(
-        "http://localhost:3001/api/checkItem",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ query }),
-        }
-      );
+      const checkRequest = await fetch("http://localhost:3001/api/checkItem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ query }),
+      });
 
       if (checkRequest.ok) {
         const checkData = await checkRequest.json();
         if (checkData.success) {
           console.log("Received data:", checkData);
-          return checkData as CheckData;
+          return checkData.records[0] as CheckData;
         } else {
           console.error("Failed to check ID:", checkData);
           return null;
@@ -74,18 +89,39 @@ export default function RetrieveRecord() {
     } catch (error) {
       console.error("Fetch error during check:", error);
       return null;
-    } 
+    } finally {
+      setCheckFirstData(true);
+    }
   };
 
-  
   return (
     <main>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", marginLeft: "20px", marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
           <HomePageButton />
         </div>
       </div>
-      <div style={{ textAlign: "center", marginTop: "-20px", marginRight: "400px", marginBottom: "100px" }}>
+      <div
+        style={{
+          textAlign: "center",
+          marginTop: "-20px",
+          marginRight: "400px",
+          marginBottom: "100px",
+        }}
+      >
         <div style={{ flexDirection: "column", marginLeft: "45px" }}>
           <div className="BEHS" style={{ fontSize: "78px" }}>
             <strong>Retrieve Medical Record</strong>
@@ -105,15 +141,18 @@ export default function RetrieveRecord() {
                   type="text"
                   value={searchQuery}
                   placeholder="Search for wallet address and ID No..."
-                  style={{ backgroundColor: "#dfdfdf", outline: "none", border: "none", marginLeft: "10px" }}
+                  style={{
+                    backgroundColor: "#dfdfdf",
+                    outline: "none",
+                    border: "none",
+                    marginLeft: "10px",
+                  }}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <SearchButton onClick={() => handleSearch(searchQuery)} />
               </div>
             </div>
-            <br />
-            <br />
-            <br />
+
             <div
               className="green-bar"
               style={{
@@ -123,44 +162,53 @@ export default function RetrieveRecord() {
                 flexDirection: "row",
               }}
             >
-            {checkData.records.map((record, index) => (
-              <div key={index}>
-                <div className="greenbar-title">
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div style={{ flexDirection: "column", marginTop: "40px" }}>
-                      <strong style={{ marginRight: "50px" }}>Record ID</strong>
-                      <div style={{ marginRight: "60px" }}>
-                        {record.recordID}
-                      </div>
+              <div className="greenbar-title">
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                    <strong style={{ marginRight: "50px" }}>Date</strong>
+                    <div style={{ marginRight: "50px" }}>
+                      {checkData?.recordDate}
                     </div>
-                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                      <strong style={{ marginRight: "50px" }}>Date</strong>
-                      <div style={{ marginRight: "50px" }}>
-                        {record.recordDate}
-                      </div>
+                  </div>
+                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                    <strong style={{ marginRight: "60px" }}>Patient ID</strong>
+                    <div style={{ marginRight: "50px" }}>
+                      {checkData && checkData.userAddress && (
+                        <>
+                          {checkData.userAddress.substring(0, 7)}...
+                          {checkData.userAddress.substring(
+                            checkData.userAddress.length - 7
+                          )}
+                        </>
+                      )}
                     </div>
-                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                      <strong style={{ marginRight: "70px" }}>Patient ID</strong>
-                      <div style={{ marginRight: "50px" }}>
-                        {record.userAddress.substring(0, 7)}...
-                        {record.userAddress.substring(record.userAddress.length - 7)}
-                      </div>
-                    </div>
-                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                      <strong style={{ marginLeft: "60px" }}>Hospital ID</strong>
-                      <div style={{ marginLeft: "50px" }}>
-                        {record.hospitalAddress.substring(0, 7)}...
-                        {record.hospitalAddress.substring(record.hospitalAddress.length - 7)}
-                      </div>
+                  </div>
+                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                    <strong>Hospital Address</strong>
+
+                    <div>
+                      {checkData && checkData.hospitalAddress && (
+                        <>
+                          {checkData.hospitalAddress.substring(0, 7)}...
+                          {checkData.hospitalAddress.substring(
+                            checkData.hospitalAddress.length - 7
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
+
               <RectangleButton
                 text="Request"
                 textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-                onClick={handleRequest}
+                onClick={() =>
+                  handleRequest({
+                    requestAddress: fetchWalletAddress,
+                    requiredAddress: checkData?.userAddress,
+                  })
+                }
               />
             </div>
           </div>
@@ -179,7 +227,12 @@ export default function RetrieveRecord() {
                   type="text"
                   value={searchQuery}
                   placeholder="Search..."
-                  style={{ backgroundColor: "#dfdfdf", outline: "none", border: "none", marginLeft: "10px" }}
+                  style={{
+                    backgroundColor: "#dfdfdf",
+                    outline: "none",
+                    border: "none",
+                    marginLeft: "10px",
+                  }}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <SearchButton onClick={() => handleSearch(searchQuery)} />
@@ -196,7 +249,7 @@ export default function RetrieveRecord() {
               }}
             >
               {checkFirstData === false ? (
-                <strong>Please input user&apos;s address or ID Number: </strong>
+                <strong>Please input user&apos;s address: </strong>
               ) : (
                 <strong>User not found!</strong>
               )}

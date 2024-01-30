@@ -1,11 +1,10 @@
 "use client";
 import Image from "next/image";
+import { useState } from "react";
 import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
-import RectangleButton from "../components/RectangleButton";
-import SearchButton from "../components/searchButton";
 import MedicalRecordInserter from "../components/MedicalRecordInserter";
-import { useState } from "react";
+import SearchButton from "../components/searchButton";
 
 interface CheckData {
   walletAddress: string;
@@ -42,16 +41,23 @@ export default function MedicalInsert() {
     }
   };
 
-  const searchRecord = async ({ query }: { query: string }): Promise<CheckData | null> => {
+  const searchRecord = async ({
+    query,
+  }: {
+    query: string;
+  }): Promise<CheckData | null> => {
     try {
-      const checkRequest = await fetch("http://localhost:3001/api/checkUserData", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ query }),
-      });
+      const checkRequest = await fetch(
+        "http://localhost:3001/api/checkUserData",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ query }),
+        }
+      );
 
       if (checkRequest.ok) {
         const checkData = await checkRequest.json();
@@ -88,6 +94,7 @@ export default function MedicalInsert() {
             alignItems: "center",
             marginLeft: "20px",
             marginTop: "20px",
+            marginBottom: "20px",
           }}
         >
           <HomePageButton />
@@ -98,50 +105,73 @@ export default function MedicalInsert() {
           textAlign: "center",
           marginTop: "-60px",
           marginRight: "400px",
-          marginBottom: "100px",
+          marginBottom: "50px",
         }}
       >
         <div style={{ flexDirection: "column", marginLeft: "45px" }}>
           <div className="BEHS" style={{ fontSize: "78px" }}>
             <strong>Insert Medical Record</strong>
           </div>
-          <div style={{ marginBottom: "50px" }} >
-          <div className="search-box" style={{ marginLeft: "1050px", display: "flex", alignItems: "center" }}>
-            <Image
-              src={searchIcon}
-              className="icon"
-              alt="search-icon"
-              style={{ height: "25px", width: "25px", marginLeft: "10px" }}
-            />
-            <input
-              type="text"
-              value={searchQuery}
-              placeholder="Search for wallet address and ID No..."
+          <div style={{ marginBottom: "30px" }}>
+            <div
+              className="search-box"
               style={{
-                backgroundColor: "#dfdfdf",
-                outline: "none",
-                border: "none",
-                marginLeft: "10px",
+                marginLeft: "1050px",
+                alignItems: "center",
               }}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchButton onClick={() => handleSearch(searchQuery)} />
+            >
+              <Image
+                src={searchIcon}
+                className="icon"
+                alt="search-icon"
+                style={{ height: "25px", width: "25px", marginLeft: "10px" }}
+              />
+              <input
+                type="text"
+                value={searchQuery}
+                placeholder="Search for wallet address and ID No..."
+                style={{
+                  backgroundColor: "#dfdfdf",
+                  outline: "none",
+                  border: "none",
+                  marginLeft: "10px",
+                }}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <SearchButton onClick={() => handleSearch(searchQuery)} />
+            </div>
           </div>
-          </div>
-          <div className="BEHS" style={{ display: "flex", justifyContent: "center", fontSize: "24px", marginLeft: "320px", marginTop: "40px" }}>
-            {checkFirstData === false ? (
-              <strong>Please input user's demographic information by searching for their user address or ID Number: </strong>
-            ) : (
-              <strong>User not found!</strong>
+          <div
+            className="BEHS"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              fontSize: "24px",
+              marginLeft: "320px",
+            }}
+          >
+            {checkData === null && (
+              <>
+                {checkFirstData === false ? (
+                  <strong>
+                    Please input user&apos;s demographic information by
+                    searching for their address or ID Number:
+                  </strong>
+                ) : (
+                  <strong>User not found!</strong>
+                )}
+              </>
             )}
           </div>
           <div style={{ display: "flex" }}>
-          {checkData && checkData.records && checkData.records.map((record, index) => (
-                  <div key={index}>
-                    <MedicalRecordInserter address={record.walletAddress} />
-                  </div>
-                ))}
-              </div>
+            {checkData &&
+              checkData.records &&
+              checkData.records.map((record, index) => (
+                <div key={index}>
+                  <MedicalRecordInserter address={record.walletAddress} />
+                </div>
+              ))}
+          </div>
         </div>
       </div>
     </main>

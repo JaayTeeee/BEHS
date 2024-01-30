@@ -55,10 +55,9 @@ export default function CheckUserData({
       });
   }
 
- useEffect(() => {
-  fetchData();
-}, [query]);
-
+  useEffect(() => {
+    fetchData();
+  }, [query]);
 
   return null;
 }
