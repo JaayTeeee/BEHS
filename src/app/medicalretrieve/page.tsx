@@ -1,14 +1,11 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
-<<<<<<< HEAD
 import GetPermission from "../functions/getPermission";
-=======
->>>>>>> jero
 
 interface CheckData {
   recordID: string;
@@ -155,13 +152,6 @@ export default function RetrieveRecord() {
                 <SearchButton onClick={() => handleSearch(searchQuery)} />
               </div>
             </div>
-<<<<<<< HEAD
-
-=======
-            <br />
-            <br />
-            <br />
->>>>>>> jero
             <div
               className="green-bar"
               style={{
@@ -173,15 +163,6 @@ export default function RetrieveRecord() {
             >
               <div className="greenbar-title">
                 <div style={{ display: "flex", flexDirection: "row" }}>
-<<<<<<< HEAD
-=======
-                  <div style={{ flexDirection: "column", marginTop: "40px" }}>
-                    <strong style={{ marginRight: "50px" }}>Record ID</strong>
-                    <div style={{ marginRight: "60px" }}>
-                      {checkData?.recordID}
-                    </div>
-                  </div>
->>>>>>> jero
                   <div style={{ marginTop: "40px", flexDirection: "column" }}>
                     <strong style={{ marginRight: "50px" }}>Date</strong>
                     <div style={{ marginRight: "50px" }}>
@@ -221,16 +202,12 @@ export default function RetrieveRecord() {
               <RectangleButton
                 text="Request"
                 textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-<<<<<<< HEAD
                 onClick={() =>
                   handleRequest({
                     requestAddress: fetchWalletAddress,
                     requiredAddress: checkData?.userAddress,
                   })
                 }
-=======
-                onClick={handleRequest}
->>>>>>> jero
               />
             </div>
           </div>
