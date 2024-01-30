@@ -23,8 +23,6 @@ export default function grantPermission(requiredAddress) {
       .then((response) => {
         if (response.success) {
           console.log("Permission granted!");
-          const url = `http://localhost:3000/welcome?WalletAddress=${requiredAddress}`;
-          window.location.href = url;
         } else {
           console.error("Address is null or response is not successful.");
         }
