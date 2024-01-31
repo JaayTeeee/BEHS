@@ -10,10 +10,16 @@
 }
 
 body {
-  color: #000000; /* Set the text color to black */
-  background-color: #ffffff; /* Set the background color to white */
+  color: #000000;
+  background-color: #ffffff;
+  overflow: hidden;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .circle {
@@ -110,9 +116,9 @@ body {
 
 .greenbar-title {
   color: #339f6b;
-  font-size: 25px;
+  font-size: 23px;
   margin-left: 20px;
-  margin-top: -40px;
+  margin-top: -30px;
 }
 
 .popup-container {

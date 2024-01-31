@@ -41,7 +41,11 @@ export default function RetrieveRecord() {
     setWalletAddress(addressFromQuery);
   }, [fetchWalletAddress]);
 
-  const handleRequest = ({ requestAddress, requiredAddress, recordID }: ReqProps) => {
+  const handleRequest = ({
+    requestAddress,
+    requiredAddress,
+    recordID,
+  }: ReqProps) => {
     const onSuccess = () => {
       toast.success("Request sent successfully!", {
         position: "top-right",
@@ -99,7 +103,7 @@ export default function RetrieveRecord() {
         } else {
           console.error("Failed to check ID:", checkData);
           return null;
-        }        
+        }
       } else {
         throw new Error("Failed to check ID");
       }
@@ -113,21 +117,41 @@ export default function RetrieveRecord() {
 
   return (
     <main>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", marginLeft: "20px", marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
           <HomePageButton />
         </div>
       </div>
-  
-      <div style={{ textAlign: "center", marginTop: "-20px", marginRight: "400px", marginBottom: "100px" }}>
+
+      <div
+        style={{
+          textAlign: "center",
+          marginTop: "-20px",
+          marginRight: "400px",
+          marginBottom: "100px",
+        }}
+      >
         <ToastContainer />
-  
+
         <div style={{ flexDirection: "column", marginLeft: "45px" }}>
           <div className="BEHS" style={{ fontSize: "78px" }}>
             <strong>Retrieve Medical Record</strong>
           </div>
         </div>
-  
+
         <div style={{ marginBottom: "50px" }}>
           <div className="search-box" style={{ marginLeft: "1050px" }}>
             <Image
@@ -140,7 +164,12 @@ export default function RetrieveRecord() {
               type="text"
               value={searchQuery}
               placeholder="Search for wallet address and ID No..."
-              style={{ backgroundColor: "#dfdfdf", outline: "none", border: "none", marginLeft: "10px" }}
+              style={{
+                backgroundColor: "#dfdfdf",
+                outline: "none",
+                border: "none",
+                marginLeft: "10px",
+              }}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <SearchButton onClick={() => handleSearch(searchQuery)} />
@@ -154,35 +183,51 @@ export default function RetrieveRecord() {
                   <div style={{ display: "flex", flexDirection: "row" }}>
                     <div style={{ marginTop: "40px", flexDirection: "column" }}>
                       <strong style={{ marginRight: "50px" }}>Record ID</strong>
-                      <div style={{ marginRight: "50px" }}>{record.recordID}</div>
+                      <div style={{ marginRight: "50px" }}>
+                        {record.recordID}
+                      </div>
                     </div>
                     <div style={{ marginTop: "40px", flexDirection: "column" }}>
                       <strong style={{ marginRight: "50px" }}>Date</strong>
-                      <div style={{ marginRight: "50px" }}>{record.recordDate}</div>
+                      <div style={{ marginRight: "50px" }}>
+                        {record.recordDate}
+                      </div>
                     </div>
                     <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                      <strong style={{ marginRight: "60px" }}>Patient ID</strong>
+                      <strong style={{ marginRight: "60px" }}>
+                        Patient ID
+                      </strong>
                       <div style={{ marginRight: "50px" }}>
                         {record.userAddress && (
                           <>
                             {record.userAddress.substring(0, 7)}...
-                            {record.userAddress.substring(record.userAddress.length - 7)}
+                            {record.userAddress.substring(
+                              record.userAddress.length - 7
+                            )}
                           </>
                         )}
                       </div>
                     </div>
-                    <div style={{ marginTop: "40px", flexDirection: "column", marginRight: "200px" }}>
+                    <div
+                      style={{
+                        marginTop: "40px",
+                        flexDirection: "column",
+                        marginRight: "200px",
+                      }}
+                    >
                       <strong>Hospital Address</strong>
                       <div>
                         {record.hospitalAddress && (
                           <>
                             {record.hospitalAddress.substring(0, 7)}...
-                            {record.hospitalAddress.substring(record.hospitalAddress.length - 7)}
+                            {record.hospitalAddress.substring(
+                              record.hospitalAddress.length - 7
+                            )}
                           </>
                         )}
                       </div>
-                    </div>  
-                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                    </div>
+                    <div style={{ marginTop: "32px", flexDirection: "column" }}>
                       <RectangleButton
                         text="Request"
                         textStyle={{ fontSize: "30px", fontWeight: "bold" }}
@@ -201,7 +246,16 @@ export default function RetrieveRecord() {
             </div>
           ))
         ) : (
-          <div className="BEHS" style={{ display: "flex", justifyContent: "center", fontSize: "24px", marginLeft: "320px", marginTop: "40px" }}>
+          <div
+            className="BEHS"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              fontSize: "24px",
+              marginLeft: "320px",
+              marginTop: "40px",
+            }}
+          >
             {checkFirstData === false ? (
               <strong>Please input user&apos;s address: </strong>
             ) : (
@@ -209,7 +263,7 @@ export default function RetrieveRecord() {
             )}
           </div>
         )}
-</div>
+      </div>
     </main>
   );
 }
