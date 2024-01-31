@@ -8,6 +8,7 @@ import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
 import GetPermission from "../functions/getPermission";
+
 interface CheckData {
   recordID: string;
   recordDate: string;
@@ -25,6 +26,7 @@ interface CheckData {
 interface ReqProps {
   requestAddress: string;
   requiredAddress: string;
+  recordID: string;
 }
 
 export default function RetrieveRecord() {
@@ -39,7 +41,7 @@ export default function RetrieveRecord() {
     setWalletAddress(addressFromQuery);
   }, [fetchWalletAddress]);
 
-  const handleRequest = ({ requestAddress, requiredAddress }: ReqProps) => {
+  const handleRequest = ({ requestAddress, requiredAddress, recordID }: ReqProps) => {
     const onSuccess = () => {
       toast.success("Request sent successfully!", {
         position: "top-right",
@@ -53,7 +55,7 @@ export default function RetrieveRecord() {
       });
     };
 
-    GetPermission(fetchWalletAddress, checkData?.userAddress, onSuccess);
+    GetPermission(requestAddress, requiredAddress, recordID, onSuccess);
   };
 
   const handleSearch = async (query: string) => {
@@ -91,12 +93,13 @@ export default function RetrieveRecord() {
       if (checkRequest.ok) {
         const checkData = await checkRequest.json();
         if (checkData.success) {
-          console.log("Received data:", checkData);
-          return checkData.records[0] as CheckData;
+          setCheckData(checkData.records);
+          console.log("Received data:", checkData.records);
+          return checkData.records as CheckData;
         } else {
           console.error("Failed to check ID:", checkData);
           return null;
-        }
+        }        
       } else {
         throw new Error("Failed to check ID");
       }
@@ -110,168 +113,103 @@ export default function RetrieveRecord() {
 
   return (
     <main>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginLeft: "20px",
-            marginTop: "20px",
-          }}
-        >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", marginLeft: "20px", marginTop: "20px" }}>
           <HomePageButton />
         </div>
       </div>
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "-20px",
-          marginRight: "400px",
-          marginBottom: "100px",
-        }}
-      >
+  
+      <div style={{ textAlign: "center", marginTop: "-20px", marginRight: "400px", marginBottom: "100px" }}>
         <ToastContainer />
-
+  
         <div style={{ flexDirection: "column", marginLeft: "45px" }}>
           <div className="BEHS" style={{ fontSize: "78px" }}>
             <strong>Retrieve Medical Record</strong>
           </div>
         </div>
-        {checkData && (
-          <div>
-            <div style={{ marginBottom: "50px" }}>
-              <div className="search-box" style={{ marginLeft: "1050px" }}>
-                <Image
-                  src={searchIcon}
-                  className="icon"
-                  alt="search-icon"
-                  style={{ height: "25px", width: "25px", marginLeft: "10px" }}
-                />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  placeholder="Search for wallet address and ID No..."
-                  style={{
-                    backgroundColor: "#dfdfdf",
-                    outline: "none",
-                    border: "none",
-                    marginLeft: "10px",
-                  }}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <SearchButton onClick={() => handleSearch(searchQuery)} />
-              </div>
-            </div>
-            <div
-              className="green-bar"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexDirection: "row",
-              }}
-            >
-              <div className="greenbar-title">
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                    <strong style={{ marginRight: "50px" }}>Date</strong>
-                    <div style={{ marginRight: "50px" }}>
-                      {checkData?.recordDate}
+  
+        <div style={{ marginBottom: "50px" }}>
+          <div className="search-box" style={{ marginLeft: "1050px" }}>
+            <Image
+              src={searchIcon}
+              className="icon"
+              alt="search-icon"
+              style={{ height: "25px", width: "25px", marginLeft: "10px" }}
+            />
+            <input
+              type="text"
+              value={searchQuery}
+              placeholder="Search for wallet address and ID No..."
+              style={{ backgroundColor: "#dfdfdf", outline: "none", border: "none", marginLeft: "10px" }}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <SearchButton onClick={() => handleSearch(searchQuery)} />
+          </div>
+        </div>
+        {checkData ? (
+          checkData.map((record, index) => (
+            <div key={index} style={{ marginBottom: "50px" }}>
+              <div className="green-bar">
+                <div className="greenbar-title">
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                      <strong style={{ marginRight: "50px" }}>Record ID</strong>
+                      <div style={{ marginRight: "50px" }}>{record.recordID}</div>
                     </div>
-                  </div>
-                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                    <strong style={{ marginRight: "60px" }}>Patient ID</strong>
-                    <div style={{ marginRight: "50px" }}>
-                      {checkData && checkData.userAddress && (
-                        <>
-                          {checkData.userAddress.substring(0, 7)}...
-                          {checkData.userAddress.substring(
-                            checkData.userAddress.length - 7
-                          )}
-                        </>
-                      )}
+                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                      <strong style={{ marginRight: "50px" }}>Date</strong>
+                      <div style={{ marginRight: "50px" }}>{record.recordDate}</div>
                     </div>
-                  </div>
-                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                    <strong>Hospital Address</strong>
-
-                    <div>
-                      {checkData && checkData.hospitalAddress && (
-                        <>
-                          {checkData.hospitalAddress.substring(0, 7)}...
-                          {checkData.hospitalAddress.substring(
-                            checkData.hospitalAddress.length - 7
-                          )}
-                        </>
-                      )}
+                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                      <strong style={{ marginRight: "60px" }}>Patient ID</strong>
+                      <div style={{ marginRight: "50px" }}>
+                        {record.userAddress && (
+                          <>
+                            {record.userAddress.substring(0, 7)}...
+                            {record.userAddress.substring(record.userAddress.length - 7)}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "40px", flexDirection: "column", marginRight: "200px" }}>
+                      <strong>Hospital Address</strong>
+                      <div>
+                        {record.hospitalAddress && (
+                          <>
+                            {record.hospitalAddress.substring(0, 7)}...
+                            {record.hospitalAddress.substring(record.hospitalAddress.length - 7)}
+                          </>
+                        )}
+                      </div>
+                    </div>  
+                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                      <RectangleButton
+                        text="Request"
+                        textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+                        onClick={() =>
+                          handleRequest({
+                            requestAddress: fetchWalletAddress,
+                            requiredAddress: record.userAddress,
+                            recordID: record.recordID,
+                          })
+                        }
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-
-              <RectangleButton
-                text="Request"
-                textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-                onClick={() =>
-                  handleRequest({
-                    requestAddress: fetchWalletAddress,
-                    requiredAddress: checkData?.userAddress,
-                  })
-                }
-              />
             </div>
+          ))
+        ) : (
+          <div className="BEHS" style={{ display: "flex", justifyContent: "center", fontSize: "24px", marginLeft: "320px", marginTop: "40px" }}>
+            {checkFirstData === false ? (
+              <strong>Please input user&apos;s address: </strong>
+            ) : (
+              <strong>User not found!</strong>
+            )}
           </div>
         )}
-        {!checkData && (
-          <div>
-            <div style={{ marginBottom: "50px" }}>
-              <div className="search-box" style={{ marginLeft: "1050px" }}>
-                <Image
-                  src={searchIcon}
-                  className="icon"
-                  alt="search-icon"
-                  style={{ height: "25px", width: "25px", marginLeft: "10px" }}
-                />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  placeholder="Search..."
-                  style={{
-                    backgroundColor: "#dfdfdf",
-                    outline: "none",
-                    border: "none",
-                    marginLeft: "10px",
-                  }}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <SearchButton onClick={() => handleSearch(searchQuery)} />
-              </div>
-            </div>
-            <div
-              className="BEHS"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                fontSize: "24px",
-                marginLeft: "320px",
-                marginTop: "40px",
-              }}
-            >
-              {checkFirstData === false ? (
-                <strong>Please input user&apos;s address: </strong>
-              ) : (
-                <strong>User not found!</strong>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+</div>
     </main>
   );
 }

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS medicalRecordData (
     hospitalAddress TEXT
 );
 
-DROP TABLE userData;
+DROP TABLE PermissionData;
 
 CREATE TABLE IF NOT EXISTS researchData (
     recordID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,6 +38,14 @@ VALUES (
     'ABt7ZBcL6UpRoTDMvKGECKsRfMiMqpMSMqjpgmw6CuZJ'
 );
 
+CREATE TABLE IF NOT EXISTS PermissionData (
+        permissionID INTEGER PRIMARY KEY AUTOINCREMENT,
+        recordID INTEGER,
+        requestAddress TEXT,
+        requestDate TEXT,
+        requiredAddress TEXT ,
+        permissionStatus NUMBER
+      );
 
 CREATE TABLE IF NOT EXISTS userData (
     userid INTEGER PRIMARY KEY AUTOINCREMENT,
