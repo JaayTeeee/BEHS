@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import searchIcon from "../../../public/icons/icons-search-black.png";
@@ -8,19 +8,26 @@ import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
 import GetPermission from "../functions/getPermission";
+import DetailBox from "../components/DetailBox";
 
 interface CheckData {
-  recordID: string;
+  recordID: number;
   recordDate: string;
   userAddress: string;
   firstName: string;
   lastName: string;
   gender: string;
   dateBirth: string;
-  idNumber: string;
+  idNumber: number;
   diagnosis: string;
   attachment: string;
   hospitalAddress: string;
+}
+
+interface PermissionData {
+  recordID: number;
+  permissionID: number;
+  permissionStatus: number;
 }
 
 interface ReqProps {
@@ -29,19 +36,38 @@ interface ReqProps {
   recordID: string;
 }
 
+interface RecordData {
+  recordID: string;
+  recordDate: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  dateBirth: string;
+  idNumber: string;
+  diagnosis: string;
+  attachment: string;
+  hospitalFirstName: string;
+  hospitalLastName: string;
+}
+
 export default function RetrieveRecord() {
-  const [checkData, setCheckData] = useState<CheckData | null>(null);
-  const [checkFirstData, setCheckFirstData] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
+  const [checkData, setCheckData] = useState<CheckData[]>([]);
+  const [permissionData, setPermissionData] = useState<PermissionData[]>([]);
+  const [checkFirstData, setCheckFirstData] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [fetchWalletAddress, setFetchWalletAddress] = useState<string | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<RecordData | null>(
+    null
+  );
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const addressFromQuery = urlSearchParams.get("WalletAddress");
-    setWalletAddress(addressFromQuery);
-  }, [fetchWalletAddress]);
+    setFetchWalletAddress(addressFromQuery);
+  }, []);
 
-  const handleRequest = ({
+  const handleRequest = async ({
     requestAddress,
     requiredAddress,
     recordID,
@@ -59,31 +85,32 @@ export default function RetrieveRecord() {
       });
     };
 
-    GetPermission(requestAddress, requiredAddress, recordID, onSuccess);
+    await GetPermission(requestAddress, requiredAddress, recordID, onSuccess);
   };
 
   const handleSearch = async (query: string) => {
     console.log("Query:", query);
     if (typeof query === "string") {
       try {
-        const data = await searchRecord(query);
-        if (checkFirstData !== false) {
-          setCheckFirstData(true);
+        const searchData = await searchRecord(query);
+        if (searchData && searchData.length > 0) {
+          const approvedData = await permissionApproved(searchData[0].userAddress);
+          if (approvedData) {
+            const updatedData = updateRecordsWithPermission(searchData, approvedData);
+            setCheckData(updatedData);
+          }
         }
-        setCheckData(data);
       } catch (error) {
         console.error("Error fetching medical records:", error);
-        if (checkFirstData !== false) {
-          setCheckFirstData(true);
-        }
-        setCheckData(null);
+      } finally {
+        setCheckFirstData(true);
       }
     } else {
       console.error("Invalid query type:", query);
     }
   };
 
-  const searchRecord = async (query: string): Promise<CheckData | null> => {
+  const searchRecord = async (query: string): Promise<CheckData[] | null> => {
     try {
       const checkRequest = await fetch("http://localhost:3001/api/checkItem", {
         method: "POST",
@@ -97,9 +124,8 @@ export default function RetrieveRecord() {
       if (checkRequest.ok) {
         const checkData = await checkRequest.json();
         if (checkData.success) {
-          setCheckData(checkData.records);
           console.log("Received data:", checkData.records);
-          return checkData.records as CheckData;
+          return checkData.records as CheckData[];
         } else {
           console.error("Failed to check ID:", checkData);
           return null;
@@ -115,6 +141,76 @@ export default function RetrieveRecord() {
     }
   };
 
+  const permissionApproved = async (userAddress: string): Promise<PermissionData[] | null> => {
+    try {
+      const permissionRequest = await fetch("http://localhost:3001/api/checkApprovedPermission", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ userAddress, hospitalAddress: fetchWalletAddress }),
+      });
+
+      if (permissionRequest.ok) {
+        const approvedData = await permissionRequest.json();
+        if (approvedData.success) {
+          console.log("permission Data:", approvedData.records);
+          return approvedData.records as PermissionData[];
+        } else {
+          console.error("Failed to find permission data:", approvedData);
+          return null;
+        }
+      } else {
+        throw new Error("Failed to find permission data");
+      }
+    } catch (error) {
+      console.error("Fetch error during check:", error);
+      return null;
+    }
+  };
+
+  const updateRecordsWithPermission = (records: CheckData[], approvedData: PermissionData[]): CheckData[] => {
+    return records.map(record => {
+      const permission = approvedData.find(item => item.recordID === record.recordID);
+      if (permission) {
+        return { ...record, permissionStatus: 1 };
+      }
+      return record;
+    });
+  };
+
+  const handleDetail = async (recordID: string) => {
+    console.log(recordID);
+    try {
+      const detailRequest = await fetch("http://localhost:3001/api/checkMedicalRecord", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ recordID }),
+      });
+
+      if (detailRequest.ok) {
+        const recordData = await detailRequest.json();
+        if (recordData.success) {
+          console.log("Record Data:", recordData);
+          setSelectedRecord(recordData);
+          setIsDetailsOpen(true);
+        } else {
+          console.error("Failed to fetch record data:", recordData);
+          return [];
+        }
+      } else {
+        throw new Error("Failed to fetch record data");
+      }
+    } catch (error) {
+      console.error("Fetch error during check:", error);
+      return [];
+    }
+  };
+  
   return (
     <main>
       <div
@@ -228,22 +324,44 @@ export default function RetrieveRecord() {
                       </div>
                     </div>
                     <div style={{ marginTop: "32px", flexDirection: "column" }}>
-                      <RectangleButton
-                        text="Request"
-                        textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-                        onClick={() =>
-                          handleRequest({
-                            requestAddress: fetchWalletAddress,
-                            requiredAddress: record.userAddress,
-                            recordID: record.recordID,
-                          })
-                        }
-                      />
+                      {record.permissionStatus === 1 ? (
+                        <>
+                          <RectangleButton
+                            text="View"
+                            textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+                            onClick={() => handleDetail({ recordID: record.recordID })}
+                            style={{ backgroundColor: "#3F45DD" }}
+                          />
+                          {isDetailsOpen && (
+                            <div className="popup-container">
+                              <div
+                                className="popup-overlay"
+                                onClick={() => setIsDetailsOpen(false)}
+                              ></div>
+                              <div className="popup-content">
+                                <DetailBox recordData={selectedRecord} />
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <RectangleButton
+                          text="Request"
+                          textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+                          onClick={() =>
+                            handleRequest({
+                              requestAddress: fetchWalletAddress,
+                              requiredAddress: record.userAddress,
+                              recordID: record.recordID,
+                            })
+                          }
+                        />
+                      )}
+                    </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
           ))
         ) : (
           <div

@@ -415,6 +415,37 @@ app.post("/api/checkPermission", (req, res) => {
   }
 });
 
+app.post("/api/checkApprovedPermission", (req, res) => {
+  const userAddress = req.body.userAddress;
+  const hospitalAddress = req.body.hospitalAddress;
+  try {
+    const selectStmt = db.prepare(`
+      SELECT 
+        pd.permissionID, pd.permissionStatus, md.recordDate, md.recordID, md.diagnosis, md.attachment, 
+        md.lastName, md.firstName, md.gender, md.dateBirth, md.idNumber, ud.firstName AS hospitalFirstName,
+        ud.lastName AS hospitalLastName
+      FROM PermissionData pd
+      INNER JOIN medicalRecordData md ON pd.requiredAddress = md.userAddress AND pd.recordID = md.recordID
+      INNER JOIN UserData ud ON pd.requestAddress = ? AND ud.walletAddress = pd.requestAddress
+      WHERE pd.requiredAddress = ? AND pd.requestAddress = ? AND pd.permissionStatus = 1
+    `);
+
+    const results = selectStmt.all(hospitalAddress, userAddress, hospitalAddress);
+
+    if (results && results.length > 0) {
+      console.log("Approved Records found", userAddress, hospitalAddress);
+      res.status(200).json({ success: true, records: results });
+    } else {
+      console.log("No approved records found:", userAddress, hospitalAddress);
+      res.status(200).json({ success: false, message: "No records found" });
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 app.post("/api/grantPermission", (req, res) => {
   const requiredAddress = req.body.requiredAddress;
   const permissionID = req.body.permissionID;
