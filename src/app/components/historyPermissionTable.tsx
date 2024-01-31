@@ -1,16 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-interface HospitalData {
-  firstName: string;
-  lastName: string;
-}
-
 interface CheckData {
   permissionID: string;
   requestDate: string;
   requestAddress: string;
   permissionStatus: string;
+  recordID: string;
 }
 
 const getStatusLabel = (status: number): string => {
@@ -67,12 +63,11 @@ const PermissionTable: React.FC = () => {
           // Extract records
           const records = checkData.records.map((record: CheckData) => ({
             permissionID: record.permissionID,
+            recordID: record.recordID,
             permissionStatus: record.permissionStatus,
             requestAddress: record.requestAddress,
             requestDate: record.requestDate,
           }));
-
-          const latestRecords = records.slice(-5);
 
           // Save hospitalName and records separately
           setHospitalData(hospitals);
@@ -80,7 +75,7 @@ const PermissionTable: React.FC = () => {
           const updatedTableData = {
             ...checkData,
             hospitalData: hospitals,
-            records: [latestRecords],
+            records: [records],
           };
           setTableData(updatedTableData);
           console.log("updatedTableData:", updatedTableData);
@@ -99,58 +94,48 @@ const PermissionTable: React.FC = () => {
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      {updatedTableData.records && updatedTableData.records.length > 0 ? (
-        <table style={tableStyle}>
-          <thead>
-            <tr>
-              <th style={headerCellStyle}>Permission ID</th>
-              <th style={headerCellStyle}>Date</th>
-              <th style={headerCellStyle}>Hospital</th>
-              <th style={headerCellStyle}>Permission Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {updatedTableData.records.map((recordArray, index) =>
-              recordArray.map((record, recordIndex) => (
-                <tr key={recordIndex} style={rowStyle}>
-                  <td style={cellStyle}>{record.permissionID}</td>
-                  <td style={cellStyle}>{record.requestDate}</td>
-                  <td
-                    style={cellStyle}
-                  >{`${updatedTableData.hospitalData[recordIndex].firstName} ${updatedTableData.hospitalData[recordIndex].lastName}`}</td>
-                  <td style={cellStyle}>
-                    {getStatusLabel(record.permissionStatus)}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      ) : (
-        <div
-          style={{
-            color: "#339f6b",
-            fontSize: "25px",
-            marginTop: "15px",
-          }}
-        >
-          <strong>No history.</strong>
-        </div>
-      )}
+      <table>
+        <thead>
+          <tr>
+            <th style={headerCellStyle}>Date</th>
+            <th style={headerCellStyle}>Time</th>
+            <th style={headerCellStyle}>Hospital</th>
+            <th style={headerCellStyle}>Permission Status</th>
+            <th style={headerCellStyle}>Records Requested</th>
+          </tr>
+        </thead>
+        <tbody>
+          {updatedTableData.records.map((recordArray, index) =>
+            recordArray.map((record, recordIndex) => (
+              <tr key={recordIndex} style={rowStyle}>
+                <td style={cellStyle}>{record.permissionID}</td>
+                <td style={cellStyle}>{record.requestDate}</td>
+                <td
+                  style={cellStyle}
+                >{`${updatedTableData.hospitalData[recordIndex].firstName} ${updatedTableData.hospitalData[recordIndex].lastName}`}</td>
+                <td style={cellStyle}>
+                  {getStatusLabel(record.permissionStatus)}
+                </td>
+                <td style={cellStyle}>{record.recordID}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };
 
 // Style for the entire table
 const tableStyle: React.CSSProperties = {
-  width: "80%",
+  width: "100%",
   borderCollapse: "collapse",
   marginTop: "20px",
-  marginBottom: "50px",
+  marginBottom: "20px",
   backgroundColor: "#F3FFEF",
   border: "2px solid #339f6b",
   height: "100px",
-  margin: "0",
+  marginLeft: "140px",
 };
 
 // Style for header cells
@@ -166,7 +151,7 @@ const headerCellStyle: React.CSSProperties = {
 
 // Style for regular cells
 const cellStyle: React.CSSProperties = {
-  padding: "10px",
+  padding: "12px",
   textAlign: "center",
   borderBottom: "1px solid #339f6b",
   margin: "0px 0", // Added margin, adjust as needed
