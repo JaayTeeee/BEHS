@@ -1,14 +1,14 @@
-export default function grantPermission(
+export default function rejectPermission(
   requiredAddress,
   permissionID,
-  onSuccess
+  onFailure
 ) {
   try {
     const insertUserData = {
       requiredAddress: requiredAddress,
       permissionID: permissionID,
     };
-    const request = new Request("http://localhost:3001/api/grantPermission", {
+    const request = new Request("http://localhost:3001/api/rejectPermission", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -27,8 +27,8 @@ export default function grantPermission(
       })
       .then((response) => {
         if (response.success) {
-          console.log("Permission granted!");
-          onSuccess();
+          console.log("Permission rejected!");
+          onFailure();
         } else {
           console.error("Address is null or response is not successful.");
         }

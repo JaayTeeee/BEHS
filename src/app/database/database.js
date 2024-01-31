@@ -361,17 +361,17 @@ app.post("/api/checkPermission", (req, res) => {
   const query = req.body.query;
   try {
     const selectStmt = db.prepare(`
-      SELECT ud.firstName, ud.lastName
+      SELECT ud.firstName, ud.lastName, pd.permissionID
       FROM PermissionData pd
       INNER JOIN userData ud ON pd.requestAddress = ud.walletAddress
       WHERE pd.requiredAddress = ? AND pd.permissionStatus = 0
     `);
 
-    const result = selectStmt.get(query);
+    const results = selectStmt.all(query); // Use all() to fetch all matching records
 
-    if (result) {
+    if (results && results.length > 0) {
       console.log("Records found matching requiredAddress query:", query);
-      res.status(200).json({ success: true, records: [result] });
+      res.status(200).json({ success: true, records: results });
     } else {
       console.log("No records found matching query:", query);
       res.status(200).json({ success: false, message: "No records found" });
@@ -383,15 +383,14 @@ app.post("/api/checkPermission", (req, res) => {
 });
 
 app.post("/api/grantPermission", (req, res) => {
-  const requiredAddress = req.body;
+  const requiredAddress = req.body.requiredAddress;
+  const permissionID = req.body.permissionID;
   try {
     const updateStmt = db.prepare(
-      "UPDATE PermissionData SET permissionStatus = 1 WHERE requiredAddress = ?"
+      "UPDATE PermissionData SET permissionStatus = 1 WHERE requiredAddress = ? AND permissionID = ?"
     );
 
-    console.log(requiredAddress.requiredAddress.requiredAddress);
-
-    updateStmt.run(requiredAddress.requiredAddress.requiredAddress);
+    updateStmt.run(requiredAddress, permissionID);
     console.log("Data updated successfully:", {
       requiredAddress,
     });
@@ -402,3 +401,78 @@ app.post("/api/grantPermission", (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+app.post("/api/rejectPermission", (req, res) => {
+  const requiredAddress = req.body.requiredAddress;
+  const permissionID = req.body.permissionID;
+  try {
+    const updateStmt = db.prepare(
+      "UPDATE PermissionData SET permissionStatus = -1 WHERE requiredAddress = ? AND permissionID = ?"
+    );
+
+    updateStmt.run(requiredAddress, permissionID);
+    console.log("Data updated successfully:", {
+      requiredAddress,
+    });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//require = user, request = hospital
+app.post("/api/showPermission", (req, res) => {
+  const query = req.body.query;
+  try {
+    const selectStmtRequest = db.prepare(`
+      SELECT ud.firstName, ud.lastName, pd.permissionStatus, pd.requestDate, pd.permissionID, pd.requestAddress
+      FROM PermissionData pd
+      INNER JOIN userData ud ON pd.requiredAddress = ud.walletAddress
+      WHERE pd.requiredAddress = ?
+    `);
+
+    const resultRequest = selectStmtRequest.all(query); // Use all method instead of get
+
+    if (resultRequest && resultRequest.length > 0) { // Check if resultRequest is not empty
+      console.log("Records found matching requiredAddress query:", query);
+      // Store the permission data in an object
+      const responseData = {
+        success: true,
+        records: resultRequest, // Store all relevant records
+      };
+
+      // Proceed to retrieve hospital name for each record
+      for (const record of resultRequest) {
+        const selectStmtHospital = db.prepare(`
+          SELECT ud.firstName, ud.lastName
+          FROM PermissionData pd
+          INNER JOIN userData ud ON pd.requestAddress = ud.walletAddress
+          WHERE pd.requestAddress = ?
+        `);
+
+        const resultHospital = selectStmtHospital.get(record.requestAddress);
+
+        if (resultHospital) {
+          console.log("Hospital name found for requestAddress:", record.requestAddress);
+          record.hospitalName = resultHospital;
+        } else {
+          console.log("No hospital name found for requestAddress:", record.requestAddress);
+          record.hospitalName = { firstName: "Unknown", lastName: "Unknown" };
+        }
+      }
+
+      // Send the response with all the data
+      res.status(200).json(responseData);
+    } else {
+      console.log("No records found matching query:", query);
+      res.status(200).json({ success: false, message: "No records found" });
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+

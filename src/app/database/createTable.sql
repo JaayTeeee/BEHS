@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS researchData (
 INSERT INTO medicalRecordData (userAddress, recordDate, firstName, lastName, gender, dateBirth, idNumber, diagnosis, attachment, hospitalAddress) 
 VALUES (
     'FKBZ4PQzvqx7mw5pj8nN9HLcjZ1fknjQwf6YuGGxF7ty',
-    '2024-01-27',
-    'weihi',
-    'ching',
+    '2024-01-30',
+    'JIYI',
+    'NG',
     'female',
     '2024-01-25',
     '1234567890',
@@ -57,12 +57,12 @@ CREATE TABLE IF NOT EXISTS userData (
 
 INSERT INTO userData (walletAddress, firstName, lastName, gender, dateBirth, idNumber, phoneNumber, address, city, postcode, state, userType) 
 VALUES (
-    'ABt7ZBcL6UpRoTDMvKGECKsRfMiMqpMSMqjpgmw6CuZJ', 
+    '6VkQtM8TSNEn1GNGBmiR2kkpAR1vPfpvu5gcix7bCRQo', 
     'Hospital', 
-    'XYZ',  
+    'UwU',  
     '',  
     NULL,  
-    5734322346,    
+    123234623,    
     64578236453, 
     'Jalan Ampang', 
     'Kuala Lumpur', 

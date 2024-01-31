@@ -1,10 +1,19 @@
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import HomePageButton from "../components/HomePageButton";
 import PermissionComponent from "../components/PermissionComponent";
 import HistoryTable from "../components/historyPermissionTable";
 
 export default function Permissions() {
   return (
-    <main>
+    <main
+      style={{
+        overflowY: "scroll",
+        height: "100vh", // Set the height to 100% of the viewport height
+        padding: "20px", // Add padding for better appearance
+      }}
+    >
+      <ToastContainer /> {/* Add the ToastContainer here */}
       <div
         style={{
           display: "flex",
@@ -23,22 +32,18 @@ export default function Permissions() {
           <HomePageButton />
         </div>
       </div>
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "-20px",
-          marginRight: "850px",
-          marginBottom: "100px",
-        }}
-      >
-        <div className="BEHS" style={{ fontSize: "70px" }}>
+      <div style={{ textAlign: "center", marginBottom: "100px" }}>
+        <div
+          className="BEHS"
+          style={{ fontSize: "70px", marginRight: "770px" }}
+        >
           <strong>Permissions</strong>
         </div>
         <PermissionComponent />
         <br />
         <div
           className="BEHS"
-          style={{ fontSize: "70px", marginRight: "150px" }}
+          style={{ fontSize: "70px", marginRight: "930px" }}
         >
           <strong>History</strong>
         </div>

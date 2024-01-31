@@ -1,8 +1,26 @@
 import Image from "next/image";
+import { useState } from "react";
 import ApproveImage from "../../../public/icons/icons-correct.png";
 import grantPermission from "../functions/grantPermission";
 
-const ApproveButton = (requiredAddress: string) => {
+const ApproveButton = ({
+  requiredAddress,
+  permissionID,
+  onSuccess,
+}: {
+  requiredAddress: string;
+  permissionID: BigInteger;
+  onSuccess: () => void;
+}) => {
+  // State to manage requiredAddress and permissionID
+  const [address, setAddress] = useState(requiredAddress);
+  const [id, setID] = useState(permissionID);
+
+  // Handler for button click
+  const handleGrantPermission = () => {
+    grantPermission(address, id, onSuccess);
+  };
+
   return (
     <div
       style={{
@@ -14,7 +32,7 @@ const ApproveButton = (requiredAddress: string) => {
       }}
     >
       <button
-        onClick={() => grantPermission(requiredAddress)}
+        onClick={handleGrantPermission}
         style={{
           display: "inline-block",
         }}
