@@ -29,3 +29,21 @@ VALUES (
     '
 
 );
+
+
+INSERT INTO researchData (researchDate, projectName, userJoined, slotsAvailable, lastParticipateDate, details) 
+VALUES (
+    '1/31/2024', 
+    'Research regarding vaccination and the human endocrine system',
+    '',
+    5,
+    '2/4/2024',
+    'This research will conduct a clinical placement regarding vaccination and the human endocrine system. 
+    To participate in this research, the criteria is as below:
+
+    - Aged range from 18 to 60 years old.
+    - Has vaccination experience.
+    - Willing to commit up to 1 months (only weekends)
+    '
+
+);

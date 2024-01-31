@@ -482,9 +482,8 @@ app.post("/api/showPermission", (req, res) => {
   }
 });
 
-app.post("/api/checkResearch", (req, res) => {
+app.post("/api/checkJoinedResearch", (req, res) => {
   const userAddress = req.body.addressFromQuery;
-  console.log(userAddress);
   try {
     const selectStmt = db.prepare(
       "SELECT * FROM researchData WHERE userJoined LIKE '%'||?||'%'"
@@ -494,6 +493,28 @@ app.post("/api/checkResearch", (req, res) => {
 
     if (results && results.length > 0) {
       console.log("Records found matching requiredAddress query:", userAddress);
+      res.status(200).json({ success: true, records: results });
+    } else {
+      console.log("No records found matching query:", userAddress);
+      res.status(200).json({ success: false, message: "No records found" });
+    }
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/checkAvailableResearch", (req, res) => {
+  const userAddress = req.body.addressFromQuery;
+  try {
+    const selectStmt = db.prepare(
+      "SELECT * FROM researchData WHERE userJoined NOT LIKE '%'||?||'%'"
+    );
+
+    const results = selectStmt.all(userAddress);
+
+    if (results && results.length > 0) {
+      console.log("Records found matching available query:", userAddress);
       res.status(200).json({ success: true, records: results });
     } else {
       console.log("No records found matching query:", userAddress);

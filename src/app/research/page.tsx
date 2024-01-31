@@ -1,5 +1,5 @@
 import HomePageButton from "../components/HomePageButton";
-import RectangleButton from "../components/RectangleButton";
+import AvailableResearch from "../functions/checkAvailableResearch";
 import ParticipatedResearch from "../functions/checkParticipatedResearch";
 
 export default function Research() {
@@ -48,28 +48,9 @@ export default function Research() {
           >
             <strong>Available Researches:</strong>
           </div>
-          <div
-            className="green-bar"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <div className="greenbar-title">
-              <strong style={{ marginRight: "40px" }}>Research ID</strong>
-              <strong style={{ marginRight: "40px" }}>Date</strong>
-              <strong style={{ marginRight: "150px" }}>Project Name</strong>
-              <strong style={{ marginRight: "30px" }}>Members Joined</strong>
-              <strong>Deadline</strong>
-            </div>
-            <RectangleButton
-              text="DETAILS"
-              textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-              onClick={""}
-            />
-          </div>
-          <br />
+
+          <AvailableResearch />
+
           <div
             className="BEHS"
             style={{ fontSize: "35px", marginRight: "460px" }}

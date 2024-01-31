@@ -6,13 +6,12 @@ import RectangleButton from "../components/RectangleButton";
 interface ResearchData {
   researchDate: string;
   projectName: string;
-  usersJoined: string;
   slotsAvailable: number;
-  lastParticipated: string;
+  lastParticipateDate: string;
   details: string;
 }
 
-export default function ParticipatedResearch() {
+export default function AvailableResearch() {
   const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
   const [participatedRecord, setParticipatedRecord] = useState<
     ResearchData[] | null
@@ -30,7 +29,7 @@ export default function ParticipatedResearch() {
   const searchResearch = async (addressFromQuery: string) => {
     try {
       const checkRequest = await fetch(
-        "http://localhost:3001/api/checkJoinedResearch",
+        "http://localhost:3001/api/checkAvailableResearch",
         {
           method: "POST",
           headers: {
@@ -49,11 +48,12 @@ export default function ParticipatedResearch() {
           const records = checkData.records.map((record: ResearchData) => ({
             researchDate: record.researchDate,
             projectName: record.projectName,
-            usersJoined: record.usersJoined,
             slotsAvailable: record.slotsAvailable,
-            lastParticipated: record.lastParticipated,
-            details: record.details,
+            lastParticipateDate: record.lastParticipateDate,
           }));
+
+          console.log(checkData.records[0]);
+          console.log();
 
           const latestRecords = records.slice(-5);
 
@@ -110,7 +110,23 @@ export default function ParticipatedResearch() {
                       </strong>
 
                       <div style={{ marginRight: "60px", fontSize: "22px" }}>
-                        {record.projectName.substring(0, 49)}...
+                        {record.projectName.substring(0, 39)}...
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                      <strong style={{ marginRight: "60px" }}>Vacancy</strong>
+
+                      <div style={{ marginRight: "60px", fontSize: "22px" }}>
+                        {record.slotsAvailable}
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                      <strong style={{ marginRight: "60px" }}>Deadline</strong>
+
+                      <div style={{ marginRight: "60px", fontSize: "22px" }}>
+                        {record.lastParticipateDate}
                       </div>
                     </div>
                   </div>
