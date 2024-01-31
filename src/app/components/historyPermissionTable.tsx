@@ -151,7 +151,7 @@ const tableStyle: React.CSSProperties = {
   backgroundColor: "#F3FFEF",
   border: "2px solid #339f6b",
   height: "100px",
-  marginLeft: "140px",
+  marginRight: "130px",
 };
 
 // Style for header cells
