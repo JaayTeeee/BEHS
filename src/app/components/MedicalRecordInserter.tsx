@@ -13,7 +13,10 @@ interface CheckData {
   idNumber: string;
 }
 
-const MedicalRecordInserter: React.FC<{ address: string }> = ({ address }) => {
+const MedicalRecordInserter: React.FC<{
+  address: string;
+  resetData: () => void;
+}> = ({ address, resetData }) => {
   const [checkData, setCheckData] = useState<CheckData | null>(null);
   const router = useRouter();
   const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
@@ -27,6 +30,10 @@ const MedicalRecordInserter: React.FC<{ address: string }> = ({ address }) => {
   function handleCheckDataReceived(checkData: CheckData | null) {
     setCheckData(checkData);
   }
+
+  const onSuccess = () => {
+    resetData();
+  };
 
   const handleSubmit = async () => {
     try {
@@ -76,12 +83,7 @@ const MedicalRecordInserter: React.FC<{ address: string }> = ({ address }) => {
             })
             .then((response) => {
               if (response.success && address !== null) {
-                const encodedWalletAddress =
-                  encodeURIComponent(fetchWalletAddress);
-                console.log("Encoded Address:", encodedWalletAddress);
-                router.push(
-                  `/medicalwelcome?WalletAddress=${encodedWalletAddress}`
-                );
+                onSuccess();
               } else {
                 console.error("Address is null or response is not successful.");
               }

@@ -42,10 +42,10 @@ export default function CheckMedicalRecord({
         if (checkRequest.ok) {
           const checkData = await checkRequest.json();
           if (checkData.success) {
-            onCheckDataReceived(checkData); // Passing the medical record data to the parent component
+            onCheckDataReceived(checkData);
           } else {
             console.error("Failed to check ID:", checkData);
-            onCheckDataReceived(null); // Passing null when the request is unsuccessful
+            onCheckDataReceived(null);
           }
         } else {
           throw new Error("Failed to check ID");

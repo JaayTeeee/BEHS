@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
 import MedicalRecordInserter from "../components/MedicalRecordInserter";
@@ -79,6 +80,21 @@ export default function MedicalInsert() {
     }
   };
 
+  const resetData = () => {
+    setCheckData(null);
+    setCheckFirstData(false);
+    toast.success("Insert record successfully!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
   return (
     <main style={{ height: "100vh", overflow: "auto" }}>
       <div
@@ -112,6 +128,7 @@ export default function MedicalInsert() {
           <div className="BEHS" style={{ fontSize: "78px" }}>
             <strong>Insert Medical Record</strong>
           </div>
+          <ToastContainer />
           <div style={{ marginBottom: "30px" }}>
             <div
               className="search-box"
@@ -168,7 +185,10 @@ export default function MedicalInsert() {
               checkData.records &&
               checkData.records.map((record, index) => (
                 <div key={index}>
-                  <MedicalRecordInserter address={record.walletAddress} />
+                  <MedicalRecordInserter
+                    address={record.walletAddress}
+                    resetData={resetData}
+                  />
                 </div>
               ))}
           </div>
