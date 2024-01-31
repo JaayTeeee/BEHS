@@ -17,9 +17,7 @@ export default function AvailableResearch() {
   const [participatedRecord, setParticipatedRecord] = useState<
     ResearchData[] | null
   >(null);
-
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-
   const [selectedResearch, setSelectedResearch] = useState<ResearchData | null>(
     null
   );

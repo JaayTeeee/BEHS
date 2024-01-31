@@ -38,6 +38,8 @@ VALUES (
     'ABt7ZBcL6UpRoTDMvKGECKsRfMiMqpMSMqjpgmw6CuZJ'
 );
 
+UPDATE PermissionData SET permissionStatus = 0 WHERE requiredAddress = 'FKBZ4PQzvqx7mw5pj8nN9HLcjZ1fknjQwf6YuGGxF7ty' AND permissionID = 6;
+
 CREATE TABLE IF NOT EXISTS PermissionData (
         permissionID INTEGER PRIMARY KEY AUTOINCREMENT,
         recordID INTEGER,

@@ -9,6 +9,12 @@ interface CheckData {
   recordID: string;
 }
 
+interface HospitalData {
+  firstName: string;
+  lastName: string;
+}
+
+
 const getStatusLabel = (status: number): string => {
   switch (status) {
     case 1:

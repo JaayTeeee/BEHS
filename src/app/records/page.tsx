@@ -5,6 +5,21 @@ import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
+import DetailBox from "../components/DetailBox";
+
+interface RecordData {
+  recordID: string;
+  recordDate: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  dateBirth: string;
+  idNumber: string;
+  diagnosis: string;
+  attachment: string;
+  hospitalFirstName: string;
+  hospitalLastName: string;
+}
 
 export default function Records() {
   const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
@@ -12,6 +27,10 @@ export default function Records() {
   const [allRecords, setAllRecords] = useState<any[]>([]); // Store all records
   const [checkData, setCheckData] = useState<any[]>([]); // Store filtered/searched records
   const [checkFirstData, setCheckFirstData] = useState<boolean>(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<RecordData | null>(
+    null
+  );
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -26,7 +45,6 @@ export default function Records() {
     }
   }, [fetchWalletAddress]);
   
- 
   const handleSearch = async (query: string) => {
     console.log("Query:", query);
     if (query.trim() !== "") {
@@ -99,8 +117,35 @@ export default function Records() {
     }
   };
 
-  const handleDataReceived = (recordID: string) => {
-    console.log("View details of record with ID:", recordID);
+  const handleDetail = async (recordID: string) => {
+    console.log(recordID);
+    try {
+      const detailRequest = await fetch("http://localhost:3001/api/checkMedicalRecord", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ recordID }),
+      });
+
+      if (detailRequest.ok) {
+        const recordData = await detailRequest.json();
+        if (recordData.success) {
+          console.log("Record Data:", recordData);
+          setSelectedRecord(recordData);
+          setIsDetailsOpen(true);
+        } else {
+          console.error("Failed to fetch record data:", recordData);
+          return [];
+        }
+      } else {
+        throw new Error("Failed to fetch record data");
+      }
+    } catch (error) {
+      console.error("Fetch error during check:", error);
+      return [];
+    }
   };
 
   return (
@@ -182,8 +227,21 @@ export default function Records() {
                       <RectangleButton
                         text="DETAILS"
                         textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-                        onClick={() => handleRecordDetails(record.recordID)}
+                        onClick={() =>
+                          handleDetail({ recordID: record.recordID })
+                        }
                       />
+                      {isDetailsOpen && (
+                        <div className="popup-container">
+                          <div
+                            className="popup-overlay"
+                            onClick={() => setIsDetailsOpen(false)}
+                          ></div>
+                          <div className="popup-content">
+                            <DetailBox recordData={selectedRecord} />
+                          </div>
+                        </div>
+                      )}{" "}
                     </div>
                   </div>
                 </div>

@@ -247,34 +247,58 @@ app.post("/api/insertMedicalRecord", (req, res) => {
 
 // Define API endpoint for checking medical record data
 app.post("/api/checkMedicalRecord", (req, res) => {
-  const walletAddress = req.body.userAddress;
+  const recordID = req.body.recordID.recordID;
   try {
-    const checkStmt = db.prepare(
-      "SELECT * FROM medicalRecordData WHERE userAddress = ?"
-    );
-    const result = checkStmt.get(walletAddress);
+    const checkStmt = db.prepare(`
+      SELECT ud.firstName, ud.lastName, md.recordDate, md.recordID, md.diagnosis, md.attachment, 
+        md.lastName AS mdLastName, md.firstName AS mdFirstName, md.gender, md.dateBirth, md.idNumber
+      FROM medicalRecordData md
+      INNER JOIN userData ud ON md.hospitalAddress = ud.walletAddress
+      WHERE md.recordID = ? 
+    `);
+    const result = checkStmt.get(recordID);
 
     // Ensure that result is not null before accessing properties
     if (result) {
-      console.log("User exists with walletAddress:", walletAddress);
+      console.log("Record ID found:", recordID);
       res.status(200).json({
         success: true,
-        userAddress: walletAddress,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        userType: result.userType,
-        recordDate: result.recordDate,
-        recordID: result.recordID,
-        hospitalAddress: result.hospitalAddress,
+        record: result // Change 'records' to 'record' for consistency
       });
     } else {
-      console.log("User not found with walletAddress:", walletAddress);
-      res.status(200).json({ success: false, message: "User not found" });
+      console.log("Record not found with recordID:", recordID);
+      res.status(404).json({ success: false, message: "Record not found" });
     }
   } catch (error) {
     console.error("Error checking data:", error);
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+// Define API endpoint for checking attachments
+app.post("/api/attachments", (req, res) => {
+  const recordId = req.body.recordId;
+    try {
+      const checkStmt = db.prepare(`
+        SELECT attachment FROM medicalRecordData WHERE recordID = ?
+      `);
+      const result = checkStmt.get(recordId);
+  
+      // Ensure that result is not null before accessing properties
+      if (result) {
+        console.log("Record ID found:", recordId);
+        res.status(200).json({
+          success: true,
+          record: result // Change 'records' to 'record' for consistency
+        });
+      } else {
+        console.log("Record not found with recordID:", recordId);
+        res.status(404).json({ success: false, message: "Record not found" });
+      }
+    } catch (error) {
+      console.error("Error checking data:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 app.post("/api/checkItem", (req, res) => {
