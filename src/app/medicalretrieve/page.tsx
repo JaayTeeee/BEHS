@@ -257,7 +257,7 @@ export default function RetrieveRecord() {
             }}
           >
             {checkFirstData === false ? (
-              <strong>Please input user&apos;s address: </strong>
+              <strong>Please input user&apos;s address or ID Number: </strong>
             ) : (
               <strong>User not found!</strong>
             )}

@@ -534,3 +534,58 @@ app.post("/api/checkAvailableResearch", (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+//for retrieving medical record of the user
+app.post("/api/getRecord", (req, res) => {
+  const query = req.body.query;
+  try {
+    const CheckStmt = db.prepare(`
+      SELECT ud.firstName, ud.lastName, md.recordDate, md.recordID, md.diagnosis, md.attachment
+      FROM medicalRecordData md
+      INNER JOIN userData ud ON md.hospitalAddress = ud.walletAddress
+      WHERE md.userAddress = ? ORDER BY md.recordID DESC
+    `);
+
+    const result = CheckStmt.all(query);
+
+    // Check if any records are found based on idNumber
+    if (result.length > 0) {
+      console.log("Records found matching query:", query);
+      res.status(200).json({ success: true, records: result });
+    } else {
+      console.log("No medical record found.");
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//user search medical record
+app.post("/api/searchRecord", (req, res) => {
+  const { query, userAddress } = req.body;
+  
+  try {
+    const CheckStmt = db.prepare(`
+      SELECT ud.firstName, ud.lastName, md.recordDate, md.recordID, md.diagnosis, md.attachment
+      FROM medicalRecordData md
+      INNER JOIN userData ud ON md.hospitalAddress = ud.walletAddress
+      WHERE md.userAddress = ? AND (md.hospitalAddress = ? OR ud.firstName LIKE ? OR ud.lastName LIKE ? ) ORDER BY md.recordID DESC
+    `);
+
+    const result = CheckStmt.all(userAddress, query, `%${query}%`, `%${query}%`);
+
+    // Check if any records are found based on the search query
+    if (result.length > 0) {
+      console.log("Records found matching query:", query);
+      res.status(200).json({ success: true, records: result });
+    } else {
+      console.log("No medical records found matching the query:", query);
+      res.status(404).json({ success: false, message: "No medical records found" });
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
