@@ -1,6 +1,7 @@
 export default function GetPermission(
   requestAddress,
   requiredAddress,
+  recordID,
   onSuccess
 ) {
   const now = new Date();
@@ -9,6 +10,7 @@ export default function GetPermission(
 
   try {
     const insertUserData = {
+      recordID: recordID,
       requestAddress: requestAddress,
       requestDate: stringDate,
       requiredAddress: requiredAddress,
