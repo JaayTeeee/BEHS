@@ -93,8 +93,13 @@ const PermissionTable: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <table>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <table style={tableStyle}>
         <thead>
           <tr>
             <th style={headerCellStyle}>Date</th>
@@ -105,20 +110,31 @@ const PermissionTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {updatedTableData.records.map((recordArray, index) =>
-            recordArray.map((record, recordIndex) => (
-              <tr key={recordIndex} style={rowStyle}>
-                <td style={cellStyle}>{record.permissionID}</td>
-                <td style={cellStyle}>{record.requestDate}</td>
-                <td
-                  style={cellStyle}
-                >{`${updatedTableData.hospitalData[recordIndex].firstName} ${updatedTableData.hospitalData[recordIndex].lastName}`}</td>
-                <td style={cellStyle}>
-                  {getStatusLabel(record.permissionStatus)}
-                </td>
-                <td style={cellStyle}>{record.recordID}</td>
-              </tr>
-            ))
+          {updatedTableData && updatedTableData.records ? (
+            updatedTableData.records.map((recordArray, index) =>
+              recordArray.map((record, recordIndex) => (
+                <tr key={recordIndex} style={rowStyle}>
+                  <td style={cellStyle}>{record.permissionID}</td>
+                  <td style={cellStyle}>{record.requestDate}</td>
+                  <td style={cellStyle}>
+                    {`${
+                      updatedTableData.hospitalData[recordIndex]?.firstName ||
+                      ""
+                    } ${
+                      updatedTableData.hospitalData[recordIndex]?.lastName || ""
+                    }`}
+                  </td>
+                  <td style={cellStyle}>
+                    {getStatusLabel(record.permissionStatus)}
+                  </td>
+                  <td style={cellStyle}>{record.recordID}</td>
+                </tr>
+              ))
+            )
+          ) : (
+            <tr>
+              <td colSpan="5">No records available</td>
+            </tr>
           )}
         </tbody>
       </table>
@@ -128,7 +144,7 @@ const PermissionTable: React.FC = () => {
 
 // Style for the entire table
 const tableStyle: React.CSSProperties = {
-  width: "100%",
+  width: "70%",
   borderCollapse: "collapse",
   marginTop: "20px",
   marginBottom: "20px",

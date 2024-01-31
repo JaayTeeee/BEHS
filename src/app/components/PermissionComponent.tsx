@@ -83,6 +83,8 @@ export default function PermissionComponent() {
     setHospitalData((prevHospitals) =>
       prevHospitals.filter((hospital) => hospital.permissionID !== permissionID)
     );
+
+    setExistData(hospitals.length > 1);
   };
 
   const onFailure = (permissionID: string) => {
@@ -100,6 +102,8 @@ export default function PermissionComponent() {
     setHospitalData((prevHospitals) =>
       prevHospitals.filter((hospital) => hospital.permissionID !== permissionID)
     );
+
+    setExistData(hospitals.length > 1);
   };
 
   return (
