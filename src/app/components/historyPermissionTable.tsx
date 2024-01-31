@@ -93,7 +93,16 @@ const PermissionTable: React.FC = () => {
   };
 
   return (
+<<<<<<< HEAD
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+=======
     <div style={{ display: "flex", justifyContent: "center" }}>
+>>>>>>> f4b89bdba216559ae5e0bafc666bf3306ad3047a
       <table style={tableStyle}>
         <thead>
           <tr>
@@ -105,6 +114,36 @@ const PermissionTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
+          {updatedTableData && updatedTableData.records ? (
+            updatedTableData.records.map((recordArray, index) =>
+              recordArray.map((record, recordIndex) => (
+                <tr key={recordIndex} style={rowStyle}>
+                  <td style={cellStyle}>{record.permissionID}</td>
+                  <td style={cellStyle}>{record.requestDate}</td>
+                  <td style={cellStyle}>
+                    {`${
+                      updatedTableData.hospitalData[recordIndex]?.firstName ||
+                      ""
+                    } ${
+                      updatedTableData.hospitalData[recordIndex]?.lastName || ""
+                    }`}
+                  </td>
+                  <td style={cellStyle}>
+                    {getStatusLabel(record.permissionStatus)}
+                  </td>
+                  <td style={cellStyle}>{record.recordID}</td>
+                </tr>
+              ))
+            )
+          ) : (
+            <tr>
+              <td colSpan="5">No records available</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+=======
         {updatedTableData && updatedTableData.records ? (
           updatedTableData.records.map((recordArray, index) => (
             recordArray.map((record, recordIndex) => (
@@ -126,6 +165,7 @@ const PermissionTable: React.FC = () => {
         )}
       </tbody>
     </table>
+>>>>>>> f4b89bdba216559ae5e0bafc666bf3306ad3047a
     </div>
   );
 };

@@ -78,3 +78,15 @@ VALUES (
     'Kuala Lumpur', 
     'hospital'
 );
+
+
+CREATE TABLE IF NOT EXISTS researchData (
+    researchID INTEGER PRIMARY KEY AUTOINCREMENT,
+    researchDate TEXT,
+    projectName TEXT,
+    userJoined TEXT,
+    slotsAvailable INTEGER,
+    lastParticipateDate TEXT,
+    details TEXT
+);
+

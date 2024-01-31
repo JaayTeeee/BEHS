@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import RectangleButton from "../components/RectangleButton";
+import TermsBox from "../components/TermsBox";
 
 interface ResearchData {
   researchDate: string;
@@ -16,6 +17,17 @@ export default function AvailableResearch() {
   const [participatedRecord, setParticipatedRecord] = useState<
     ResearchData[] | null
   >(null);
+
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  const [selectedResearch, setSelectedResearch] = useState<ResearchData | null>(
+    null
+  );
+
+  const handleDetailsClick = (research: ResearchData) => {
+    setSelectedResearch(research);
+    setIsDetailsOpen(true);
+  };
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -51,9 +63,6 @@ export default function AvailableResearch() {
             slotsAvailable: record.slotsAvailable,
             lastParticipateDate: record.lastParticipateDate,
           }));
-
-          console.log(checkData.records[0]);
-          console.log();
 
           const latestRecords = records.slice(-5);
 
@@ -136,10 +145,21 @@ export default function AvailableResearch() {
           </div>
         )}
         <RectangleButton
-          text="DETAILS"
+          text="JOIN"
           textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-          onClick={""}
+          onClick={handleDetailsClick}
         />
+        {isDetailsOpen && (
+          <div className="popup-container">
+            <div
+              className="popup-overlay"
+              onClick={() => setIsDetailsOpen(false)}
+            ></div>
+            <div className="popup-content">
+              <TermsBox />
+            </div>
+          </div>
+        )}{" "}
       </div>
     </div>
   );
