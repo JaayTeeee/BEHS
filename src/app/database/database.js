@@ -367,7 +367,7 @@ app.post("/api/checkPermission", (req, res) => {
       WHERE pd.requiredAddress = ? AND pd.permissionStatus = 0
     `);
 
-    const results = selectStmt.all(query); // Use all() to fetch all matching records
+    const results = selectStmt.all(query);
 
     if (results && results.length > 0) {
       console.log("Records found matching requiredAddress query:", query);
@@ -435,7 +435,8 @@ app.post("/api/showPermission", (req, res) => {
 
     const resultRequest = selectStmtRequest.all(query); // Use all method instead of get
 
-    if (resultRequest && resultRequest.length > 0) { // Check if resultRequest is not empty
+    if (resultRequest && resultRequest.length > 0) {
+      // Check if resultRequest is not empty
       console.log("Records found matching requiredAddress query:", query);
       // Store the permission data in an object
       const responseData = {
@@ -455,10 +456,16 @@ app.post("/api/showPermission", (req, res) => {
         const resultHospital = selectStmtHospital.get(record.requestAddress);
 
         if (resultHospital) {
-          console.log("Hospital name found for requestAddress:", record.requestAddress);
+          console.log(
+            "Hospital name found for requestAddress:",
+            record.requestAddress
+          );
           record.hospitalName = resultHospital;
         } else {
-          console.log("No hospital name found for requestAddress:", record.requestAddress);
+          console.log(
+            "No hospital name found for requestAddress:",
+            record.requestAddress
+          );
           record.hospitalName = { firstName: "Unknown", lastName: "Unknown" };
         }
       }
@@ -475,4 +482,25 @@ app.post("/api/showPermission", (req, res) => {
   }
 });
 
+app.post("/api/checkResearch", (req, res) => {
+  const userAddress = req.body.addressFromQuery;
+  console.log(userAddress);
+  try {
+    const selectStmt = db.prepare(
+      "SELECT * FROM researchData WHERE userJoined LIKE '%'||?||'%'"
+    );
 
+    const results = selectStmt.all(userAddress);
+
+    if (results && results.length > 0) {
+      console.log("Records found matching requiredAddress query:", userAddress);
+      res.status(200).json({ success: true, records: results });
+    } else {
+      console.log("No records found matching query:", userAddress);
+      res.status(200).json({ success: false, message: "No records found" });
+    }
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});

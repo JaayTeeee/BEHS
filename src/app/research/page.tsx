@@ -1,8 +1,6 @@
-import Image from "next/image";
-import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
-import SearchButton from "../components/searchButton";
+import ParticipatedResearch from "../functions/checkParticipatedResearch";
 
 export default function Research() {
   return (
@@ -50,29 +48,6 @@ export default function Research() {
           >
             <strong>Available Researches:</strong>
           </div>
-          <div className="search-box" style={{ marginLeft: "1050px" }}>
-            <Image
-              src={searchIcon}
-              className="icon"
-              alt="search-icon"
-              style={{
-                height: "25px",
-                width: "25px",
-                marginLeft: "10px",
-              }}
-            />
-            <input
-              type="text"
-              placeholder="Search..."
-              style={{
-                backgroundColor: "#dfdfdf",
-                outline: "none",
-                border: "none",
-                marginLeft: "5px",
-              }}
-            />
-            <SearchButton text="Search" onClick={""} />
-          </div>
           <div
             className="green-bar"
             style={{
@@ -101,26 +76,7 @@ export default function Research() {
           >
             <strong>Participated Researches:</strong>
           </div>
-          <div
-            className="green-bar"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <div className="greenbar-title">
-              <strong style={{ marginRight: "70px" }}>Research ID</strong>
-              <strong style={{ marginRight: "60px" }}>Date</strong>
-              <strong style={{ marginRight: "200px" }}>Project Name</strong>
-            </div>
-            <RectangleButton
-              text="DETAILS"
-              textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-              onClick={""}
-            />
-          </div>
-          {/* Placeholder for participated researches */}
+          <ParticipatedResearch />
         </div>
       </div>
     </main>

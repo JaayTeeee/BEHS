@@ -1,20 +1,31 @@
 -- SQLite
 
-INSERT INTO userData (walletAddress, firstName, lastName, gender, dateBirth, idNumber, phoneNumber, address, city, postcode, state, userType) 
-VALUES (
-    'FsaZvMVpwsutWSsKUyM2i5NjaiJcifJykjXQVftNZMdh', 
-    'Hospital', 
-    'ABC',  
-    '',  
-    NULL,  
-    1232345645,    
-    12344567878, 
-    'Jalan AMPANG', 
-    'Kuala Lumpur', 
-    58200, 
-    'Kuala Lumpur', 
-    'hospital'
+DROP TABLE researchData
+
+CREATE TABLE IF NOT EXISTS researchData (
+    researchID INTEGER PRIMARY KEY AUTOINCREMENT,
+    researchDate TEXT,
+    projectName TEXT,
+    userJoined TEXT,
+    slotsAvailable INTEGER,
+    lastParticipateDate TEXT,
+    details TEXT
 );
 
-DELETE FROM userData 
-WHERE walletAddress = "FsaZvMVpwsutWSsKUyM2i5NjaiJcifJykjXQVftNZMdh"
+
+INSERT INTO researchData (researchDate, projectName, userJoined, slotsAvailable, lastParticipateDate, details) 
+VALUES (
+    '1/31/2024', 
+    'Research Regarding the human skeletal function and traumatic experience',
+    '3wr9XMLD8BLcQGH4XLx3GgVfzxwFS2JJhWYpbFioqyx6',
+    2,
+    '2/2/2024',
+    'This research will conduct a clinical placement regarding the human skeletal function and traumatic experience. 
+    To participate in this research, the criteria is as below:
+
+    - Aged range from 18 to 60 years old.
+    - Has traumatic experience.
+    - Willing to commit up to 1 months (only weekends)
+    '
+
+);
