@@ -60,7 +60,7 @@ const PermissionTable: React.FC = () => {
         if (checkData.success) {
           console.log("Received data:", checkData);
 
-          const hospitals = checkData.records.map(record => ({
+          const hospitals = checkData.records.map((record) => ({
             firstName: record.hospitalName.firstName,
             lastName: record.hospitalName.lastName,
           }));
@@ -71,18 +71,19 @@ const PermissionTable: React.FC = () => {
             requestAddress: record.requestAddress,
             requestDate: record.requestDate,
           }));
-  
+
+          const latestRecords = records.slice(-5);
+
           // Save hospitalName and records separately
           setHospitalData(hospitals);
 
           const updatedTableData = {
             ...checkData,
             hospitalData: hospitals,
-            records: [records],
+            records: [latestRecords],
           };
           setTableData(updatedTableData);
           console.log("updatedTableData:", updatedTableData);
-          
         } else {
           console.error("Failed to check ID:", checkData);
           return null;
@@ -99,36 +100,42 @@ const PermissionTable: React.FC = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       {updatedTableData.records && updatedTableData.records.length > 0 ? (
-      <table style={tableStyle}>
-        <thead>
-          <tr>
-            <th style={headerCellStyle}>Permission ID</th>
-            <th style={headerCellStyle}>Date</th>
-            <th style={headerCellStyle}>Hospital</th>
-            <th style={headerCellStyle}>Permission Status</th>
-          </tr>
-        </thead>
-        <tbody>
-        {updatedTableData.records.map((recordArray, index) => (
-          recordArray.map((record, recordIndex) => (
-            <tr key={recordIndex} style={rowStyle}>
-              <td style={cellStyle}>{record.permissionID}</td>
-              <td style={cellStyle}>{record.requestDate}</td>
-              <td style={cellStyle}>{`${updatedTableData.hospitalData[recordIndex].firstName} ${updatedTableData.hospitalData[recordIndex].lastName}`}</td>
-              <td style={cellStyle}>{getStatusLabel(record.permissionStatus)}</td>
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={headerCellStyle}>Permission ID</th>
+              <th style={headerCellStyle}>Date</th>
+              <th style={headerCellStyle}>Hospital</th>
+              <th style={headerCellStyle}>Permission Status</th>
             </tr>
-          ))
-        ))}
-      </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {updatedTableData.records.map((recordArray, index) =>
+              recordArray.map((record, recordIndex) => (
+                <tr key={recordIndex} style={rowStyle}>
+                  <td style={cellStyle}>{record.permissionID}</td>
+                  <td style={cellStyle}>{record.requestDate}</td>
+                  <td
+                    style={cellStyle}
+                  >{`${updatedTableData.hospitalData[recordIndex].firstName} ${updatedTableData.hospitalData[recordIndex].lastName}`}</td>
+                  <td style={cellStyle}>
+                    {getStatusLabel(record.permissionStatus)}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       ) : (
-        <div style={{
-          color: "#339f6b",
-          fontSize: "25px", 
-          marginTop: "15px"}}>
+        <div
+          style={{
+            color: "#339f6b",
+            fontSize: "25px",
+            marginTop: "15px",
+          }}
+        >
           <strong>No history.</strong>
-          </div>
-          
+        </div>
       )}
     </div>
   );

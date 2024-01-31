@@ -1,6 +1,9 @@
-export default function grantPermission(requiredAddress, permissionID) {
+export default function grantPermission(
+  requiredAddress,
+  permissionID,
+  onSuccess
+) {
   try {
-    
     const insertUserData = {
       requiredAddress: requiredAddress,
       permissionID: permissionID,
@@ -25,6 +28,7 @@ export default function grantPermission(requiredAddress, permissionID) {
       .then((response) => {
         if (response.success) {
           console.log("Permission granted!");
+          onSuccess();
         } else {
           console.error("Address is null or response is not successful.");
         }

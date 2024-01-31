@@ -1,16 +1,24 @@
 import Image from "next/image";
+import { useState } from "react";
 import RejectImage from "../../../public/icons/icons-wrong.png";
 import rejectPermission from "../functions/rejectPermission";
-import { useState } from "react";
 
-const RejectButton = ({ requiredAddress, permissionID }: { requiredAddress: string, permissionID: BigInteger }) => {
+const RejectButton = ({
+  requiredAddress,
+  permissionID,
+  onFailure,
+}: {
+  requiredAddress: string;
+  permissionID: BigInteger;
+  onFailure: () => void;
+}) => {
   // State to manage requiredAddress and permissionID
   const [address, setAddress] = useState(requiredAddress);
   const [id, setID] = useState(permissionID);
 
   // Handler for button click
   const handleRejectPermission = () => {
-    rejectPermission(address, id);
+    rejectPermission(address, id, onFailure);
   };
 
   return (

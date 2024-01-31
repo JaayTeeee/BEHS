@@ -1,17 +1,21 @@
 "use client";
+
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import ApproveButton from "./approveButton";
 import RejectButton from "./rejectButton";
 
 interface HospitalData {
   firstName: string;
   lastName: string;
+  permissionID: string;
 }
 
 export default function PermissionComponent() {
   const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
-  const [hospitals, setHospitalData] = useState<HospitalData | null>(null);
+  const [hospitals, setHospitalData] = useState<HospitalData[]>([]);
   const [existData, setExistData] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -42,14 +46,13 @@ export default function PermissionComponent() {
         if (checkData.success) {
           console.log("Received data in permission:", checkData);
           setExistData(true);
-          const hospitals = checkData.records.map(record => ({
+          const hospitals = checkData.records.map((record: any) => ({
             firstName: record.firstName,
             lastName: record.lastName,
-            permissionID: record.permissionID
+            permissionID: record.permissionID,
           }));
           setHospitalData(hospitals);
           console.log("hospital name:", hospitals);
-
         } else {
           console.error("Failed to check ID:", checkData);
           return null;
@@ -60,7 +63,43 @@ export default function PermissionComponent() {
     } catch (error) {
       console.error("Fetch error during check:", error);
       return null;
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const onSuccess = (permissionID: string) => {
+    toast.success("Permission granted!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
+    });
+    // Update the state to remove the granted permission from the list
+    setHospitalData((prevHospitals) =>
+      prevHospitals.filter((hospital) => hospital.permissionID !== permissionID)
+    );
+  };
+
+  const onFailure = (permissionID: string) => {
+    toast.error("Permission rejected!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
+    });
+    // Update the state to remove the rejected permission from the list
+    setHospitalData((prevHospitals) =>
+      prevHospitals.filter((hospital) => hospital.permissionID !== permissionID)
+    );
   };
 
   return (
@@ -86,10 +125,12 @@ export default function PermissionComponent() {
                 <ApproveButton
                   requiredAddress={fetchWalletAddress}
                   permissionID={hospital.permissionID}
+                  onSuccess={() => onSuccess(hospital.permissionID)}
                 />
                 <RejectButton
                   requiredAddress={fetchWalletAddress}
                   permissionID={hospital.permissionID}
+                  onFailure={() => onFailure(hospital.permissionID)}
                 />
               </div>
             </div>
@@ -100,12 +141,15 @@ export default function PermissionComponent() {
           </div>
         )
       ) : (
-        <div style={{
-          color: "#339f6b",
-          fontSize: "25px", 
-          marginTop: "15px"}}>
+        <div
+          style={{
+            color: "#339f6b",
+            fontSize: "25px",
+            marginTop: "15px",
+          }}
+        >
           <strong>No permissions are requested.</strong>
-      </div>      
+        </div>
       )}
     </>
   );
