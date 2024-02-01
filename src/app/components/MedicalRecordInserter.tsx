@@ -1,8 +1,13 @@
 "use client";
 
+import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CheckUserData from "../functions/getUserData";
+import {
+  createTransaction,
+  signTransaction,
+} from "../functions/transactionSigner";
 import Button from "./RectangleButton";
 
 interface CheckData {
@@ -15,8 +20,9 @@ interface CheckData {
 
 const MedicalRecordInserter: React.FC<{
   address: string;
+  hospitalAddress: string;
   resetData: () => void;
-}> = ({ address, resetData }) => {
+}> = ({ address, hospitalAddress, resetData }) => {
   const [checkData, setCheckData] = useState<CheckData | null>(null);
   const router = useRouter();
   const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
@@ -36,69 +42,91 @@ const MedicalRecordInserter: React.FC<{
   };
 
   const handleSubmit = async () => {
-    try {
-      const diagnosisInput = document.getElementsByName(
-        "diagnosis"
-      )[0] as HTMLInputElement;
-      const attachmentInput = document.querySelector(
-        'input[name="attachment"]'
-      ) as HTMLInputElement;
-      const file = attachmentInput.files ? attachmentInput.files[0] : null;
+    const senderPublicKey = new PublicKey(hospitalAddress);
+    const recipientPublicKey = new PublicKey(address);
+    const amount = 1000;
 
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const fileData = reader.result;
-          console.log(checkData);
-          const insertUserData = {
-            userAddress: address,
-            firstName: checkData?.records?.[0]?.firstName,
-            lastName: checkData?.records?.[0]?.lastName,
-            gender: checkData?.records?.[0]?.gender,
-            dateBirth: checkData?.records?.[0]?.dateBirth,
-            idNumber: checkData?.records?.[0]?.idNumber,
-            diagnosis: diagnosisInput.value,
-            attachment: fileData,
-            hospitalAddress: fetchWalletAddress,
+    console.log(senderPublicKey);
+    console.log(recipientPublicKey);
+    const transaction = createTransaction(
+      senderPublicKey,
+      recipientPublicKey,
+      amount
+    );
+    const signedTransaction = await signTransaction(
+      transaction,
+      senderPublicKey
+    );
+
+    if (signedTransaction) {
+      try {
+        const diagnosisInput = document.getElementsByName(
+          "diagnosis"
+        )[0] as HTMLInputElement;
+        const attachmentInput = document.querySelector(
+          'input[name="attachment"]'
+        ) as HTMLInputElement;
+        const file = attachmentInput.files ? attachmentInput.files[0] : null;
+
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const fileData = reader.result;
+            console.log(checkData);
+            const insertUserData = {
+              userAddress: address,
+              firstName: checkData?.records?.[0]?.firstName,
+              lastName: checkData?.records?.[0]?.lastName,
+              gender: checkData?.records?.[0]?.gender,
+              dateBirth: checkData?.records?.[0]?.dateBirth,
+              idNumber: checkData?.records?.[0]?.idNumber,
+              diagnosis: diagnosisInput.value,
+              attachment: fileData,
+              hospitalAddress: fetchWalletAddress,
+            };
+            const request = new Request(
+              "http://localhost:3001/api/insertMedicalRecord",
+              {
+                method: "POST",
+                headers: new Headers({
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                }),
+                mode: "cors", // Set CORS mode to 'cors'
+                body: JSON.stringify(insertUserData),
+              }
+            );
+
+            fetch(request)
+              .then((res) => {
+                if (!res.ok) {
+                  throw new Error(`Failed to fetch: ${res.statusText}`);
+                }
+                return res.json();
+              })
+              .then((response) => {
+                if (response.success && address !== null) {
+                  onSuccess();
+                } else {
+                  console.error(
+                    "Address is null or response is not successful."
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error("Failed to fetch:", error);
+              });
           };
-          const request = new Request(
-            "http://localhost:3001/api/insertMedicalRecord",
-            {
-              method: "POST",
-              headers: new Headers({
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              }),
-              mode: "cors", // Set CORS mode to 'cors'
-              body: JSON.stringify(insertUserData),
-            }
-          );
 
-          fetch(request)
-            .then((res) => {
-              if (!res.ok) {
-                throw new Error(`Failed to fetch: ${res.statusText}`);
-              }
-              return res.json();
-            })
-            .then((response) => {
-              if (response.success && address !== null) {
-                onSuccess();
-              } else {
-                console.error("Address is null or response is not successful.");
-              }
-            })
-            .catch((error) => {
-              console.error("Failed to fetch:", error);
-            });
-        };
-
-        reader.readAsDataURL(file);
-      } else {
-        console.log("No file selected");
+          reader.readAsDataURL(file);
+        } else {
+          console.log("No file selected");
+        }
+      } catch (error) {
+        console.error("Failed to save data:", error);
       }
-    } catch (error) {
-      console.error("Failed to save data:", error);
+    } else {
+      console.log("Error!");
     }
   };
 
