@@ -12,8 +12,8 @@ const LoginButton = () => {
   );
 
   if (publicKey != null && connected) {
-    console.log("Wallet Address: ", publicKey.toBase58());
     const walletAddress = publicKey.toBase58();
+    sessionStorage.setItem('walletAddress', walletAddress);
     const checkRequest = new Request("http://localhost:3001/api/checkID", {
       method: "POST",
       headers: {

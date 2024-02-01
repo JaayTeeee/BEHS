@@ -26,18 +26,21 @@ const ApproveButton = ({
 
   // Handler for button click
   const handleGrantPermission = async () => {
-    console.log("My address:", requiredAddress);
-    console.log("Hospital address:", requestedAddress);
     const senderPublicKey = new PublicKey(requiredAddress);
     const recipientPublicKey = new PublicKey(requestedAddress);
     const amount = 1000;
 
+    console.log(senderPublicKey);
+    console.log(recipientPublicKey);
     const transaction = createTransaction(
       senderPublicKey,
       recipientPublicKey,
       amount
     );
-    const signedTransaction = await signTransaction(transaction);
+    const signedTransaction = await signTransaction(
+      transaction,
+      senderPublicKey
+    );
 
     if (signedTransaction) {
       grantPermission(address, id, onSuccess);

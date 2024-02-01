@@ -25,11 +25,12 @@ import CheckUsername from "../functions/getUsername";
 
 export default function Home() {
   const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
-
+  
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const addressFromQuery = urlSearchParams.get("WalletAddress");
     setWalletAddress(addressFromQuery);
+    console.log("session:", sessionStorage.getItem('walletAddress'));
   }, [fetchWalletAddress]);
 
   const solNetwork = WalletAdapterNetwork.Testnet;
