@@ -15,10 +15,17 @@ const RejectButton = ({
   // State to manage requiredAddress and permissionID
   const [address, setAddress] = useState(requiredAddress);
   const [id, setID] = useState(permissionID);
+  const [clicked, setClicked] = useState(false);
 
   // Handler for button click
   const handleRejectPermission = () => {
     rejectPermission(address, id, onFailure);
+    setClicked(true);
+
+    // Reload the page after 3 seconds
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   };
 
   return (
@@ -36,6 +43,7 @@ const RejectButton = ({
         style={{
           display: "inline-block",
         }}
+        disabled={clicked} // Disable the button after it's clicked to prevent multiple clicks
       >
         <Image src={RejectImage} alt="Button Icon" />
       </button>

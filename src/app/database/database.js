@@ -247,34 +247,58 @@ app.post("/api/insertMedicalRecord", (req, res) => {
 
 // Define API endpoint for checking medical record data
 app.post("/api/checkMedicalRecord", (req, res) => {
-  const walletAddress = req.body.userAddress;
+  const recordID = req.body.recordID.recordID;
   try {
-    const checkStmt = db.prepare(
-      "SELECT * FROM medicalRecordData WHERE userAddress = ?"
-    );
-    const result = checkStmt.get(walletAddress);
+    const checkStmt = db.prepare(`
+      SELECT ud.firstName, ud.lastName, md.recordDate, md.recordID, md.diagnosis, md.attachment, 
+        md.lastName AS mdLastName, md.firstName AS mdFirstName, md.gender, md.dateBirth, md.idNumber
+      FROM medicalRecordData md
+      INNER JOIN userData ud ON md.hospitalAddress = ud.walletAddress
+      WHERE md.recordID = ? 
+    `);
+    const result = checkStmt.get(recordID);
 
     // Ensure that result is not null before accessing properties
     if (result) {
-      console.log("User exists with walletAddress:", walletAddress);
+      console.log("Record ID found:", recordID);
       res.status(200).json({
         success: true,
-        userAddress: walletAddress,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        userType: result.userType,
-        recordDate: result.recordDate,
-        recordID: result.recordID,
-        hospitalAddress: result.hospitalAddress,
+        record: result // Change 'records' to 'record' for consistency
       });
     } else {
-      console.log("User not found with walletAddress:", walletAddress);
-      res.status(200).json({ success: false, message: "User not found" });
+      console.log("Record not found with recordID:", recordID);
+      res.status(404).json({ success: false, message: "Record not found" });
     }
   } catch (error) {
     console.error("Error checking data:", error);
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+// Define API endpoint for checking attachments
+app.post("/api/attachments", (req, res) => {
+  const recordId = req.body.recordId;
+    try {
+      const checkStmt = db.prepare(`
+        SELECT attachment FROM medicalRecordData WHERE recordID = ?
+      `);
+      const result = checkStmt.get(recordId);
+  
+      // Ensure that result is not null before accessing properties
+      if (result) {
+        console.log("Record ID found:", recordId);
+        res.status(200).json({
+          success: true,
+          record: result // Change 'records' to 'record' for consistency
+        });
+      } else {
+        console.log("Record not found with recordID:", recordId);
+        res.status(404).json({ success: false, message: "Record not found" });
+      }
+    } catch (error) {
+      console.error("Error checking data:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 app.post("/api/checkItem", (req, res) => {
@@ -390,6 +414,37 @@ app.post("/api/checkPermission", (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+app.post("/api/checkApprovedPermission", (req, res) => {
+  const userAddress = req.body.userAddress;
+  const hospitalAddress = req.body.hospitalAddress;
+  try {
+    const selectStmt = db.prepare(`
+      SELECT 
+        pd.permissionID, pd.permissionStatus, md.recordDate, md.recordID, md.diagnosis, md.attachment, 
+        md.lastName, md.firstName, md.gender, md.dateBirth, md.idNumber, ud.firstName AS hospitalFirstName,
+        ud.lastName AS hospitalLastName
+      FROM PermissionData pd
+      INNER JOIN medicalRecordData md ON pd.requiredAddress = md.userAddress AND pd.recordID = md.recordID
+      INNER JOIN UserData ud ON pd.requestAddress = ? AND ud.walletAddress = pd.requestAddress
+      WHERE pd.requiredAddress = ? AND pd.requestAddress = ? AND pd.permissionStatus = 1
+    `);
+
+    const results = selectStmt.all(hospitalAddress, userAddress, hospitalAddress);
+
+    if (results && results.length > 0) {
+      console.log("Approved Records found", userAddress, hospitalAddress);
+      res.status(200).json({ success: true, records: results });
+    } else {
+      console.log("No approved records found:", userAddress, hospitalAddress);
+      res.status(200).json({ success: false, message: "No records found" });
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 app.post("/api/grantPermission", (req, res) => {
   const requiredAddress = req.body.requiredAddress;
@@ -534,3 +589,58 @@ app.post("/api/checkAvailableResearch", (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+//for retrieving medical record of the user
+app.post("/api/getRecord", (req, res) => {
+  const query = req.body.query;
+  try {
+    const CheckStmt = db.prepare(`
+      SELECT ud.firstName, ud.lastName, md.recordDate, md.recordID, md.diagnosis, md.attachment
+      FROM medicalRecordData md
+      INNER JOIN userData ud ON md.hospitalAddress = ud.walletAddress
+      WHERE md.userAddress = ? ORDER BY md.recordID DESC
+    `);
+
+    const result = CheckStmt.all(query);
+
+    // Check if any records are found based on idNumber
+    if (result.length > 0) {
+      console.log("Records found matching query:", query);
+      res.status(200).json({ success: true, records: result });
+    } else {
+      console.log("No medical record found.");
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//user search medical record
+app.post("/api/searchRecord", (req, res) => {
+  const { query, userAddress } = req.body;
+  
+  try {
+    const CheckStmt = db.prepare(`
+      SELECT ud.firstName, ud.lastName, md.recordDate, md.recordID, md.diagnosis, md.attachment
+      FROM medicalRecordData md
+      INNER JOIN userData ud ON md.hospitalAddress = ud.walletAddress
+      WHERE md.userAddress = ? AND (md.hospitalAddress = ? OR ud.firstName LIKE ? OR ud.lastName LIKE ? ) ORDER BY md.recordID DESC
+    `);
+
+    const result = CheckStmt.all(userAddress, query, `%${query}%`, `%${query}%`);
+
+    // Check if any records are found based on the search query
+    if (result.length > 0) {
+      console.log("Records found matching query:", query);
+      res.status(200).json({ success: true, records: result });
+    } else {
+      console.log("No medical records found matching the query:", query);
+      res.status(404).json({ success: false, message: "No medical records found" });
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
