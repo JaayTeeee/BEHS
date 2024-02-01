@@ -1,5 +1,4 @@
 "use client";
-
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -9,6 +8,7 @@ import {
   signTransaction,
 } from "../functions/transactionSigner";
 import Button from "./RectangleButton";
+import sessionStorage from 'sessionstorage';
 
 interface CheckData {
   firstName: string;
@@ -28,8 +28,7 @@ const MedicalRecordInserter: React.FC<{
   const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get("WalletAddress");
+    const addressFromQuery = sessionStorage.getItem('walletAddress');
     setWalletAddress(addressFromQuery);
   }, [fetchWalletAddress]);
 

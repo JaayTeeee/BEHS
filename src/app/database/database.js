@@ -125,11 +125,12 @@ app.post("/api/checkID", (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 app.post("/api/checkUserData", (req, res) => {
   try {
     const query = req.body.query; // Access the query parameter from req.body directly
     const idNumberCheckStmt = db.prepare(
-      "SELECT firstName, lastName, userType, gender, dateBirth, idNumber, walletAddress FROM userData WHERE idNumber = ? AND userType = ?"
+      "SELECT * FROM userData WHERE idNumber = ? AND userType = ?"
     );
 
     const idNumberResult = idNumberCheckStmt.get(query, "user");
@@ -140,7 +141,7 @@ app.post("/api/checkUserData", (req, res) => {
     } else {
       // If no records found based on idNumber, search by userAddress
       const userAddressCheckStmt = db.prepare(
-        "SELECT firstName, lastName, userType, gender, dateBirth, idNumber, walletAddress FROM userData WHERE walletAddress = ? AND userType = ?"
+        "SELECT * FROM userData WHERE walletAddress = ? AND userType = ?"
       );
 
       const userAddressResult = userAddressCheckStmt.get(query, "user");
@@ -153,6 +154,25 @@ app.post("/api/checkUserData", (req, res) => {
         console.log("No records found matching query:", query);
         res.status(200).json({ success: false, message: "No records found" });
       }
+    }
+  } catch (error) {
+    console.error("Error searching records:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/udpateUserData", (req, res) => {
+  try {
+    const query = req.body.query; // Access the query parameter from req.body directly
+    const CheckStmt = db.prepare(
+      "UPDATE userData SET WHERE idNumber = ? "
+    );
+
+    const Result = CheckStmt.get(query);
+    // Check if any records are found based on idNumber
+    if (Result) {
+      console.log("Records found matching idNumber query:", query);
+      res.status(200).json({ success: true, records: [Result] }); // Wrap idNumberResult in an array
     }
   } catch (error) {
     console.error("Error searching records:", error);
