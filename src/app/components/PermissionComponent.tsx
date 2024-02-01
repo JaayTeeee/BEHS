@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ApproveButton from "./approveButton";
 import RejectButton from "./rejectButton";
-
 interface HospitalData {
   firstName: string;
   lastName: string;
   permissionID: string;
+  requestAddress: string;
 }
 
 export default function PermissionComponent() {
@@ -50,6 +50,7 @@ export default function PermissionComponent() {
             firstName: record.firstName,
             lastName: record.lastName,
             permissionID: record.permissionID,
+            requestAddress: record.requestAddress,
           }));
           setHospitalData(hospitals);
           console.log("hospital name:", hospitals);
@@ -128,11 +129,13 @@ export default function PermissionComponent() {
               <div style={{ display: "flex", marginRight: "40px" }}>
                 <ApproveButton
                   requiredAddress={fetchWalletAddress}
+                  requestedAddress={hospital.requestAddress}
                   permissionID={hospital.permissionID}
                   onSuccess={() => onSuccess(hospital.permissionID)}
                 />
                 <RejectButton
                   requiredAddress={fetchWalletAddress}
+                  requestedAddress={hospital.requestAddress}
                   permissionID={hospital.permissionID}
                   onFailure={() => onFailure(hospital.permissionID)}
                 />

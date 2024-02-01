@@ -1,14 +1,21 @@
+import { PublicKey } from "@solana/web3.js";
 import Image from "next/image";
 import { useState } from "react";
 import ApproveImage from "../../../public/icons/icons-correct.png";
 import grantPermission from "../functions/grantPermission";
+import {
+  createTransaction,
+  signTransaction,
+} from "../functions/transactionSigner";
 
 const ApproveButton = ({
   requiredAddress,
+  requestedAddress,
   permissionID,
   onSuccess,
 }: {
   requiredAddress: string;
+  requestedAddress: string;
   permissionID: BigInteger;
   onSuccess: () => void;
 }) => {
@@ -18,9 +25,24 @@ const ApproveButton = ({
   const [clicked, setClicked] = useState(false);
 
   // Handler for button click
-  const handleGrantPermission = () => {
-    grantPermission(address, id, onSuccess);
-    setClicked(true);
+  const handleGrantPermission = async () => {
+    console.log("My address:", requiredAddress);
+    console.log("Hospital address:", requestedAddress);
+    const senderPublicKey = new PublicKey(requiredAddress);
+    const recipientPublicKey = new PublicKey(requestedAddress);
+    const amount = 1000;
+
+    const transaction = createTransaction(
+      senderPublicKey,
+      recipientPublicKey,
+      amount
+    );
+    const signedTransaction = await signTransaction(transaction);
+
+    if (signedTransaction) {
+      grantPermission(address, id, onSuccess);
+      setClicked(true);
+    }
 
     // Reload the page after 3 seconds
     setTimeout(() => {
