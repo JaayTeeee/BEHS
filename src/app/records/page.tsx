@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import searchIcon from "../../../public/icons/icons-search-black.png";
+import DetailBox from "../components/DetailBox";
 import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
-import DetailBox from "../components/DetailBox";
 
 interface RecordData {
   recordID: string;
@@ -28,9 +28,7 @@ export default function Records() {
   const [checkData, setCheckData] = useState<any[]>([]); // Store filtered/searched records
   const [checkFirstData, setCheckFirstData] = useState<boolean>(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState<RecordData | null>(
-    null
-  );
+  const [selectedRecord, setSelectedRecord] = useState<RecordData | null>(null);
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -44,7 +42,11 @@ export default function Records() {
       fetchAllRecords(fetchWalletAddress);
     }
   }, [fetchWalletAddress]);
-  
+
+  const handleCloseDetails = () => {
+    setIsDetailsOpen(false);
+  };
+
   const handleSearch = async (query: string) => {
     console.log("Query:", query);
     if (query.trim() !== "") {
@@ -90,14 +92,20 @@ export default function Records() {
 
   const searchRecord = async (query: string): Promise<any[]> => {
     try {
-      const checkRequest = await fetch("http://localhost:3001/api/searchRecord", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ query: query, userAddress: fetchWalletAddress }),
-      });
+      const checkRequest = await fetch(
+        "http://localhost:3001/api/searchRecord",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            query: query,
+            userAddress: fetchWalletAddress,
+          }),
+        }
+      );
 
       if (checkRequest.ok) {
         const checkData = await checkRequest.json();
@@ -120,14 +128,17 @@ export default function Records() {
   const handleDetail = async (recordID: string) => {
     console.log(recordID);
     try {
-      const detailRequest = await fetch("http://localhost:3001/api/checkMedicalRecord", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ recordID }),
-      });
+      const detailRequest = await fetch(
+        "http://localhost:3001/api/checkMedicalRecord",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ recordID }),
+        }
+      );
 
       if (detailRequest.ok) {
         const recordData = await detailRequest.json();
@@ -183,97 +194,118 @@ export default function Records() {
         </div>
       </div>
       <div style={{ marginBottom: "50px", marginTop: "-100px" }}>
-          <div className="search-box" style={{ marginLeft: "1050px" }}>
-            <Image
-              src={searchIcon}
-              className="icon"
-              alt="search-icon"
-              style={{ height: "25px", width: "25px", marginLeft: "10px" }}
-            />
-            <input
-              type="text"
-              value={searchQuery}
-              placeholder="Search for wallet address and ID No..."
-              style={{
-                backgroundColor: "#dfdfdf",
-                outline: "none",
-                border: "none",
-                marginLeft: "10px",
-              }}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchButton onClick={() => handleSearch(searchQuery)} />
-          </div>
+        <div className="search-box" style={{ marginLeft: "1050px" }}>
+          <Image
+            src={searchIcon}
+            className="icon"
+            alt="search-icon"
+            style={{ height: "25px", width: "25px", marginLeft: "10px" }}
+          />
+          <input
+            type="text"
+            value={searchQuery}
+            placeholder="Search for wallet address and ID No..."
+            style={{
+              backgroundColor: "#dfdfdf",
+              outline: "none",
+              border: "none",
+              marginLeft: "10px",
+            }}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <SearchButton onClick={() => handleSearch(searchQuery)} />
         </div>
-        {checkFirstData && checkData.length > 0 ? (
-          checkData.map((record, index) => (
-            <div key={index} style={{ marginBottom: "30px" }}>
-              <div className="green-bar">
-                <div className="greenbar-title">
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                      <strong style={{ marginRight: "50px" }}>Record ID</strong>
-                      <div style={{ marginLeft: "40px", marginRight: "50px" }}>{record.recordID}</div>
+      </div>
+      {checkFirstData && checkData.length > 0 ? (
+        checkData.map((record, index) => (
+          <div key={index} style={{ marginBottom: "30px" }}>
+            <div className="green-bar">
+              <div className="greenbar-title">
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                    <strong style={{ marginRight: "50px" }}>Record ID</strong>
+                    <div style={{ marginLeft: "40px", marginRight: "50px" }}>
+                      {record.recordID}
                     </div>
-                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                      <strong style={{ marginRight: "50px" }}>Record Date</strong>
-                      <div style={{ marginLeft: "5px", marginRight: "50px" }}>{record.recordDate}</div>
+                  </div>
+                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                    <strong style={{ marginRight: "50px" }}>Record Date</strong>
+                    <div style={{ marginLeft: "5px", marginRight: "50px" }}>
+                      {record.recordDate}
                     </div>
-                    <div style={{ marginTop: "40px", flexDirection: "column", marginLeft: "100px" }}>
-                      <strong>Recorded By</strong>
-                      <div>{record.firstName} {record.lastName}</div>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: "40px",
+                      flexDirection: "column",
+                      marginLeft: "100px",
+                    }}
+                  >
+                    <strong>Recorded By</strong>
+                    <div>
+                      {record.firstName} {record.lastName}
                     </div>
-                    <div style={{ marginTop: "32px", flexDirection: "column", marginLeft: "430px" }}>
-                      <RectangleButton
-                        text="DETAILS"
-                        textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-                        onClick={() =>
-                          handleDetail({ recordID: record.recordID })
-                        }
-                      />
-                      {isDetailsOpen && (
-                        <div className="popup-container">
-                          <div
-                            className="popup-overlay"
-                            onClick={() => setIsDetailsOpen(false)}
-                          ></div>
-                          <div className="popup-content">
-                            <DetailBox recordData={selectedRecord} />
-                          </div>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: "32px",
+                      flexDirection: "column",
+                      marginLeft: "430px",
+                    }}
+                  >
+                    <RectangleButton
+                      text="DETAILS"
+                      textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+                      onClick={() =>
+                        handleDetail({ recordID: record.recordID })
+                      }
+                    />
+                    {isDetailsOpen && (
+                      <div className="popup-container">
+                        <div
+                          className="popup-overlay"
+                          onClick={() => setIsDetailsOpen(false)}
+                        ></div>
+                        <div className="popup-content">
+                          <DetailBox
+                            recordData={selectedRecord}
+                            handleClose={handleCloseDetails}
+                          />
                         </div>
-                      )}{" "}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-          ))
-        ) : checkFirstData && checkData.length === 0 ? (
-          <div
-            className="BEHS"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: "32px",
-              marginTop: "40px",
-            }}
-          >
-            <strong>No records found.</strong>
           </div>
-        ) : (
-          <div
-            className="BEHS"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: "24px",
-              marginLeft: "320px",
-              marginTop: "40px",
-            }}
-          >
-            Fetching records...
-          </div>
-        )}
+        ))
+      ) : checkFirstData && checkData.length === 0 ? (
+        <div
+          className="BEHS"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            fontSize: "32px",
+            marginTop: "40px",
+          }}
+        >
+          <strong>No records found.</strong>
+        </div>
+      ) : (
+        <div
+          className="BEHS"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            fontSize: "24px",
+            marginLeft: "320px",
+            marginTop: "40px",
+          }}
+        >
+          Fetching records...
+        </div>
+      )}
     </main>
   );
 }
