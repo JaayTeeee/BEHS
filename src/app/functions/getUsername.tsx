@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
+import sessionStorage from 'sessionstorage';
 
 export default function CheckUsername() {
-  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
   const [checkData, setCheckData] = useState<{ success: boolean; firstName?: string; lastName: string } | null>(null);
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get('WalletAddress');
-    setWalletAddress(addressFromQuery);
+    fetchData();
   }, []);
 
   function fetchData() {
@@ -18,7 +16,7 @@ export default function CheckUsername() {
         'Accept': 'application/json',
       }),
       mode: 'cors',
-      body: JSON.stringify({ walletAddress: fetchWalletAddress }),
+      body: JSON.stringify({ walletAddress: sessionStorage.getItem('walletAddress') }),
     });
 
     fetch(checkRequest)
@@ -47,12 +45,6 @@ export default function CheckUsername() {
         // Handle fetch errors during check
       });
   }
-
-  useEffect(() => {
-    if (fetchWalletAddress) {
-      fetchData();
-    }
-  }, [fetchWalletAddress]);
 
   return (
     <>

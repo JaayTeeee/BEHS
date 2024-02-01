@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
@@ -23,15 +22,8 @@ import LogoutButton from "../components/LogoutButton";
 import UserProfileButton from "../components/UserProfileButton";
 import CheckUsername from "../functions/getUsername";
 
+
 export default function Home() {
-  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
-  
-  useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get("WalletAddress");
-    setWalletAddress(addressFromQuery);
-    console.log("session:", sessionStorage.getItem('walletAddress'));
-  }, [fetchWalletAddress]);
 
   const solNetwork = WalletAdapterNetwork.Testnet;
   const endpoint = useMemo(() => clusterApiUrl(solNetwork), [solNetwork]);
@@ -102,21 +94,21 @@ export default function Home() {
               <ButtonWithImage
                 text="Research Opportunities"
                 imageSrc={ResearchImage}
-                link={`/research?WalletAddress=${fetchWalletAddress}`}
+                link={`/research`}
               />
             </div>
             <div style={{ marginRight: "20px" }}>
               <ButtonWithImage
                 text="Permissions"
                 imageSrc={PermissionImage}
-                link={`/permissions?WalletAddress=${fetchWalletAddress}`}
+                link={`/permissions`}
               />
             </div>
             <div>
               <ButtonWithImage
                 text="Medical Records"
                 imageSrc={MedRecordImage}
-                link={`/records?WalletAddress=${fetchWalletAddress}`}
+                link={`/records`}
               />
             </div>
           </div>

@@ -6,6 +6,7 @@ import DetailBox from "../components/DetailBox";
 import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
+import sessionStorage from 'sessionstorage';
 
 interface RecordData {
   recordID: string;
@@ -22,7 +23,6 @@ interface RecordData {
 }
 
 export default function Records() {
-  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [allRecords, setAllRecords] = useState<any[]>([]); // Store all records
   const [checkData, setCheckData] = useState<any[]>([]); // Store filtered/searched records
@@ -31,17 +31,10 @@ export default function Records() {
   const [selectedRecord, setSelectedRecord] = useState<RecordData | null>(null);
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get("WalletAddress");
-    setWalletAddress(addressFromQuery);
-  }, [fetchWalletAddress]);
-
-  useEffect(() => {
-    if (fetchWalletAddress) {
-      // Fetch all records when fetchWalletAddress is available
-      fetchAllRecords(fetchWalletAddress);
+    if (sessionStorage.getItem('walletAddress')) {
+      fetchAllRecords(sessionStorage.getItem('walletAddress'));
     }
-  }, [fetchWalletAddress]);
+  }, [sessionStorage.getItem('walletAddress')]);
 
   const handleCloseDetails = () => {
     setIsDetailsOpen(false);
@@ -71,7 +64,7 @@ export default function Records() {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({ query: fetchWalletAddress }),
+        body: JSON.stringify({ query: sessionStorage.getItem('walletAddress') }),
       });
       if (response.ok) {
         const data = await response.json();
@@ -102,7 +95,7 @@ export default function Records() {
           },
           body: JSON.stringify({
             query: query,
-            userAddress: fetchWalletAddress,
+            userAddress: sessionStorage.getItem('walletAddress'),
           }),
         }
       );

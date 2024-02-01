@@ -65,11 +65,13 @@ CREATE TABLE IF NOT EXISTS userData (
     userType TEXT
 );
 
+DELETE FROM userData WHERE walletAddress = 'c6EXf96ebZVya5RLnTdkMjzc4t8tK6P6muSMUoDRUz5';
+
 INSERT INTO userData (walletAddress, firstName, lastName, gender, dateBirth, idNumber, phoneNumber, address, city, postcode, state, userType) 
 VALUES (
-    '6VkQtM8TSNEn1GNGBmiR2kkpAR1vPfpvu5gcix7bCRQo', 
+    'CJjZcCKPCzwdN8MSUBMritQBaPRZoMZ72nzYFt2KE98w', 
     'Hospital', 
-    'UwU',  
+    'OwO',  
     '',  
     NULL,  
     123234623,    

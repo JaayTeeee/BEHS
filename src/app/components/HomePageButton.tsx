@@ -3,16 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import HealthCare from "../../../public/icons/icons-healthcare.png";
 import React, { useEffect, useState } from "react";
+import sessionStorage from 'sessionstorage';
 
 const HomePageButton = () => {
   const [checkData, setCheckData] = useState<{ success: boolean; userType?: string } | null>(null);
-  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
-
-  useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get('WalletAddress');
-    setWalletAddress(addressFromQuery);
-  }, [fetchWalletAddress]);
 
   useEffect(() => {
     const checkRequest = new Request('http://localhost:3001/api/checkID', {
@@ -22,7 +16,7 @@ const HomePageButton = () => {
         'Accept': 'application/json',
       }),
       mode: 'cors',
-      body: JSON.stringify({ walletAddress: fetchWalletAddress }),
+      body: JSON.stringify({ walletAddress: sessionStorage.getItem('walletAddress') }),
     });
 
     fetch(checkRequest)
@@ -50,12 +44,12 @@ const HomePageButton = () => {
         console.error("Fetch error during check:", error);
         // Handle fetch errors during check
       });
-  }, [fetchWalletAddress]);
+  }, [sessionStorage.getItem('walletAddress')]);
 
   return (
     <>
       {checkData && checkData.userType === "user" && (
-        <Link href={`/welcome?WalletAddress=${fetchWalletAddress}`}>
+        <Link href={`/welcome`}>
           <Image
             src={HealthCare}
             alt="Button Icon"
@@ -64,7 +58,7 @@ const HomePageButton = () => {
         </Link>
       )}
       {checkData && checkData.userType === "hospital" && (
-        <Link href={`/medicalwelcome?WalletAddress=${fetchWalletAddress}`}>
+        <Link href={`/medicalwelcome`}>
           <Image
             src={HealthCare}
             alt="Button Icon"

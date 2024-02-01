@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import sessionStorage from 'sessionstorage';
 
 interface CheckData {
   permissionID: string;
@@ -29,19 +30,16 @@ const getStatusLabel = (status: number): string => {
 };
 
 const PermissionTable: React.FC = () => {
-  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
   const [hospitals, setHospitalData] = useState<HospitalData | null>(null);
   const [records, setRecordsData] = useState<CheckData | null>(null);
   const [updatedTableData, setTableData] = useState<any[]>([]);
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get("WalletAddress");
-    setWalletAddress(addressFromQuery);
-    if (addressFromQuery) {
+    if (sessionStorage.getItem('walletAddress')) {
+      const addressFromQuery = sessionStorage.getItem('walletAddress');
       SearchPermission(addressFromQuery);
     }
-  }, [fetchWalletAddress]);
+  }, [sessionStorage.getItem('walletAddress')]);
 
   const SearchPermission = async (query: string) => {
     try {

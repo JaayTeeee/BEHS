@@ -7,6 +7,7 @@ import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
 import MedicalRecordInserter from "../components/MedicalRecordInserter";
 import SearchButton from "../components/searchButton";
+import sessionStorage from 'sessionstorage';
 
 interface CheckData {
   walletAddress: string;
@@ -24,8 +25,7 @@ export default function MedicalInsert() {
   const [fetchWalletAddress, setFetchWalletAddress] = useState<string | null>();
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get("WalletAddress");
+    const addressFromQuery = sessionStorage.getItem('walletAddress');
     setFetchWalletAddress(addressFromQuery);
   }, []);
 

@@ -3,6 +3,7 @@ import { DatePicker } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Button from "../components/RectangleButton";
+import sessionStorage from 'sessionstorage';
 
 interface UserData {
   firstName: string;
@@ -493,14 +494,8 @@ const Confirmation: React.FC<{
   onSubmit: () => void;
 }> = ({ userData, onPrevious, onSubmit }) => {
   const router = useRouter();
-  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get("WalletAddress");
-    setWalletAddress(addressFromQuery);
-  }, [fetchWalletAddress]);
   const handlePrevious = () => {
     onPrevious();
   };
@@ -510,7 +505,7 @@ const Confirmation: React.FC<{
     onSubmit();
     try {
       const insertUserData = {
-        walletAddress: fetchWalletAddress,
+        walletAddress: sessionStorage.getItem('walletAddress'),
         firstName: userData.firstName,
         lastName: userData.lastName,
         gender: userData.gender,
@@ -540,10 +535,8 @@ const Confirmation: React.FC<{
 
       const response = await res.json();
 
-      if (response.success && fetchWalletAddress !== null) {
-        const encodedWalletAddress = encodeURIComponent(fetchWalletAddress);
-        console.log("Encoded Address:", encodedWalletAddress);
-        router.push(`/welcome?WalletAddress=${encodedWalletAddress}`);
+      if (response.success) {
+        router.push(`/welcome`);
       } else {
         console.error("Address is null or response is not successful.");
         // Handle the case when address is null or response is not successful

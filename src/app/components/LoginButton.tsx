@@ -40,17 +40,14 @@ const LoginButton = () => {
         if (checkData && checkData.success === true) {
           const userType = checkData.userType;
           if (userType === "user") {
-            const encodedAddress = encodeURIComponent(walletAddress);
-            router.push(`/welcome?WalletAddress=${encodedAddress}`);
+            router.push(`/welcome`);
           } else if (userType === "hospital") {
-            const encodedAddress = encodeURIComponent(walletAddress);
-            router.push(`/medicalwelcome?WalletAddress=${encodedAddress}`);
+            router.push(`/medicalwelcome`);
           } else {
             console.error("Unknown user type:", userType);
           }
         } else {
-          const encodedAddress = encodeURIComponent(walletAddress);
-          router.push(`/register?WalletAddress=${encodedAddress}`);
+          router.push(`/register`);
         }
       })
       .catch((error) => {

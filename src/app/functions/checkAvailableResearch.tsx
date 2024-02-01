@@ -1,8 +1,8 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import RectangleButton from "../components/RectangleButton";
 import TermsBox from "../components/TermsBox";
+import sessionStorage from 'sessionstorage';
 
 interface ResearchData {
   researchDate: string;
@@ -28,8 +28,7 @@ export default function AvailableResearch() {
   };
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get("WalletAddress");
+    const addressFromQuery = sessionStorage.getItem('walletAddress');
     setWalletAddress(addressFromQuery);
     if (addressFromQuery) {
       searchResearch(addressFromQuery);

@@ -36,6 +36,9 @@ const signTransaction = async (
     const blockhash = blockhashObj.blockhash;
     transaction.recentBlockhash = blockhash;
     transaction.feePayer = feePayerPublicKey;
+
+    console.log(transaction)
+    console.log(feePayerPublicKey)
     const signedTransaction = await provider.signTransaction(
       transaction,
       feePayerPublicKey

@@ -9,6 +9,7 @@ import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
 import GetPermission from "../functions/getPermission";
+import sessionStorage from 'sessionstorage';
 
 interface CheckData {
   recordID: number;
@@ -55,17 +56,8 @@ export default function RetrieveRecord() {
   const [permissionData, setPermissionData] = useState<PermissionData[]>([]);
   const [checkFirstData, setCheckFirstData] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [fetchWalletAddress, setFetchWalletAddress] = useState<string | null>(
-    null
-  );
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<RecordData | null>(null);
-
-  useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get("WalletAddress");
-    setFetchWalletAddress(addressFromQuery);
-  }, []);
 
   const handleRequest = async ({
     requestAddress,
@@ -94,16 +86,13 @@ export default function RetrieveRecord() {
       try {
         const searchData = await searchRecord(query);
         if (searchData && searchData.length > 0) {
-          const approvedData = await permissionApproved(
-            searchData[0].userAddress
-          );
-          if (approvedData) {
-            const updatedData = updateRecordsWithPermission(
-              searchData,
-              approvedData
-            );
-            setCheckData(updatedData);
-          }
+          const approvedData = await permissionApproved(searchData[0].userAddress);
+            if (approvedData) {
+              const updatedData = updateRecordsWithPermission(searchData, approvedData);
+              setCheckData(updatedData);
+            } else {
+              setCheckData(searchData); // Set searchData directly if no approvedData
+          }        
         }
       } catch (error) {
         console.error("Error fetching medical records:", error);
@@ -160,7 +149,7 @@ export default function RetrieveRecord() {
           },
           body: JSON.stringify({
             userAddress,
-            hospitalAddress: fetchWalletAddress,
+            hospitalAddress: sessionStorage.getItem('walletAddress'),
           }),
         }
       );
@@ -293,117 +282,106 @@ export default function RetrieveRecord() {
           </div>
         </div>
         {checkData ? (
-          checkData.map((record, index) => (
-            <div key={index} style={{ marginBottom: "50px" }}>
-              <div className="green-bar">
-                <div className="greenbar-title">
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                      <strong style={{ marginRight: "50px" }}>Record ID</strong>
-                      <div style={{ marginRight: "50px" }}>
-                        {record.recordID}
-                      </div>
+        checkData.map((record, index) => (
+          <div key={index} style={{ marginBottom: "50px" }}>
+            <div className="green-bar">
+              <div className="greenbar-title">
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                    <strong style={{ marginRight: "50px" }}>Record ID</strong>
+                    <div style={{ marginRight: "50px" }}>
+                      {record.recordID}
                     </div>
-                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                      <strong style={{ marginRight: "50px" }}>Date</strong>
-                      <div style={{ marginRight: "50px" }}>
-                        {record.recordDate}
-                      </div>
+                  </div>
+                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                    <strong style={{ marginRight: "50px" }}>Date</strong>
+                    <div style={{ marginRight: "50px" }}>
+                      {record.recordDate}
                     </div>
-                    <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                      <strong style={{ marginRight: "60px" }}>
-                        Patient ID
-                      </strong>
-                      <div style={{ marginRight: "50px" }}>
-                        {record.userAddress && (
-                          <>
-                            {record.userAddress.substring(0, 7)}...
-                            {record.userAddress.substring(
-                              record.userAddress.length - 7
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        marginTop: "40px",
-                        flexDirection: "column",
-                        marginRight: "200px",
-                      }}
-                    >
-                      <strong>Hospital Address</strong>
-                      <div>
-                        {record.hospitalAddress && (
-                          <>
-                            {record.hospitalAddress.substring(0, 7)}...
-                            {record.hospitalAddress.substring(
-                              record.hospitalAddress.length - 7
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <div style={{ marginTop: "32px", flexDirection: "column" }}>
-                      {record.permissionStatus === 1 ? (
+                  </div>
+                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
+                    <strong style={{ marginRight: "60px" }}>
+                      Patient ID
+                    </strong>
+                    <div style={{ marginRight: "50px" }}>
+                      {record.userAddress && (
                         <>
-                          <RectangleButton
-                            text="View"
-                            textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-                            onClick={() =>
-                              handleDetail({ recordID: record.recordID })
-                            }
-                            style={{ backgroundColor: "#3F45DD" }}
-                          />
-                          {isDetailsOpen && (
-                            <div className="popup-container">
-                              <div
-                                className="popup-overlay"
-                                onClick={() => setIsDetailsOpen(false)}
-                              ></div>
-                              <div className="popup-content">
-                                <DetailBox recordData={selectedRecord} />
-                              </div>
-                            </div>
+                          {record.userAddress.substring(0, 7)}...
+                          {record.userAddress.substring(
+                            record.userAddress.length - 7
                           )}
                         </>
-                      ) : (
-                        <RectangleButton
-                          text="Request"
-                          textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-                          onClick={() =>
-                            handleRequest({
-                              requestAddress: fetchWalletAddress,
-                              requiredAddress: record.userAddress,
-                              recordID: record.recordID,
-                            })
-                          }
-                        />
                       )}
                     </div>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: "40px",
+                      flexDirection: "column",
+                      marginRight: "200px",
+                    }}
+                  >
+                    <strong>Hospital Address</strong>
+                    <div>
+                      {record.hospitalAddress && (
+                        <>
+                          {record.hospitalAddress.substring(0, 7)}...
+                          {record.hospitalAddress.substring(
+                            record.hospitalAddress.length - 7
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div style={{ marginTop: "32px", flexDirection: "column" }}>
+                    {record.permissionStatus === 1 ? (
+                      <>
+                        <RectangleButton
+                          text="View"
+                          textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+                          onClick={() => handleDetail({ recordID: record.recordID })}
+                          style={{ backgroundColor: "#3F45DD" }}
+                        />
+                        {isDetailsOpen && (
+                          <div className="popup-container">
+                            <div
+                              className="popup-overlay"
+                              onClick={() => setIsDetailsOpen(false)}
+                            ></div>
+                            <div className="popup-content">
+                              <DetailBox recordData={selectedRecord} />
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <RectangleButton
+                        text="Request"
+                        textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+                        onClick={() =>
+                          handleRequest({
+                            requestAddress: sessionStorage.getItem('walletAddress'),
+                            requiredAddress: record.userAddress,
+                            recordID: record.recordID,
+                          })
+                        }
+                      />
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-          ))
-        ) : (
-          <div
-            className="BEHS"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: "24px",
-              marginLeft: "320px",
-              marginTop: "40px",
-            }}
-          >
-            {checkFirstData === false ? (
-              <strong>Please input user&apos;s address or ID Number: </strong>
-            ) : (
-              <strong>User not found!</strong>
-            )}
           </div>
-        )}
+        ))
+      ) : (
+        <div className="BEHS" style={{ display: "flex", justifyContent: "center", fontSize: "24px", marginLeft: "320px", marginTop: "40px" }}>
+          {checkFirstData === false ? (
+            <strong>Please input user's address or ID Number: </strong>
+          ) : (
+            <strong>User not found!</strong>
+          )}
+        </div>
+      )}
       </div>
     </main>
   );

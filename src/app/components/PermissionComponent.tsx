@@ -1,9 +1,10 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ApproveButton from "./approveButton";
 import RejectButton from "./rejectButton";
+import sessionStorage from 'sessionstorage';
+
 interface HospitalData {
   firstName: string;
   lastName: string;
@@ -18,8 +19,7 @@ export default function PermissionComponent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const addressFromQuery = urlSearchParams.get("WalletAddress");
+    const addressFromQuery = sessionStorage.getItem('walletAddress');
     setWalletAddress(addressFromQuery);
 
     if (addressFromQuery) {

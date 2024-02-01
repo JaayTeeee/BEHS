@@ -2,12 +2,15 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import LogoutImage from "../../../public/icons/icons-logout.png";
+import sessionStorage from 'sessionstorage';
+
 const LogoutButton = () => {
   const { disconnect, connected } = useWallet();
   const router = useRouter();
   const disconnectWallet = () => {
     disconnect();
     if (!connected) {
+      sessionStorage.removeItem('walletAddress');
       router.push("/");
     }
   };
