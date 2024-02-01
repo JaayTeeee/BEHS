@@ -22,12 +22,6 @@ export default function MedicalInsert() {
   const [checkData, setCheckData] = useState<CheckData | null>(null);
   const [checkFirstData, setCheckFirstData] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [fetchWalletAddress, setFetchWalletAddress] = useState<string | null>();
-
-  useEffect(() => {
-    const addressFromQuery = sessionStorage.getItem('walletAddress');
-    setFetchWalletAddress(addressFromQuery);
-  }, []);
 
   const handleSearch = async (query: string) => {
     console.log("Query:", query);
@@ -195,7 +189,7 @@ export default function MedicalInsert() {
                 <div key={index}>
                   <MedicalRecordInserter
                     address={record.walletAddress}
-                    hospitalAddress={fetchWalletAddress}
+                    hospitalAddress={sessionStorage.getItem('walletAddress')}
                     resetData={resetData}
                   />
                 </div>
