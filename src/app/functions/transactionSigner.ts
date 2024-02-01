@@ -22,7 +22,10 @@ const createTransaction = (
   return transaction;
 };
 
-const signTransaction = async (transaction: Transaction) => {
+const signTransaction = async (
+  transaction: Transaction,
+  feePayerPublicKey: PublicKey
+) => {
   try {
     const provider = window.solana;
     const solana = new Connection(
@@ -32,7 +35,11 @@ const signTransaction = async (transaction: Transaction) => {
     const blockhashObj = await solana.getLatestBlockhash();
     const blockhash = blockhashObj.blockhash;
     transaction.recentBlockhash = blockhash;
-    const signedTransaction = await provider.signTransaction(transaction);
+    transaction.feePayer = feePayerPublicKey;
+    const signedTransaction = await provider.signTransaction(
+      transaction,
+      feePayerPublicKey
+    );
     return true; // Transaction signed successfully
   } catch (error) {
     console.error("Error signing transaction:", error);
