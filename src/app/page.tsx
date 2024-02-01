@@ -18,7 +18,6 @@ import { useMemo } from "react";
 import HealthCare from "../../public/icons/icons-healthcare.png";
 import MedicalImage from "../../public/icons/medical.jpg";
 import LoginButton from "./components/LoginButton";
-
 require("@solana/wallet-adapter-react-ui/styles.css");
 
 function App() {
