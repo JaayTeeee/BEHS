@@ -166,35 +166,31 @@ app.post("/api/updateUserData", (req, res) => {
     firstName,
     lastName,
     gender,
-    dateBirth,
     phoneNumber,
     address,
     city,
     postcode,
     state,
-    userid,
+    walletAddress,
   } = req.body;
+  const dateOfBirth = new Date(req.body.dateBirth);
+  const formattedDateOfBirth = dateOfBirth.toISOString().split("T")[0];
 
   try {
     const updateStmt = db.prepare(`
       UPDATE userData 
       SET firstName = ?, lastName = ?, gender = ?, dateBirth = ?, 
       phoneNumber = ?, address = ?, city = ?, postcode = ?, state = ? 
-      WHERE userid = ? 
+      WHERE walletAddress = ? 
     `);
 
     // Execute the prepared statement with provided parameters
-    updateStmt.run(firstName, lastName, gender, dateBirth, phoneNumber, address, city, postcode, state, userid, (error) => {
-      if (error) {
-        console.error("Error updating user record:", error);
-        res.status(500).json({ error: "Internal server error" });
-      } else {
-        console.log("Update user record successfully:", userid);
-        res.status(200).json({ success: true });
-      }
-    });
+    updateStmt.run(firstName, lastName, gender, formattedDateOfBirth, phoneNumber, address, city, postcode, state, walletAddress);
+
+    console.log("Update user record successfully:", walletAddress);
+    res.status(200).json({ success: true });
   } catch (error) {
-    console.error("Error preparing update statement:", error);
+    console.error("Error updating user record:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

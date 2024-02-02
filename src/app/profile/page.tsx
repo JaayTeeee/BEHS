@@ -1,11 +1,11 @@
 "use client";
 import { DatePicker } from "antd";
-import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import Button from "../components/RectangleButton";
 import HomePageButton from "../components/HomePageButton";
 import moment from 'moment';
-import { Dayjs } from "dayjs";
 import sessionStorage from 'sessionstorage';
 
 interface UserData {
@@ -13,8 +13,8 @@ interface UserData {
     lastName: string;
     gender: string;
     dateBirth: string;
-    idNumber: number;
-    phoneNumber: number;
+    idNumber: string;
+    phoneNumber: string;
     address: string;
     city: string;
     postcode: number;
@@ -37,13 +37,12 @@ interface UserData {
         lastName: "",
         gender: "",
         dateBirth: "",
-        idNumber: 0,
-        phoneNumber: 0,
+        idNumber: "",
+        phoneNumber: "",
         address: "",
         city: "",
         postcode: 0,
         state: "",
-        userid: 0
     });
 
     useEffect(() => {
@@ -83,12 +82,12 @@ interface UserData {
         }));
     };
 
-    const handleDateChange = (date: Dayjs | null, dateString: string) => {
+    const handleDateChange = (date: Moment | null, dateString: string) => {
       if (date) {
-        const formattedDateString = date.format('YYYY-MM-DD'); // Format the date as needed
+        // const formattedDateString = date.format('YYYY-MM-DD'); // Format the date as needed
         setUserData((prevUserData) => ({
             ...prevUserData,
-            dateBirth: formattedDateString,
+            dateBirth: dateString,
         }));
     }
     };
@@ -126,8 +125,9 @@ interface UserData {
                 city: userData.city,
                 postcode: userData.postcode,
                 state: userData.state,
-                userid: userData.userid,
+                walletAddress: sessionStorage.getItem('walletAddress')
             };
+
             const request = new Request("http://localhost:3001/api/updateUserData", {
                 method: "POST",
                 headers: new Headers({
@@ -146,8 +146,22 @@ interface UserData {
             const response = await res.json();
 
             if (response.success) {
-                // Do something after successful submission
-            } else {
+              const onSuccess = () => {
+                toast.success("Update data successfully!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                });
+            };
+        
+            // Call the onSuccess callback function
+            onSuccess();
+          } else {
                 console.error("Address is null or response is not successful.");
                 // Handle the case when address is null or response is not successful
             }
@@ -158,6 +172,7 @@ interface UserData {
 
     return (
         <main>
+          <ToastContainer />
         <div
         style={{
           display: "flex",
@@ -309,8 +324,8 @@ interface UserData {
               }}
             >
               <DatePicker
+                value={userData.dateBirth ? moment(userData.dateBirth) : null}
                 onChange={handleDateChange}
-                value={userData.dateBirth ? moment(userData.dateBirth, 'YYYY-MM-DD') : null} // Parse the date if available
                 style={{
                   position: "absolute",
                   marginTop: "5px",
