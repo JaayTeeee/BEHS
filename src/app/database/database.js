@@ -161,21 +161,40 @@ app.post("/api/checkUserData", (req, res) => {
   }
 });
 
-app.post("/api/udpateUserData", (req, res) => {
-  try {
-    const query = req.body.query; // Access the query parameter from req.body directly
-    const CheckStmt = db.prepare(
-      "UPDATE userData SET WHERE idNumber = ? "
-    );
+app.post("/api/updateUserData", (req, res) => {
+  const {
+    firstName,
+    lastName,
+    gender,
+    dateBirth,
+    phoneNumber,
+    address,
+    city,
+    postcode,
+    state,
+    userid,
+  } = req.body;
 
-    const Result = CheckStmt.get(query);
-    // Check if any records are found based on idNumber
-    if (Result) {
-      console.log("Records found matching idNumber query:", query);
-      res.status(200).json({ success: true, records: [Result] }); // Wrap idNumberResult in an array
-    }
+  try {
+    const updateStmt = db.prepare(`
+      UPDATE userData 
+      SET firstName = ?, lastName = ?, gender = ?, dateBirth = ?, 
+      phoneNumber = ?, address = ?, city = ?, postcode = ?, state = ? 
+      WHERE userid = ? 
+    `);
+
+    // Execute the prepared statement with provided parameters
+    updateStmt.run(firstName, lastName, gender, dateBirth, phoneNumber, address, city, postcode, state, userid, (error) => {
+      if (error) {
+        console.error("Error updating user record:", error);
+        res.status(500).json({ error: "Internal server error" });
+      } else {
+        console.log("Update user record successfully:", userid);
+        res.status(200).json({ success: true });
+      }
+    });
   } catch (error) {
-    console.error("Error searching records:", error);
+    console.error("Error preparing update statement:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

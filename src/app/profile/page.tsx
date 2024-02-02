@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Button from "../components/RectangleButton";
 import HomePageButton from "../components/HomePageButton";
+import moment from 'moment';
+import { Dayjs } from "dayjs";
 import sessionStorage from 'sessionstorage';
 
 interface UserData {
@@ -11,7 +13,7 @@ interface UserData {
     lastName: string;
     gender: string;
     dateBirth: string;
-    idNumber: string;
+    idNumber: number;
     phoneNumber: string;
     address: string;
     city: string;
@@ -20,106 +22,139 @@ interface UserData {
   }
 
   const EditProfile: React.FC<{
-    userData: UserData;
-    setUserData: React.Dispatch<React.SetStateAction<UserData>>;
     onSubmit: () => void;
-}> = ({ userData, setUserData, onSubmit }) => {
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setUserData((prevUserData) => ({
-            ...prevUserData,
-            [name]: value,
-        }));
-    };
-    
-    const [checkData, setCheckData] = useState<{ success: boolean; firstName?: string; lastName: string } | null>(null);
-    const checkRequest = new Request('http://localhost:3001/api/checkID', {
-      method: 'POST',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      }),
-      mode: 'cors',
-      body: JSON.stringify({ walletAddress: sessionStorage.getItem('walletAddress') }),
+}> = ({ onSubmit }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+    const [userData, setUserData] = useState<UserData>({
+        firstName: "",
+        lastName: "",
+        gender: "",
+        dateBirth: "",
+        idNumber: 0,
+        phoneNumber: 0,
+        address: "",
+        city: "",
+        postcode: 0,
+        state: "",
+        userid: 0
     });
 
-    fetch(checkRequest)
-      .then((checkResponse) => {
-        if (checkResponse.ok) {
-          // Continue with parsing JSON when the response is OK
-          return checkResponse.json();
-        } else {
-          // Log additional details about the response when it's not OK
-          console.error("Failed to check ID:", checkResponse);
-          // You can return a failed promise here or throw an error if needed
-          throw new Error("Failed to check ID");
-        }
-      })
-      .then((checkData) => {
-        if (checkData.success) {
-          console.log(checkData);
-          setCheckData(checkData);
-        } else {
-          console.error('Failed to check ID:', checkData);
-        }
-      })
-      .catch((error) => {
-        // Log additional details about the fetch error during check
-        console.error("Fetch error during check:", error);
-        // Handle fetch errors during check
-      });
+    useEffect(() => {
+        fetchUserData();
+    }, []);
 
-    const initialUserData: UserData = {
-        firstName: '',
-        lastName: '',
-        gender: '',
-        dateBirth: '',
-        idNumber: '',
-        phoneNumber: '',
-        address: '',
-        city: '',
-        postcode: 0,
-        state: '',
-      };
-
-    const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const { value } = event.target;
-      setUserData((prevUserData) => ({
-        ...prevUserData,
-        gender: value,
-      }));
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch("http://localhost:3001/api/checkUserData",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({ query: sessionStorage.getItem('walletAddress') }),
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch user data");
+            }
+            const data = await response.json();
+            if (data.success) {
+                const user = data.records[0];
+                setUserData(user);
+            } else {
+                console.error("Failed to fetch user data");
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
     };
 
-    const handleDateChange = (date: moment.Moment | null, dateString: string) => {
-      setUserData((prevUserData) => ({
-        ...prevUserData,
-        dateBirth: dateString,
-      }));
+    const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const { value } = event.target;
+        setUserData((prevUserData) => ({
+            ...prevUserData,
+            gender: value,
+        }));
+    };
+
+    const handleDateChange = (date: Dayjs | null, dateString: string) => {
+      if (date) {
+        const formattedDateString = date.format('YYYY-MM-DD'); // Format the date as needed
+        setUserData((prevUserData) => ({
+            ...prevUserData,
+            dateBirth: formattedDateString,
+        }));
+    }
     };
 
     const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const { value } = event.target;
-      setUserData((prevUserData) => ({
-        ...prevUserData,
-        state: value,
-      }));
+        const { value } = event.target;
+        setUserData((prevUserData) => ({
+            ...prevUserData,
+            state: value,
+        }));
     };
 
     const disableNumberPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key >= "0" && event.key <= "9") {
-        event.preventDefault();
-      }
+        if (event.key >= "0" && event.key <= "9") {
+            event.preventDefault();
+        }
     };
 
     const disableABCPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if ((event.keyCode >= 65 && event.keyCode <= 90) || (event.keyCode >= 97 && event.keyCode <= 122)) {
-        event.preventDefault();
-      }
+        if ((event.keyCode >= 65 && event.keyCode <= 90) || (event.keyCode >= 97 && event.keyCode <= 122)) {
+            event.preventDefault();
+        }
     };
 
     const handleSubmit = async () => {
-        onSubmit();
-    }
+        try {
+            const UploadUserData = {
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                gender: userData.gender,
+                dateBirth: userData.dateBirth,
+                idNumber: userData.idNumber,
+                phoneNumber: userData.phoneNumber,
+                address: userData.address,
+                city: userData.city,
+                postcode: userData.postcode,
+                state: userData.state,
+                userid: userData.userid,
+            };
+            const request = new Request("http://localhost:3001/api/updateUserData", {
+                method: "POST",
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                }),
+                mode: "cors",
+                body: JSON.stringify(UploadUserData),
+            });
+
+            const res = await fetch(request);
+            if (!res.ok) {
+                throw new Error(`Failed to fetch: ${res.statusText}`);
+            }
+
+            const response = await res.json();
+
+            if (response.success) {
+                // Do something after successful submission
+            } else {
+                console.error("Address is null or response is not successful.");
+                // Handle the case when address is null or response is not successful
+            }
+        } catch (error) {
+            console.error("Failed to save data:", error);
+        }
+    };
 
     return (
         <main>
@@ -174,7 +209,7 @@ interface UserData {
               <input
                 type="text"
                 name="firstName"
-                value={initialUserData.firstName}
+                value={userData.firstName}
                 onChange={handleChange}
                 onKeyDown={disableNumberPress}
                 style={{
@@ -209,7 +244,7 @@ interface UserData {
               <input
                 type="text"
                 name="lastName"
-                value={initialUserData.lastName}
+                value={userData.lastName}
                 onChange={handleChange}
                 onKeyDown={disableNumberPress}
                 style={{
@@ -239,7 +274,7 @@ interface UserData {
             >
               <select
                 name="gender"
-                value={initialUserData.gender}
+                value={userData.gender}
                 onChange={handleGenderChange}
                 style={{
                   backgroundColor: "#dfdfdf",
@@ -275,6 +310,7 @@ interface UserData {
             >
               <DatePicker
                 onChange={handleDateChange}
+                value={userData.dateBirth ? moment(userData.dateBirth, 'YYYY-MM-DD') : null} // Parse the date if available
                 style={{
                   position: "absolute",
                   marginTop: "5px",
@@ -294,7 +330,7 @@ interface UserData {
         <input
           type="text"
           name="phoneNumber"
-          value={initialUserData.phoneNumber}
+          value={userData.phoneNumber}
           onChange={handleChange}
           onKeyDown={disableABCPress}
           style={{ backgroundColor: "#dfdfdf", outline: "none", border: "none", height: "45px", width: "100%", caretColor: "transparent", marginLeft: "10px" }}
@@ -314,7 +350,7 @@ interface UserData {
         <input
           type="text"
           name="city"
-          value={initialUserData.city}
+          value={userData.city}
           onChange={handleChange}
           style={{ backgroundColor: "#dfdfdf", outline: "none", border: "none", height: "45px", width: "100%", caretColor: "transparent", marginLeft: "10px" }}
           required
@@ -336,7 +372,7 @@ interface UserData {
         <input
           type="text"
           name="address"
-          value={initialUserData.address}
+          value={userData.address}
           onChange={handleChange}
           style={{ backgroundColor: "#dfdfdf", outline: "none", border: "none", height: "45px", width: "100%", caretColor: "transparent", marginLeft: "10px" }}
           required
@@ -356,7 +392,7 @@ interface UserData {
         <input
           type="number"
           name="postcode"
-          value={initialUserData.postcode}
+          value={userData.postcode}
           onChange={handleChange}
           style={{ backgroundColor: "#dfdfdf", outline: "none", border: "none", height: "45px", width: "100%", caretColor: "transparent", marginLeft: "10px" }}
           required
@@ -372,7 +408,7 @@ interface UserData {
     <div style={{ backgroundColor: "#dfdfdf", width: "410px", height: "45px" }}>
       <select
         name="state"
-        value={initialUserData.state}
+        value={userData.state}
         onChange={handleStateChange}
         style={{ backgroundColor: "#dfdfdf", outline: "none", border: "none", height: "45px", width: "400px", marginLeft: "10px" }}
       >
@@ -415,3 +451,4 @@ interface UserData {
 };
 
 export default EditProfile;
+
