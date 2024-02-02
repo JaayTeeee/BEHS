@@ -14,7 +14,7 @@ interface UserData {
     gender: string;
     dateBirth: string;
     idNumber: number;
-    phoneNumber: string;
+    phoneNumber: number;
     address: string;
     city: string;
     postcode: number;
