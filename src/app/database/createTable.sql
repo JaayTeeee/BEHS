@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS userData (
 
 INSERT INTO userData (walletAddress, firstName, lastName, gender, dateBirth, idNumber, phoneNumber, address, city, postcode, state, userType) 
 VALUES (
-    '6VkQtM8TSNEn1GNGBmiR2kkpAR1vPfpvu5gcix7bCRQo', 
+    'JBTjhb9akhL1NHfieMytHD1tXisiFVv4iUT8hxB24jR9', 
     'Hospital', 
-    'UwU',  
+    'UowoU',  
     '',  
     NULL,  
     123234623,    

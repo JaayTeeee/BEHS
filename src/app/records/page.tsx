@@ -220,61 +220,50 @@ export default function Records() {
         checkData.map((record, index) => (
           <div key={index} style={{ marginBottom: "30px" }}>
             <div className="green-bar">
-              <div className="greenbar-title">
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                    <strong style={{ marginRight: "50px" }}>Record ID</strong>
-                    <div style={{ marginLeft: "40px", marginRight: "50px" }}>
-                      {record.recordID}
-                    </div>
+              <div
+                className="greenbar-title"
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <div style={{ flexDirection: "column", marginTop: "40px" }}>
+                  <strong>Record ID</strong>
+                  <div style={{ marginLeft: "40px" }}>{record.recordID}</div>
+                </div>
+                <div style={{ flexDirection: "column", marginTop: "40px" }}>
+                  <strong>Record Date</strong>
+                  <div style={{ marginLeft: "5px" }}>{record.recordDate}</div>
+                </div>
+                <div style={{ flexDirection: "column", marginTop: "40px" }}>
+                  <strong>Recorded By</strong>
+                  <div style={{ marginRight: "20px" }}>
+                    {record.firstName} {record.lastName}
                   </div>
-                  <div style={{ marginTop: "40px", flexDirection: "column" }}>
-                    <strong style={{ marginRight: "50px" }}>Record Date</strong>
-                    <div style={{ marginLeft: "5px", marginRight: "50px" }}>
-                      {record.recordDate}
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      marginTop: "40px",
-                      flexDirection: "column",
-                      marginLeft: "100px",
-                    }}
-                  >
-                    <strong>Recorded By</strong>
-                    <div>
-                      {record.firstName} {record.lastName}
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      marginTop: "32px",
-                      flexDirection: "column",
-                      marginLeft: "430px",
-                    }}
-                  >
-                    <RectangleButton
-                      text="DETAILS"
-                      textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-                      onClick={() =>
-                        handleDetail({ recordID: record.recordID })
-                      }
-                    />
-                    {isDetailsOpen && (
-                      <div className="popup-container">
-                        <div
-                          className="popup-overlay"
-                          onClick={() => setIsDetailsOpen(false)}
-                        ></div>
-                        <div className="popup-content">
-                          <DetailBox
-                            recordData={selectedRecord}
-                            handleClose={handleCloseDetails}
-                          />
-                        </div>
+                </div>
+                <div
+                  style={{
+                    flexDirection: "column",
+                    marginTop: "30px",
+                    marginRight: "30px",
+                  }}
+                >
+                  <RectangleButton
+                    text="DETAILS"
+                    textStyle={{ fontSize: "30px", fontWeight: "bold" }}
+                    onClick={() => handleDetail({ recordID: record.recordID })}
+                  />
+                  {isDetailsOpen && (
+                    <div className="popup-container">
+                      <div
+                        className="popup-overlay"
+                        onClick={() => setIsDetailsOpen(false)}
+                      ></div>
+                      <div className="popup-content">
+                        <DetailBox
+                          recordData={selectedRecord}
+                          handleClose={handleCloseDetails}
+                        />
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

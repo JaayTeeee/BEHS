@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import searchIcon from "../../../public/icons/icons-search-black.png";
+import DetailBox from "../components/DetailBox";
 import HomePageButton from "../components/HomePageButton";
 import RectangleButton from "../components/RectangleButton";
 import SearchButton from "../components/searchButton";
 import GetPermission from "../functions/getPermission";
-import DetailBox from "../components/DetailBox";
 
 interface CheckData {
   recordID: number;
@@ -55,11 +55,11 @@ export default function RetrieveRecord() {
   const [permissionData, setPermissionData] = useState<PermissionData[]>([]);
   const [checkFirstData, setCheckFirstData] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [fetchWalletAddress, setFetchWalletAddress] = useState<string | null>(null);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState<RecordData | null>(
+  const [fetchWalletAddress, setFetchWalletAddress] = useState<string | null>(
     null
   );
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<RecordData | null>(null);
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -94,10 +94,18 @@ export default function RetrieveRecord() {
       try {
         const searchData = await searchRecord(query);
         if (searchData && searchData.length > 0) {
-          const approvedData = await permissionApproved(searchData[0].userAddress);
+          const approvedData = await permissionApproved(
+            searchData[0].userAddress
+          );
           if (approvedData) {
-            const updatedData = updateRecordsWithPermission(searchData, approvedData);
+            const updatedData = updateRecordsWithPermission(
+              searchData,
+              approvedData
+            );
             setCheckData(updatedData);
+          } else {
+            // If there's no permission approve before
+            setCheckData(searchData);
           }
         }
       } catch (error) {
@@ -141,16 +149,24 @@ export default function RetrieveRecord() {
     }
   };
 
-  const permissionApproved = async (userAddress: string): Promise<PermissionData[] | null> => {
+  const permissionApproved = async (
+    userAddress: string
+  ): Promise<PermissionData[] | null> => {
     try {
-      const permissionRequest = await fetch("http://localhost:3001/api/checkApprovedPermission", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ userAddress, hospitalAddress: fetchWalletAddress }),
-      });
+      const permissionRequest = await fetch(
+        "http://localhost:3001/api/checkApprovedPermission",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            userAddress,
+            hospitalAddress: fetchWalletAddress,
+          }),
+        }
+      );
 
       if (permissionRequest.ok) {
         const approvedData = await permissionRequest.json();
@@ -170,9 +186,14 @@ export default function RetrieveRecord() {
     }
   };
 
-  const updateRecordsWithPermission = (records: CheckData[], approvedData: PermissionData[]): CheckData[] => {
-    return records.map(record => {
-      const permission = approvedData.find(item => item.recordID === record.recordID);
+  const updateRecordsWithPermission = (
+    records: CheckData[],
+    approvedData: PermissionData[]
+  ): CheckData[] => {
+    return records.map((record) => {
+      const permission = approvedData.find(
+        (item) => item.recordID === record.recordID
+      );
       if (permission) {
         return { ...record, permissionStatus: 1 };
       }
@@ -180,17 +201,24 @@ export default function RetrieveRecord() {
     });
   };
 
+  const handleCloseDetails = () => {
+    setIsDetailsOpen(false);
+  };
+
   const handleDetail = async (recordID: string) => {
     console.log(recordID);
     try {
-      const detailRequest = await fetch("http://localhost:3001/api/checkMedicalRecord", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ recordID }),
-      });
+      const detailRequest = await fetch(
+        "http://localhost:3001/api/checkMedicalRecord",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ recordID }),
+        }
+      );
 
       if (detailRequest.ok) {
         const recordData = await detailRequest.json();
@@ -210,7 +238,7 @@ export default function RetrieveRecord() {
       return [];
     }
   };
-  
+
   return (
     <main>
       <div
@@ -329,7 +357,9 @@ export default function RetrieveRecord() {
                           <RectangleButton
                             text="View"
                             textStyle={{ fontSize: "30px", fontWeight: "bold" }}
-                            onClick={() => handleDetail({ recordID: record.recordID })}
+                            onClick={() =>
+                              handleDetail({ recordID: record.recordID })
+                            }
                             style={{ backgroundColor: "#3F45DD" }}
                           />
                           {isDetailsOpen && (
@@ -339,7 +369,10 @@ export default function RetrieveRecord() {
                                 onClick={() => setIsDetailsOpen(false)}
                               ></div>
                               <div className="popup-content">
-                                <DetailBox recordData={selectedRecord} />
+                                <DetailBox
+                                  recordData={selectedRecord}
+                                  handleClose={handleCloseDetails}
+                                />
                               </div>
                             </div>
                           )}
@@ -358,10 +391,10 @@ export default function RetrieveRecord() {
                         />
                       )}
                     </div>
-                    </div>
                   </div>
                 </div>
               </div>
+            </div>
           ))
         ) : (
           <div
