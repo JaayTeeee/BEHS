@@ -11,6 +11,9 @@
 ===========================================================================
 
 
+Description:
+
+Our innovative blockchain-based electronic health system revolutionizes the medical data handling situation in Malaysia, fostering trust between hospitals and patients while addressing security and privacy concerns.
 
 
 
