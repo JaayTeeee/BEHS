@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Kodchasan";
+  src: url("../../public/fonts/Kodchasan/Kodchasan-Medium.ttf");
+  font-weight: normal;
+  color: "#339F6B";
+}
+
+body {
+  color: #000000;
+  background-color: #ffffff;
+  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.circle {
+  display: block;
+  background: #339f6b;
+  border-radius: 50%;
+  height: 800px;
+  width: 830px;
+  position: absolute;
+  right: -50px;
+  top: -180px;
+}
+
+.icon {
+  height: 90px;
+  width: 90px;
+}
+
+.BEHS {
+  font-family: Kodchasan;
+  color: #339f6b;
+  font-size: 120px;
+}
+
+.green-container {
+  display: block;
+  background: #339f6b;
+  height: 90px;
+  width: 193px;
+  position: absolute;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #dfdfdf;
+  height: 40px;
+  width: 330px;
+  border-radius: 7px;
+  z-index: 1;
+}
+
+.buttonWithImage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #339f6b;
+  background: white;
+  width: 400px;
+  height: 270px;
+  margin: 10px;
+  z-index: 999;
+  border: 3px solid #339f6b;
+  border-radius: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
+  transition: background-color 0.3s;
+}
+
+.buttonWithImage:hover {
+  background-color: #339f6b;
+  color: white;
+}
+
+.buttonWithImage:hover img {
+  filter: brightness(0) invert(1);
+}
+
+.scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.small-circle {
+  display: block;
+  background: #ffffff;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+}
+
+.green-bar {
+  background-color: #f3ffef;
+  border: 2px solid #339f6b;
+  border-radius: 10px;
+  height: 100px;
+  width: 1270px;
+  margin-left: 150px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.greenbar-title {
+  color: #339f6b;
+  font-size: 23px;
+  margin-left: 20px;
+  margin-top: -30px;
+}
+
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.popup-content {
+  position: relative;
+  padding: 20px;
+  z-index: 2;
+}
