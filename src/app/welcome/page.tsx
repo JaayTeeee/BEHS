@@ -20,7 +20,6 @@ import ResearchImage from "../../../public/icons/icons-research.png";
 import ButtonWithImage from "../components/ButtonWithImage";
 import HomePageButton from "../components/HomePageButton";
 import LogoutButton from "../components/LogoutButton";
-import UserProfileButton from "../components/UserProfileButton";
 import CheckUsername from "../functions/getUsername";
 
 export default function Home() {
@@ -73,7 +72,6 @@ export default function Home() {
                 marginTop: "15px",
               }}
             >
-              <UserProfileButton />
               <LogoutButton />
             </div>
           </div>
