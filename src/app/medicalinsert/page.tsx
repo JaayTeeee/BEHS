@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import searchIcon from "../../../public/icons/icons-search-black.png";
 import HomePageButton from "../components/HomePageButton";
@@ -20,6 +20,13 @@ export default function MedicalInsert() {
   const [checkData, setCheckData] = useState<CheckData | null>(null);
   const [checkFirstData, setCheckFirstData] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [fetchWalletAddress, setWalletAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const addressFromQuery = urlSearchParams.get("WalletAddress");
+    setWalletAddress(addressFromQuery);
+  }, [fetchWalletAddress]);
 
   const handleSearch = async (query: string) => {
     console.log("Query:", query);
@@ -187,6 +194,7 @@ export default function MedicalInsert() {
                 <div key={index}>
                   <MedicalRecordInserter
                     address={record.walletAddress}
+                    hospitalAddress={fetchWalletAddress}
                     resetData={resetData}
                   />
                 </div>
